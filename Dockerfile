@@ -1,4 +1,6 @@
-FROM node:alpine
+FROM node:lts-alpine
+
+RUN apk update && apk upgrade
 
 WORKDIR /opt/test-runner
 
