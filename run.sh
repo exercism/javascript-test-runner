@@ -28,8 +28,8 @@ sed -i 's/xtest/test/g' $test_file
 npm i --prefix $2
 npm i --prefix $2 jest-junit
 
-# add custom test run to testfile
-# this is a hack to avoid jest cli complications
+# Add custom test to package.json to run the tests with junit output
+# This is a hack to avoid jest cli complications
 # TODO: find a clean way to use jest cli
 if grep -q '^.*customTest' "$2/package.json"; then
     echo "hello from replace"
