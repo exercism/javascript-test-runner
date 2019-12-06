@@ -23,6 +23,6 @@ COPY --from=builder /javascript-test-runner/production_node_modules /opt/test-ru
 USER appuser
 WORKDIR /opt/test-runner
 
-COPY ./run.sh ./bin/
+COPY ./bin/run.sh ./bin/
 
 ENTRYPOINT [ "sh", "/opt/test-runner/bin/run.sh" ]
