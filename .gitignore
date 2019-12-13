@@ -1,0 +1,13 @@
+node_modules
+dist
+
+/numbers.js
+/numbers.spec.js
+
+# Output
+jest.json
+results.json
+junit.xml
+results.xml
+
+yarn-error.log
