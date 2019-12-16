@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 # Synopsis:
 # Automatically tests exercism's JS track solutions against corresponding test files.
