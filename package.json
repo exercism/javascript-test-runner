@@ -15,7 +15,7 @@
     "watch": "jest --no-cache --watch ./*",
     "lint": "eslint .",
     "lint-test": "eslint . && jest --no-cache ./* ",
-    "test:cli": "jest test --no-cache ./in/* --outputFile=./out/results.json --noStackTrace --verbose=false"
+    "test:cli": "jest test --no-cache {in}* --outputFile={result_file} --noStackTrace --verbose=false"
   },
   "dependencies": {
     "chalk": "^3.0.0",
