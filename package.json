@@ -2,6 +2,7 @@
   "name": "@exercism/javascript-test-runner",
   "description": "Automated Test runner for exercism solutions in Javascript.",
   "author": "Derk-Jan Karrenbeld <derk-jan+github@karrenbeld.info>",
+  "version": "1.0.0",
   "private": true,
   "license": "MIT",
   "repository": {
@@ -14,33 +15,33 @@
     "watch": "jest --no-cache --watch ./*",
     "lint": "eslint .",
     "lint-test": "eslint . && jest --no-cache ./* ",
-    "test:cli": "yarn test --outputName={result_file} --noStackTrace"
+    "test:cli": "jest test --no-cache ./in/* --outputFile=./out/results.json --noStackTrace --verbose=false"
   },
   "dependencies": {
     "chalk": "^3.0.0",
-    "jest-util": "^24.9.0",
+    "jest-util": "^25.1.0",
     "slash": "^3.0.0",
     "string-length": "^3.1.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.7.5",
-    "@babel/core": "^7.7.5",
-    "@babel/node": "^7.7.4",
-    "@babel/preset-env": "^7.7.6",
-    "@babel/preset-typescript": "^7.7.4",
-    "@types/jest": "^24.0.23",
-    "@types/node": "^12.12.17",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
+    "@babel/preset-typescript": "^7.8.3",
+    "@types/jest": "^25.1.1",
+    "@types/node": "^13.5.3",
     "@types/slash": "^3.0.0",
     "@types/string-length": "^3.0.0",
-    "@typescript-eslint/parser": "^2.11.0",
-    "@typescript-eslint/typescript-estree": "^2.11.0",
+    "@typescript-eslint/parser": "^2.18.0",
+    "@typescript-eslint/typescript-estree": "^2.18.0",
     "babel-eslint": "^10.0.3",
-    "babel-jest": "^24.9.0",
-    "eslint": "^6.7.2",
-    "eslint-plugin-import": "^2.19.1",
-    "jest": "^24.9.0",
+    "babel-jest": "^25.1.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-import": "^2.20.0",
+    "jest": "^25.1.0",
     "jest-junit": "^10.0.0",
-    "typescript": "^3.7.3"
+    "typescript": "^3.7.5"
   },
   "jest": {
     "modulePathIgnorePatterns": [
@@ -48,6 +49,8 @@
     ],
     "reporters": [
       "<rootDir>/dist/reporter.js"
+    ],
+    "setupFilesAfterEnv": [
     ]
   }
 }

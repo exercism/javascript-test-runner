@@ -1,7 +1,10 @@
 import path from 'path'
 import fs from 'fs'
-import { relativePath } from './utils/relativePath'
 import { trimAndFormatPath } from './utils/trimAndFormatPath'
+
+import { ConsoleBuffer } from '@jest/console'
+import { AggregatedResult, AssertionResult, TestResult } from '@jest/test-result'
+import { Config } from '@jest/types'
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -19,11 +22,13 @@ interface OutputTestInterface {
 export class Output {
 
   private results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
-  private readonly globalConfig: jest.GlobalConfig
+  private readonly globalConfig: Config.GlobalConfig
+  private readonly outputFile: string
 
-  constructor(globalConfig: jest.GlobalConfig) {
+  constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
     this.results = { tests: [] }
+    this.outputFile = this.globalConfig.outputFile || path.join(process.cwd(), 'results.json')
   }
 
   error(message: string) {
@@ -31,7 +36,7 @@ export class Output {
     this.results.message = message
   }
 
-  finish(aggregatedResults: jest.AggregatedResult) {
+  finish(aggregatedResults: AggregatedResult) {
     if (this.results.status === null) {
       this.results.status = aggregatedResults.success
         && (aggregatedResults.numPendingTests === 0)
@@ -41,21 +46,27 @@ export class Output {
     }
 
     const artifact = JSON.stringify(this.results, undefined, 2)
-    const outputPath = path.join(process.cwd(), 'results.json')
 
-    fs.writeFileSync(outputPath, artifact)
+    fs.writeFileSync(this.outputFile, artifact)
   }
 
-  testFinished(_path: string, _testResult: jest.TestResult, results: jest.AggregatedResult) {
+  testFinished(_path: string, _testResult: TestResult, results: AggregatedResult) {
     results.testResults.forEach((testResult) => {
       return this.testInnerFinished(testResult.testFilePath, testResult, testResult.testResults)
     })
   }
 
-  testInnerFinished(path: string, testResult: jest.TestResult, innerResults: jest.AssertionResult[]) {
+  testInnerFinished(path: string, testResult: TestResult, innerResults: AssertionResult[]) {
     if (testResult.console) {
+      const name = [
+        typeof testResult.displayName === 'string' && testResult.displayName,
+        typeof testResult.displayName === 'object' && testResult.displayName && testResult.displayName.name,
+        innerResults[0] && innerResults[0].ancestorTitles.join(' > '),
+        trimAndFormatPath(0, this.globalConfig, path, 80)
+      ].filter(Boolean)[0] as string
+
       this.results.tests.push({
-        name: trimAndFormatPath(0, this.globalConfig, path, 80),
+        name: name,
         output: buildOutput(testResult.console),
         status: testResult.numPendingTests === 0 && testResult.numFailingTests === 0 ? 'pass' : 'fail',
         message: ''
@@ -70,7 +81,7 @@ export class Output {
   }
 }
 
-function buildOutput(buffer: jest.ConsoleBuffer) {
+function buildOutput(buffer: ConsoleBuffer) {
   const output = buffer
     .map((entry) => `[${entry.type}] ${entry.message}`)
     .join('\n')
@@ -83,8 +94,8 @@ function buildOutput(buffer: jest.ConsoleBuffer) {
 }
 
 function buildTestOutput(
-  testResult: jest.TestResult,
-  inner: jest.AssertionResult[]
+  testResult: TestResult,
+  inner: AssertionResult[]
 ): Pick<OutputTestInterface, 'name' | 'status' | 'message'>[] {
   if (testResult.testExecError) {
     return [{

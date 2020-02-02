@@ -1,12 +1,22 @@
 import chalk from 'chalk'
 
-export function printDisplayName(config: jest.ProjectConfig): string {
+import { Config } from '@jest/types'
+
+export function printDisplayName(config: Config.ProjectConfig): string {
   const { displayName } = config;
 
-  if (displayName) {
+  if (typeof displayName === 'string') {
     return chalk.supportsColor
       ? chalk.reset.inverse.white(` ${displayName} `)
       : displayName;
+  }
+
+  if (displayName && typeof displayName === 'object') {
+    return chalk.supportsColor
+      ? chalk.reset.inverse.white(` ${displayName} `)
+      : displayName.name;
+
+    // displayName.color
   }
 
   return '';

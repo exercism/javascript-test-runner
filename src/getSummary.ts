@@ -1,9 +1,11 @@
 import chalk from 'chalk'
 
+import { AggregatedResult } from '@jest/test-result'
+
 import { pluralize } from './utils/pluralize'
 import { renderTime } from './utils/renderTime'
 
-export function getSummary(aggregatedResults: jest.AggregatedResult, options?: { roundTime?: boolean; estimatedTime?: number, width?: number }): string {
+export function getSummary(aggregatedResults: AggregatedResult, options?: { roundTime?: boolean; estimatedTime?: number, width?: number }): string {
   let runTime = (Date.now() - aggregatedResults.startTime) / 1000;
   if (options && options.roundTime) {
     runTime = Math.floor(runTime);

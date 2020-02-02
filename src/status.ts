@@ -1,6 +1,10 @@
 import chalk from 'chalk'
 import stringLength from 'string-length'
 
+import { Config } from '@jest/types'
+import { AggregatedResult, TestResult } from '@jest/test-result'
+import { ReporterOnStartOptions } from '@jest/reporters'
+
 import { trimAndFormatPath } from './utils/trimAndFormatPath'
 import { wrapAnsiString } from './utils/wrapAnsiString'
 import { printDisplayName } from './utils/printDisplayName'
@@ -10,7 +14,7 @@ const RUNNING = `${chalk.reset.inverse.yellow.bold(RUNNING_TEXT)} `;
 
 interface TestRecord {
   testPath: string
-  config: jest.ProjectConfig
+  config: Config.ProjectConfig
 }
 
 /**
@@ -25,7 +29,7 @@ class CurrentTestList {
     this._array = [];
   }
 
-  add(testPath: string, config: jest.ProjectConfig) {
+  add(testPath: string, config: Config.ProjectConfig) {
     const index = this._array.indexOf(null);
     const record = { config, testPath };
     if (index !== -1) {
@@ -61,7 +65,7 @@ export class Status {
   private _estimatedTime: number;
   private _showStatus: boolean;
   private _cache: null | { clear: string; content: string };
-  private _aggregatedResults?: jest.AggregatedResult;
+  private _aggregatedResults?: AggregatedResult;
   private _interval?: NodeJS.Timeout;
   private _lastUpdated?: number;
 
@@ -79,7 +83,7 @@ export class Status {
     this._callback = callback;
   }
 
-  runStarted(aggregatedResults: jest.AggregatedResult, options: jest.ReporterOnStartOptions) {
+  runStarted(aggregatedResults: AggregatedResult, options: ReporterOnStartOptions) {
     this._estimatedTime = (options && options.estimatedTime) || 0;
     this._showStatus = options && options.showStatus;
     this._interval = setInterval(() => this._tick(), 1000);
@@ -93,7 +97,7 @@ export class Status {
     this._emit();
   }
 
-  testStarted(testPath: string, config: jest.ProjectConfig) {
+  testStarted(testPath: string, config: Config.ProjectConfig) {
     this._currentTests.add(testPath, config);
     if (!this._showStatus) {
       this._emit();
@@ -102,7 +106,7 @@ export class Status {
     }
   }
 
-  testFinished(_config: unknown, testResult: jest.TestResult, aggregatedResults: jest.AggregatedResult) {
+  testFinished(_config: unknown, testResult: TestResult, aggregatedResults: AggregatedResult) {
     const { testFilePath } = testResult;
     this._aggregatedResults = aggregatedResults;
     this._currentTests.delete(testFilePath);

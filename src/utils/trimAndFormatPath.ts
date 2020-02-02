@@ -2,10 +2,10 @@ import path from 'path'
 import chalk from 'chalk'
 import slash from 'slash'
 
-
+import { Config } from '@jest/types'
 import { relativePath } from './relativePath'
 
-export function trimAndFormatPath(pad: number, config: jest.ProjectConfig | jest.GlobalConfig, testPath: string, columns: number): string {
+export function trimAndFormatPath(pad: number, config: Config.ProjectConfig | Config.GlobalConfig, testPath: string, columns: number): string {
   const maxLength = columns - pad;
   const relative = relativePath(config, testPath);
   const { basename } = relative;

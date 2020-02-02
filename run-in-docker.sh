@@ -15,19 +15,18 @@
 # Writes the tests output to the output directory
 
 # Example:
-# ./run-in-docker.sh two-fer ./relative/path/to/two-fer/solution/folder ./relative/path/to/output-directory
+# ./run-in-docker.sh two-fer ./relative/path/to/two-fer/solution/folder/ ./relative/path/to/output-directory/
 
 # If arguments not provided, print usage and exit
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
-    echo "usage: ./run-in-docker.sh two-fer ./relative/path/to/two-fer/solution/folder ./relative/path/to/output-directory"
+    echo "usage: ./run-in-docker.sh two-fer ./relative/path/to/two-fer/solution/folder/ ./relative/path/to/output-directory/"
 fi
 
 # build docker image
 docker build -t javascript-test-runner .
 
 # run image passing the arguments
-# run image passing the arguments
 docker run \
-    --mount type=bind,src=$PWD/$2,dst=/solution \
-    --mount type=bind,src=$PWD/$3,dst=/output \
-    javascript-test-runner $1 /solution /output
+    --mount type=bind,src=$PWD/$2,dst=/solution/ \
+    --mount type=bind,src=$PWD/$3,dst=/output/ \
+    javascript-test-runner $1 /solution/ /output/

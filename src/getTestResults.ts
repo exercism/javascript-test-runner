@@ -1,26 +1,28 @@
 import chalk from 'chalk'
 import { specialChars } from 'jest-util';
 
+import { Status, AssertionResult, TestResult } from '@jest/test-result'
+
 const { ICONS } = specialChars;
 
 interface TestSuite {
   suites: TestSuite[]
-  tests: jest.AssertionResult[]
+  tests: AssertionResult[]
   title: string
 }
 
 type TestsBySuites = TestSuite
 
-export function getTestResults(testResults: jest.TestResult['testResults']) {
+export function getTestResults(testResults: TestResult['testResults']) {
   const testSuites = groupTestsBySuites(testResults);
 
   return getLogSuite(testSuites, 0);
 };
 
-function groupTestsBySuites(testResults: jest.TestResult['testResults']) {
+function groupTestsBySuites(testResults: TestResult['testResults']) {
   const output: TestsBySuites = { suites: [], tests: [], title: '' };
 
-  testResults.forEach((testResult: jest.AssertionResult) => {
+  testResults.forEach((testResult: AssertionResult) => {
     let targetSuite = output;
 
     // Find the target suite for this test,
@@ -62,14 +64,14 @@ export function getLine(str: string, indentLevel: number): string {
   return `${indentation}${str || ''}\n`;
 };
 
-export function logTests(tests: jest.AssertionResult[], indentLevel: number): string {
+export function logTests(tests: AssertionResult[], indentLevel: number): string {
   let output = '';
   tests.forEach(test => (output += logTest(test, indentLevel)));
 
   return output;
 };
 
-export function logTest(test: jest.AssertionResult, indentLevel : number) {
+export function logTest(test: AssertionResult, indentLevel : number) {
   const status = getIcon(test.status);
   const time = test.duration ? ` (${test.duration.toFixed(0)}ms)` : '';
   const testStatus = `${status} ${chalk.dim(test.title + time)}`;
@@ -77,7 +79,7 @@ export function logTest(test: jest.AssertionResult, indentLevel : number) {
   return getLine(testStatus, indentLevel);
 };
 
-export function getIcon(status: jest.Status): string {
+export function getIcon(status: Status): string {
   switch (status) {
     case 'failed':
       return chalk.red(ICONS.failed);

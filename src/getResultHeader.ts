@@ -1,5 +1,8 @@
 import chalk from 'chalk'
-import { getConsoleOutput } from 'jest-util'
+import {getConsoleOutput} from '@jest/console';
+
+import { Config } from '@jest/types'
+import { TestResult } from '@jest/test-result'
 
 import { formatTestPath } from './utils/formatTestPath'
 import { printDisplayName } from './utils/printDisplayName'
@@ -20,7 +23,7 @@ const PASS = chalk.supportsColor
   ? chalk.reset.inverse.bold.green(` ${PASS_TEXT} `)
   : PASS_TEXT;
 
-export function getResultHeader(result: jest.TestResult, globalConfig: jest.GlobalConfig, projectConfig: jest.ProjectConfig): string {
+export function getResultHeader(result: TestResult, globalConfig: Config.GlobalConfig, projectConfig: Config.ProjectConfig): string {
   const testPath = result.testFilePath;
   const status =
     result.numFailingTests > 0 || result.testExecError ? FAIL : PASS;

@@ -11,3 +11,9 @@ junit.xml
 results.xml
 
 yarn-error.log
+
+# Docker base files
+/in
+/out
+/production_node_modules
+/package.template.json

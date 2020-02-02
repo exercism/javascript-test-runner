@@ -21,7 +21,7 @@ RUN yarn install --production --modules-folder './production_node_modules'
 FROM node:lts-alpine
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=builder /etc/passwd /etc/passwd
-COPY --from=builder /javascript-test-runner/package.json /opt/test-runner/package.json
+COPY --from=builder /javascript-test-runner/package.json /opt/test-runner/package.template.json
 COPY --from=builder /javascript-test-runner/bin /opt/test-runner/bin
 COPY --from=builder /javascript-test-runner/production_node_modules /opt/test-runner/node_modules
 COPY --from=builder /javascript-test-runner/dist /opt/test-runner/dist

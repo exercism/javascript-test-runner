@@ -2,14 +2,18 @@ import { Status } from './status'
 import { Output } from './output'
 import { isInteractive } from 'jest-util'
 
+import { Config } from '@jest/types';
+import { Context, Test, Reporter, ReporterOnStartOptions }  from '@jest/reporters'
+import { AggregatedResult, TestResult } from '@jest/test-result'
+
 import { getResultHeader } from './getResultHeader'
 import { getSnapshotStatus } from './getSnapshotStatus'
 import { getTestResults } from './getTestResults'
 import { getSummary } from './getSummary'
 import { Stdlib } from './stdlib'
 
-class StandardReporter implements jest.Reporter {
-  private readonly globalConfig: jest.GlobalConfig
+class StandardReporter implements Reporter {
+  private readonly globalConfig: Config.GlobalConfig
   private readonly stdlib: Stdlib
   private readonly status: Status
   private readonly output: Output
@@ -17,7 +21,7 @@ class StandardReporter implements jest.Reporter {
   private error: null | Error
   private clear: string
 
-  constructor(globalConfig: jest.GlobalConfig) {
+  constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
     this.stdlib = new Stdlib(globalConfig)
 
@@ -29,8 +33,10 @@ class StandardReporter implements jest.Reporter {
     this.status.onChange(() => {})
   }
 
-  getLastError(): jest.Maybe<Error> {
-    return this.error
+  getLastError(): Error | void {
+    if (this.error) {
+      return this.error
+    }
   }
 
   setError(error: Error) {
@@ -42,7 +48,7 @@ class StandardReporter implements jest.Reporter {
    * @param results
    * @param options
    */
-  onRunStart(results: jest.AggregatedResult, options: jest.ReporterOnStartOptions): void {
+  onRunStart(results: AggregatedResult, options: ReporterOnStartOptions): void {
     this.status.runStarted(results, options)
     if (isInteractive) {
       this.stdlib.clear()
@@ -52,7 +58,7 @@ class StandardReporter implements jest.Reporter {
   /**
    * @param test
    */
-  onTestStart(test: jest.Test): void {
+  onTestStart(test: Test): void {
     this.status.testStarted(test.path, test.context.config)
     this.output.testStarted(test.path)
   }
@@ -62,7 +68,7 @@ class StandardReporter implements jest.Reporter {
    * @param testResult
    * @param results
    */
-  onTestResult(test: jest.Test, testResult: jest.TestResult, results: jest.AggregatedResult): void {
+  onTestResult(test: Test, testResult: TestResult, results: AggregatedResult): void {
     this.status.testFinished(test.context.config, testResult, results)
     this.output.testFinished(test.path, testResult, results)
 
@@ -97,7 +103,7 @@ class StandardReporter implements jest.Reporter {
    * @param contexts
    * @param aggregatedResults
    */
-  onRunComplete(_contexts: Set<jest.Context>, aggregatedResults: jest.AggregatedResult): jest.Maybe<Promise<void>> {
+  onRunComplete(_contexts: Set<Context>, aggregatedResults: AggregatedResult): Promise<void> | void {
     this.stdlib.log(getSummary(aggregatedResults, undefined))
     this.status.runFinished()
     this.stdlib.close()

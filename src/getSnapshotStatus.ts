@@ -1,6 +1,8 @@
 import chalk from 'chalk'
 import { pluralize } from './utils/pluralize'
 
+import { TestResult } from '@jest/test-result'
+
 const ARROW = ' \u203A ';
 const DOT = ' \u2022 ';
 const FAIL_COLOR = chalk.bold.red;
@@ -8,7 +10,7 @@ const SNAPSHOT_ADDED = chalk.bold.green;
 const SNAPSHOT_UPDATED = chalk.bold.green;
 const SNAPSHOT_OUTDATED = chalk.bold.yellow;
 
-export function getSnapshotStatus(snapshot: jest.TestResult['snapshot'], afterUpdate: boolean): string[] {
+export function getSnapshotStatus(snapshot: TestResult['snapshot'], afterUpdate: boolean): string[] {
   const statuses: string[] = [];
 
   if (snapshot.added) {

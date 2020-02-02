@@ -1,12 +1,14 @@
 import { clearLine } from 'jest-util'
 
+import { Config } from '@jest/types'
+
 export class Stdlib {
   private out: NodeJS.WriteStream['write']
   private err: NodeJS.WriteStream['write']
   private readonly useStderr: boolean
   private readonly bufferedOutput: Set<() => void>
 
-  constructor(globalConfig: jest.GlobalConfig) {
+  constructor(globalConfig: Config.GlobalConfig) {
     this.out = process.stdout.write.bind(process.stdout);
     this.err = process.stderr.write.bind(process.stderr);
     this.useStderr = globalConfig.useStderr;
