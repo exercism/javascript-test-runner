@@ -25,6 +25,8 @@ COPY --from=builder /javascript-test-runner/bin /opt/test-runner/bin
 COPY --from=builder /javascript-test-runner/node_modules /opt/test-runner/node_modules
 COPY --from=builder /javascript-test-runner/dist /opt/test-runner/dist
 COPY --from=builder /javascript-test-runner/jest.config.js /opt/test-runner/jest.config.js
+COPY --from=builder /javascript-test-runner/babel.config.js /opt/test-runner/babel.config.js
+
 USER appuser
 WORKDIR /opt/test-runner
 

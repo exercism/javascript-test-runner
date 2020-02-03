@@ -29,4 +29,9 @@ sed -i 's/xit/it/g' "${test_file}"
 
 mkdir -p "${3}"
 
-./node_modules/.bin/jest test --no-cache "${2}*" --outputFile="${result_file}" --noStackTrace --verbose=false
+./node_modules/.bin/jest test --no-cache "${2}*" \
+                              --outputFile="${result_file}" \
+                              --reporters "./dist/reporter.js" \
+                              --noStackTrace \
+                              --verbose=false \
+                              --roots "${2}"
