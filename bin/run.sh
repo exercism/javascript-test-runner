@@ -29,9 +29,22 @@ sed -i 's/xit/it/g' "${test_file}"
 
 mkdir -p "${3}"
 
+# Disable auto exit
+set +e
+
+# Run tests
 ./node_modules/.bin/jest test --no-cache "${2}*" \
                               --outputFile="${result_file}" \
                               --reporters "./dist/reporter.js" \
                               --noStackTrace \
                               --verbose=false \
                               --roots "${2}"
+
+# Convert exit(1) to exit(0)
+test_exit=$?
+if [ $test_exit -eq 1 ]
+then
+  exit 0
+else
+  exit $test_exit
+fi
