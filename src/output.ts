@@ -37,7 +37,7 @@ export class Output {
   }
 
   finish(aggregatedResults: AggregatedResult) {
-    if (this.results.status === null) {
+    if (!this.results.status) {
       this.results.status = aggregatedResults.success
         && (aggregatedResults.numPendingTests === 0)
         && (aggregatedResults.numFailedTests === 0)
