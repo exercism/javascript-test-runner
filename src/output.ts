@@ -50,20 +50,20 @@ export class Output {
     fs.writeFileSync(this.outputFile, artifact)
   }
 
-  testFinished(_path: string, testResult: TestResult, results: AggregatedResult) {
+  testFinished(specFilePath: string, testResult: TestResult, results: AggregatedResult) {
     // Syntax errors etc. These are runtime errors: failures to run
     if (results.numRuntimeErrorTestSuites > 0) {
-      this.error(testResult.failureMessage || 'Something went wrong when running the tests.')
+      this.error(sanitizeErrorMessage(specFilePath, testResult.failureMessage || 'Something went wrong when running the tests.'))
       return
     }
 
     // Suites ran fine. Output regurarly.
     results.testResults.forEach((testResult) => {
-      return this.testInnerFinished(testResult.testFilePath, testResult, testResult.testResults)
+      return this.testInnerFinished(specFilePath, testResult, testResult.testResults)
     })
   }
 
-  testInnerFinished(_path: string, testResult: TestResult, innerResults: AssertionResult[]) {
+  testInnerFinished(specFilePath: string, testResult: TestResult, innerResults: AssertionResult[]) {
     if (testResult.console) {
       /*
       // The code below works, but is not accepted by the current runner spec on exercism
@@ -82,10 +82,10 @@ export class Output {
       })
       */
 
-     this.results.message = buildOutput(testResult.console)
+     this.results.message = sanitizeErrorMessage(specFilePath, buildOutput(testResult.console))
     }
 
-    const outputs = buildTestOutput(testResult, innerResults)
+    const outputs = buildTestOutput(specFilePath, testResult, innerResults)
     this.results.tests.push(...outputs.map((r) => ({ ...r, output: null })))
   }
 
@@ -106,14 +106,18 @@ function buildOutput(buffer: ConsoleBuffer) {
 }
 
 function buildTestOutput(
+  path: string,
   testResult: TestResult,
   inner: AssertionResult[]
 ): Pick<OutputTestInterface, 'name' | 'status' | 'message'>[] {
   if (testResult.testExecError) {
     return [{
-      message: testResult.failureMessage
-        ? removeStackTrace(testResult.failureMessage)
-        : testResult.testExecError.message,
+      message: sanitizeErrorMessage(
+        path,
+        testResult.failureMessage
+          ? removeStackTrace(testResult.failureMessage)
+          : testResult.testExecError.message
+      ),
       name: testResult.testFilePath,
       status: 'error',
     }]
@@ -123,7 +127,10 @@ function buildTestOutput(
     return {
       name: assert.ancestorTitles.concat(assert.title).join(' > '),
       status: assert.status === 'passed' ? 'pass' : 'fail',
-      message: assert.failureMessages.map(removeStackTrace).join("\n")
+      message: sanitizeErrorMessage(
+        testResult.testFilePath,
+        assert.failureMessages.map(removeStackTrace).join("\n")
+      )
     }
   })
 }
@@ -137,4 +144,21 @@ function removeStackTrace(message: string): string {
   return split === -1
     ? message.slice(0, i).trimEnd()
     : message.slice(0, split).trimEnd()
+}
+
+function sanitizeErrorMessage(specFilePath: string, message: string): string {
+  const dirs = [
+    path.dirname(specFilePath),
+    path.dirname(path.dirname(specFilePath)),
+    process.cwd(),
+    path.dirname(process.cwd())
+  ]
+
+  dirs.forEach((sensativePath) => {
+    while(message.indexOf(sensativePath) !== -1) {
+      message = message.replace(sensativePath, '<solution>')
+    }
+  })
+
+  return message
 }
