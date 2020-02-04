@@ -22,27 +22,29 @@ test_file="${2}${1}.spec.js"
 
 # Put together the path to the test results file
 result_file="${3}results.json"
-package_json_source="./package.template.json" # /opt/test-runner/package.json
-package_json="./package.json"
 
 # Change xtest to test so all tests are run
 sed -i 's/xtest/test/g' "${test_file}"
 sed -i 's/xit/it/g' "${test_file}"
 
-# Symlink the node_modules we have, then install missing packages
-# ln -sfr "./production_node_modules" .
-# NOTE: this should have been done by the docker image.
-
-# NOTE: we are NOT allowed to access the internet, so this is just praying that
-#       it works. I guess this is what we'll have to do.
-#
-# yarn install --prefer-offline --cwd "${2}"
-
-# Afterwards, copy the package.json
-cp "${package_json_source}" "${package_json}"
-sed -i "s;{result_file};${result_file};g" "${package_json}"
-sed -i "s;{in};${2};g" "${package_json}"
-
 mkdir -p "${3}"
 
-(cd "${2}"; yarn test:cli)
+# Disable auto exit
+set +e
+
+# Run tests
+./node_modules/.bin/jest test --no-cache "${2}*" \
+                              --outputFile="${result_file}" \
+                              --reporters "./dist/reporter.js" \
+                              --noStackTrace \
+                              --verbose=false \
+                              --roots "${2}"
+
+# Convert exit(1) to exit(0)
+test_exit=$?
+if [ $test_exit -eq 1 ]
+then
+  exit 0
+else
+  exit $test_exit
+fi
