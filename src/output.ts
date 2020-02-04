@@ -50,7 +50,14 @@ export class Output {
     fs.writeFileSync(this.outputFile, artifact)
   }
 
-  testFinished(_path: string, _testResult: TestResult, results: AggregatedResult) {
+  testFinished(_path: string, testResult: TestResult, results: AggregatedResult) {
+    // Syntax errors etc. These are runtime errors: failures to run
+    if (results.numRuntimeErrorTestSuites > 0) {
+      this.error(testResult.failureMessage || 'Something went wrong when running the tests.')
+      return
+    }
+
+    // Suites ran fine. Output regurarly.
     results.testResults.forEach((testResult) => {
       return this.testInnerFinished(testResult.testFilePath, testResult, testResult.testResults)
     })
