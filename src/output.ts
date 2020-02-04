@@ -63,8 +63,10 @@ export class Output {
     })
   }
 
-  testInnerFinished(path: string, testResult: TestResult, innerResults: AssertionResult[]) {
+  testInnerFinished(_path: string, testResult: TestResult, innerResults: AssertionResult[]) {
     if (testResult.console) {
+      /*
+      // The code below works, but is not accepted by the current runner spec on exercism
       const name = [
         typeof testResult.displayName === 'string' && testResult.displayName,
         typeof testResult.displayName === 'object' && testResult.displayName && testResult.displayName.name,
@@ -78,6 +80,9 @@ export class Output {
         status: testResult.numPendingTests === 0 && testResult.numFailingTests === 0 ? 'pass' : 'fail',
         message: ''
       })
+      */
+
+     this.results.message = buildOutput(testResult.console)
     }
 
     const outputs = buildTestOutput(testResult, innerResults)
