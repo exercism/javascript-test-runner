@@ -38,7 +38,8 @@ export class Output {
 
   finish(aggregatedResults: AggregatedResult) {
     if (!this.results.status) {
-      this.results.status = aggregatedResults.success
+      this.results.status = (aggregatedResults.numRuntimeErrorTestSuites === 0)
+        && (aggregatedResults.numFailedTestSuites === 0)
         && (aggregatedResults.numPendingTests === 0)
         && (aggregatedResults.numFailedTests === 0)
         ? 'pass'
