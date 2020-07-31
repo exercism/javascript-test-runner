@@ -6,8 +6,8 @@
 
 # Arguments:
 # $1: exercise slug
-# $2: path to solution folder (with trailing slash)
-# $3: path to output directory (with trailing slash)
+# $2: path to solution folder (without trailing slash)
+# $3: path to output directory (without trailing slash)
 
 # Output:
 # Writes the tests output to the output directory
@@ -42,7 +42,7 @@ mkdir -p "${3}"
 set +e
 
 # Run tests
-./node_modules/.bin/jest test --no-cache "${2}*" \
+./node_modules/.bin/jest test --no-cache "${2}/*" \
                               --outputFile="${result_file}" \
                               --reporters "./dist/reporter.js" \
                               --noStackTrace \
