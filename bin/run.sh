@@ -18,10 +18,10 @@
 set -euo pipefail
 
 # Put together the path to the test file
-test_file="${2}${1}.spec.js"
+test_file="${2}/${1}.spec.js"
 
 # Put together the path to the test results file
-result_file="${3}results.json"
+result_file="${3}/results.json"
 
 # Change xtest to test so all tests are run
 sed -i 's/xtest/test/g' "${test_file}"
