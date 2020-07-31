@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Synopsis:
 # Automatically tests exercism's JS track solutions against corresponding test files.
@@ -23,9 +23,18 @@ test_file="${2}/${1}.spec.js"
 # Put together the path to the test results file
 result_file="${3}/results.json"
 
+# alpine doesn't have real bash and hence no OSTYPE
+OSTYPE="${OSTYPE:-linuxlike}"
+
 # Change xtest to test so all tests are run
-sed -i 's/xtest/test/g' "${test_file}"
-sed -i 's/xit/it/g' "${test_file}"
+if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
+  # BSD sed -i takes an extra parameter to specify the backup file extension
+  sed -i 'tmp' 's/xtest/test/g' "${test_file}"
+  sed -i 'tmp' 's/xit/it/g' "${test_file}"
+else # linux
+  sed -i 's/xtest/test/g' "${test_file}"
+  sed -i 's/xit/it/g' "${test_file}"
+fi
 
 mkdir -p "${3}"
 
