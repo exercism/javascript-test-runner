@@ -1,4 +1,4 @@
-FROM node:erbium-buster
+FROM node:erbium-buster-slim
 # Node.js v12 LTS (Erbium)
 # Debian Buster (v10.4)
 
