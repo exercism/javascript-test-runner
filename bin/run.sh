@@ -23,9 +23,6 @@ test_file="${2}/${1}.spec.js"
 # Put together the path to the test results file
 result_file="${3}/results.json"
 
-# alpine doesn't have real bash and hence no OSTYPE
-OSTYPE="${OSTYPE:-linuxlike}"
-
 # Change xtest to test so all tests are run
 if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
   # BSD sed -i takes an extra parameter to specify the backup file extension
