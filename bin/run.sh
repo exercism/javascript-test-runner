@@ -28,7 +28,7 @@ if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
   # BSD sed -i takes an extra parameter to specify the backup file extension
   sed -i 'tmp' 's/xtest/test/g' "${test_file}"
   sed -i 'tmp' 's/xit/it/g' "${test_file}"
-else # linux
+else
   sed -i 's/xtest/test/g' "${test_file}"
   sed -i 's/xit/it/g' "${test_file}"
 fi
