@@ -32,6 +32,9 @@ RUN set -ex; \
 # Copy over the binary gem from the gembuilder
 COPY --from=gembuilder /var/lib/gems /var/lib/gems
 COPY --from=gembuilder /usr/local/bin/exercism_local_tooling_webserver /usr/local/bin/exercism_local_tooling_webserver
+
+COPY hack/exercism_local_tooling_webserver /usr/local/bin/exercism_local_tooling_webserver
+RUN chmod +x /usr/local/bin/exercism_local_tooling_webserver
 USER appuser
 
 ENTRYPOINT [ "exercism_local_tooling_webserver" ]
