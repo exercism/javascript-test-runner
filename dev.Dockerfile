@@ -31,7 +31,7 @@ RUN set -ex; \
   yarn cache clean;
 
 USER appuser
-ENTRYPOINT [ "bash", "/opt/test-runner/bin/run.sh" ]
+ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
 # ^ ~~~~~ Dockerfile ~~~~~ ^
 #########################################################
 
