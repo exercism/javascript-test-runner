@@ -5,7 +5,7 @@ The Docker image for automatically run tests on JavaScript solutions submitted t
 ## Running the Tests
 
 To run a solution's tests, do the following:
-1. Open termnial in project's root
+1. Open terminal in project's root
 2. Run `./run.sh <exercise-slug> <path-to-solution-folder>`
 
 ## Running the Tests in Docker container
