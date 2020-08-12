@@ -39,7 +39,7 @@ mkdir -p "${3}"
 set +e
 
 # Run tests
-./node_modules/.bin/jest test --no-cache "${2}/*" \
+./node_modules/.bin/jest test --no-cache "${2}*" \
                               --outputFile="${result_file}" \
                               --reporters "./dist/reporter.js" \
                               --noStackTrace \
