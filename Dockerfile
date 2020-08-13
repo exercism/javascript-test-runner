@@ -6,6 +6,9 @@ FROM node:erbium-buster-slim as runner
 RUN set -ex; \
     apt-get update; \
     apt-get upgrade -y; \
+    # curl is required to fetch our webhook from github
+    # unzip is required for unzipping payloads in development
+    apt-get install curl unzip -y; \
     rm -rf /var/lib/apt/lists/*
 
 # add a non-root user to run our code as
@@ -25,6 +28,12 @@ RUN set -ex; \
   yarn install --production; \
   # clean our yarn cache
   yarn cache clean;
+
+# static binary used for webhook when running in dev mode
+ARG webhook_version=0.0.1
+RUN curl -L -o /usr/local/bin/exercism_local_tooling_webserver \
+  https://github.com/joshgoebel/local-tooling-webserver/releases/download/${webhook_version}/exercism_local_tooling_webserver
+RUN chmod +x /usr/local/bin/exercism_local_tooling_webserver
 
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
