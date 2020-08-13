@@ -6,8 +6,8 @@
 
 # Arguments:
 # $1: exercise slug
-# $2: path to solution folder (without trailing slash)
-# $3: path to output directory (without trailing slash)
+# $2: path to solution folder (with trailing slash)
+# $3: path to output directory (with trailing slash)
 
 # Output:
 # Writes the tests output to the output directory
@@ -18,10 +18,10 @@
 set -euo pipefail
 
 # Put together the path to the test file
-test_file="${2}/${1}.spec.js"
+test_file="${2}${1}.spec.js"
 
 # Put together the path to the test results file
-result_file="${3}/results.json"
+result_file="${3}results.json"
 
 # Change xtest to test so all tests are run
 if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
