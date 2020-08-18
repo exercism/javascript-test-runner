@@ -30,9 +30,8 @@ RUN set -ex; \
   yarn cache clean;
 
 # static binary used for webhook when running in dev mode
-ARG webhook_version=0.6.0
 RUN curl -L -o /usr/local/bin/exercism_local_tooling_webserver \
-  https://github.com/exercism/local-tooling-webserver/releases/download/${webhook_version}/exercism_local_tooling_webserver
+  https://github.com/exercism/local-tooling-webserver/releases/latest/download/exercism_local_tooling_webserver
 RUN chmod +x /usr/local/bin/exercism_local_tooling_webserver
 
 USER appuser
