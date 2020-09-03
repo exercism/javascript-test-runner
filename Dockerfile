@@ -30,9 +30,9 @@ RUN set -ex; \
   yarn cache clean;
 
 # static binary used for webhook when running in dev mode
-RUN curl -L -o /usr/local/bin/exercism_local_tooling_webserver \
-  https://github.com/exercism/local-tooling-webserver/releases/latest/download/exercism_local_tooling_webserver
-RUN chmod +x /usr/local/bin/exercism_local_tooling_webserver
+RUN curl -L -o /usr/local/bin/tooling_webserver \
+  https://github.com/exercism/tooling-webserver/releases/latest/download/tooling_webserver
+RUN chmod +x /usr/local/bin/tooling_webserver
 
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
