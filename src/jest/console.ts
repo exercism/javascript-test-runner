@@ -1,28 +1,33 @@
-import { spyOn } from 'jest-mock'
+import { spyOn } from 'jest-mock';
 
-const defaultKeys = ['debug', 'log', 'info', 'warn', 'error'] as const
+const defaultKeys = ['debug', 'log', 'info', 'warn', 'error'] as const;
 
-type ConsoleFunction = jest.FunctionPropertyNames<Console>
-type Spies = Record<ConsoleFunction, jest.SpyInstance<Console>>
+type ConsoleFunction = jest.FunctionPropertyNames<Console>;
+type Spies = Record<ConsoleFunction, jest.SpyInstance<Console>>;
 
 interface CapturedConsole {
-  getSpy(key: ConsoleFunction): jest.SpyInstance<Console>
-  restore(): void
-  clear(): void
-  calls(): Record<string, any[]>
+  getSpy(key: ConsoleFunction): jest.SpyInstance<Console>;
+  restore(): void;
+  clear(): void;
+  calls(): Record<string, any[]>;
 }
 
-function captureConsole(keys?: ConsoleFunction | ReadonlyArray<ConsoleFunction>): CapturedConsole {
-  const capturedKeys = typeof keys === 'string' ? [keys] : (keys || defaultKeys)
+function captureConsole(
+  keys?: ConsoleFunction | ReadonlyArray<ConsoleFunction>
+): CapturedConsole {
+  const capturedKeys = typeof keys === 'string' ? [keys] : keys || defaultKeys;
 
   // Capture these
-  const spies = capturedKeys.reduce((result: Partial<Spies>, key: ConsoleFunction) => {
-    result[key] = spyOn<Console, any>(global.console, key) as jest.SpyInstance<Console>
-    return result
-  }, {}) as Spies
+  const spies = capturedKeys.reduce(
+    (result: Partial<Spies>, key: ConsoleFunction) => {
+      result[key] = spyOn<Console, any>(global.console, key) as any;
+      return result;
+    },
+    {}
+  ) as Spies;
 
   function getSpy(spykey: string) {
-    return spies[spykey as keyof typeof spies]
+    return spies[spykey as keyof typeof spies];
   }
 
   // Return function to restore console
@@ -30,20 +35,20 @@ function captureConsole(keys?: ConsoleFunction | ReadonlyArray<ConsoleFunction>)
     getSpy: getSpy,
 
     restore: () => {
-      Object.keys(spies).forEach((spykey) => getSpy(spykey).mockRestore())
+      Object.keys(spies).forEach((spykey) => getSpy(spykey).mockRestore());
     },
 
     clear: () => {
-      Object.keys(spies).forEach((spykey) => getSpy(spykey).mockClear())
+      Object.keys(spies).forEach((spykey) => getSpy(spykey).mockClear());
     },
 
     calls: () => {
       return Object.keys(spies).reduce((result, spyKey) => {
-        result[spyKey] = [...getSpy(spyKey).mock.calls]
-        return result
-      }, {} as Record<string, any[]>)
-    }
-  }
-};
+        result[spyKey] = [...getSpy(spyKey).mock.calls];
+        return result;
+      }, {} as Record<string, any[]>);
+    },
+  };
+}
 
 export default captureConsole;
