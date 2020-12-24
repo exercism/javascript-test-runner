@@ -19,7 +19,7 @@
   "scripts": {
     "execute": "./bin/run.sh",
     "execute:dev": "yarn build && yarn execute",
-    "build": "yarn tsc --project ./tsconfig.json",
+    "build": "yarn tsc --project ./tsconfig.json --outDir ./dist",
     "watch": "yarn build -w",
     "prepublish": "yarn test",
     "lint": "yarn eslint . --ext ts,js,tsx,jsx,mjs -c .eslintrc",
