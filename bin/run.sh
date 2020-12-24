@@ -79,7 +79,7 @@ REPORTER="./dist/reporter.js"
 if test -f "$REPORTER"; then
   echo "Using $REPORTER to generate results.json"
 else
-  echo "Expected $REPORTER to exist. Did you forget to yarn build first?"
+  >&2 echo "Expected $REPORTER to exist. Did you forget to yarn build first?"
   exit 1
 fi
 
@@ -109,12 +109,12 @@ set +e
 # Run tests
 ./node_modules/.bin/jest test --no-cache "${INPUT}*" \
                               --outputFile="${result_file}" \
-                              --reporters "./dist/reporter.js" \
+                              --reporters "${REPORTER}" \
                               --noStackTrace \
                               --verbose=false \
                               --roots "${INPUT}"
 
-# Convert exit(1) to exit(0)
+# Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
 
 echo "Find the output at:"
