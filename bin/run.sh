@@ -75,13 +75,18 @@ OUTPUT="${OUTPUT%/}/"
 
 set -euo pipefail
 
-REPORTER="./dist/reporter.js"
+ROOT="$(realpath $(dirname "$0")/..)"
+REPORTER="${ROOT}/dist/reporter.js"
 if test -f "$REPORTER"; then
-  echo "Using $REPORTER to generate results.json"
+  echo "Using reporter: $REPORTER"
+  echo "Using testroot: $INPUT"
+  echo "Using baseroot: $ROOT"
 else
   >&2 echo "Expected $REPORTER to exist. Did you forget to yarn build first?"
   exit 1
 fi
+
+echo ""
 
 # Put together the path to the test file
 test_file="${INPUT}${SLUG}.spec.js"
@@ -117,6 +122,7 @@ set +e
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
 
+echo ""
 echo "Find the output at:"
 echo $result_file
 
