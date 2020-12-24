@@ -75,6 +75,14 @@ OUTPUT="${OUTPUT%/}/"
 
 set -euo pipefail
 
+REPORTER="./dist/reporter.js"
+if test -f "$REPORTER"; then
+  echo "Using $REPORTER to generate results.json"
+else
+  echo "Expected $REPORTER to exist. Did you forget to yarn build first?"
+  exit 1
+fi
+
 # Put together the path to the test file
 test_file="${INPUT}${SLUG}.spec.js"
 
