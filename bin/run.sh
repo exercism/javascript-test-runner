@@ -81,11 +81,15 @@ if test -f "$REPORTER"; then
   echo "Using reporter: $REPORTER"
   echo "Using testroot: $INPUT"
   echo "Using baseroot: $ROOT"
+  echo ""
+  echo $(ls $ROOT/dist)
 else
   >&2 echo "Expected reporter.js to exist. Did you forget to yarn build first?"
   >&2 echo "With reporter: $REPORTER"
   >&2 echo "With testroot: $INPUT"
   >&2 echo "With baseroot: $ROOT"
+  >&2 echo ""
+  >&2 echo $(ls $ROOT/dist)
   exit 1
 fi
 
