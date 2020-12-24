@@ -13,13 +13,13 @@ interface TestSuite {
 
 type TestsBySuites = TestSuite
 
-export function getTestResults(testResults: TestResult['testResults']) {
+export function getTestResults(testResults: TestResult['testResults']): string {
   const testSuites = groupTestsBySuites(testResults)
 
   return getLogSuite(testSuites, 0)
 }
 
-function groupTestsBySuites(testResults: TestResult['testResults']) {
+function groupTestsBySuites(testResults: TestResult['testResults']): TestSuite {
   const output: TestsBySuites = { suites: [], tests: [], title: '' }
 
   testResults.forEach((testResult: AssertionResult) => {
@@ -74,7 +74,7 @@ export function logTests(
   return output
 }
 
-export function logTest(test: AssertionResult, indentLevel: number) {
+export function logTest(test: AssertionResult, indentLevel: number): string {
   const status = getIcon(test.status)
   const time = test.duration ? ` (${test.duration.toFixed(0)}ms)` : ''
   const testStatus = `${status} ${chalk.dim(test.title + time)}`

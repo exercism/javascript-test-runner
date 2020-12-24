@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { spyOn } from 'jest-mock'
 
 const defaultKeys = ['debug', 'log', 'info', 'warn', 'error'] as const
@@ -9,7 +10,7 @@ interface CapturedConsole {
   getSpy(key: ConsoleFunction): jest.SpyInstance<Console>
   restore(): void
   clear(): void
-  calls(): Record<string, any[]>
+  calls(): Record<string, unknown[]>
 }
 
 function captureConsole(
@@ -26,7 +27,7 @@ function captureConsole(
     {}
   ) as Spies
 
-  function getSpy(spykey: string) {
+  function getSpy(spykey: string): any {
     return spies[spykey as keyof typeof spies]
   }
 
@@ -34,19 +35,19 @@ function captureConsole(
   return {
     getSpy: getSpy,
 
-    restore: () => {
+    restore: (): void => {
       Object.keys(spies).forEach((spykey) => getSpy(spykey).mockRestore())
     },
 
-    clear: () => {
+    clear: (): void => {
       Object.keys(spies).forEach((spykey) => getSpy(spykey).mockClear())
     },
 
-    calls: () => {
+    calls: (): Record<string, unknown[]> => {
       return Object.keys(spies).reduce((result, spyKey) => {
         result[spyKey] = [...getSpy(spyKey).mock.calls]
         return result
-      }, {} as Record<string, any[]>)
+      }, {} as Record<string, unknown[]>)
     },
   }
 }

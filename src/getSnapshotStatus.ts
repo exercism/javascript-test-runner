@@ -53,8 +53,8 @@ export function getSnapshotStatus(
       )
     }
 
-    if ((snapshot as any).uncheckedKeys) {
-      ;(snapshot as any).uncheckedKeys.forEach((key: string) => {
+    if (snapshot.uncheckedKeys) {
+      snapshot.uncheckedKeys.forEach((key: string) => {
         statuses.push(`  ${DOT}${key}`)
       })
     }

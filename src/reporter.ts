@@ -24,27 +24,27 @@ class StandardReporter implements Reporter {
   private readonly output: Output
 
   private error: null | Error
-  private clear: string
 
   constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
     this.stdlib = new Stdlib(globalConfig)
 
     this.error = null
-    this.clear = ''
     this.status = new Status()
     this.output = new Output(globalConfig)
 
-    this.status.onChange(() => {})
+    this.status.onChange(() => {
+      /*noop*/
+    })
   }
 
-  getLastError(): Error | void {
+  public getLastError(): Error | void {
     if (this.error) {
       return this.error
     }
   }
 
-  setError(error: Error) {
+  public setError(error: Error): void {
     this.error = error
     this.output.error(error.message)
   }
@@ -53,7 +53,10 @@ class StandardReporter implements Reporter {
    * @param results
    * @param options
    */
-  onRunStart(results: AggregatedResult, options: ReporterOnStartOptions): void {
+  public onRunStart(
+    results: AggregatedResult,
+    options: ReporterOnStartOptions
+  ): void {
     this.status.runStarted(results, options)
     if (isInteractive) {
       this.stdlib.clear()
@@ -63,7 +66,7 @@ class StandardReporter implements Reporter {
   /**
    * @param test
    */
-  onTestStart(test: Test): void {
+  public onTestStart(test: Test): void {
     this.status.testStarted(test.path, test.context.config)
     this.output.testStarted(test.path)
   }
@@ -73,7 +76,7 @@ class StandardReporter implements Reporter {
    * @param testResult
    * @param results
    */
-  onTestResult(
+  public onTestResult(
     test: Test,
     testResult: TestResult,
     results: AggregatedResult
@@ -109,7 +112,7 @@ class StandardReporter implements Reporter {
    * @param contexts
    * @param aggregatedResults
    */
-  onRunComplete(
+  public onRunComplete(
     _contexts: Set<Context>,
     aggregatedResults: AggregatedResult
   ): Promise<void> | void {
