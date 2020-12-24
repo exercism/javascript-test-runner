@@ -76,7 +76,7 @@ OUTPUT="${OUTPUT%/}/"
 set -euo pipefail
 
 ROOT="$(realpath $(dirname "$0")/..)"
-REPORTER="${ROOT}/dist/reporter.js"
+REPORTER="./dist/reporter.js"
 if test -f "$REPORTER"; then
   echo "Using reporter: $REPORTER"
   echo "Using testroot: $INPUT"
