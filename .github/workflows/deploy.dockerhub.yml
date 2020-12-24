@@ -1,4 +1,4 @@
-name: Push to DockerHub
+name: javascript-test-runner / deploy / dockerhub
 
 on:
   push:
