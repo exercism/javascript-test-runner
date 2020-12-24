@@ -1,6 +1,5 @@
 import path from 'path'
 import fs from 'fs'
-import { trimAndFormatPath } from './utils/trimAndFormatPath'
 
 import { ConsoleBuffer } from '@jest/console'
 import {
@@ -35,12 +34,12 @@ export class Output {
       this.globalConfig.outputFile || path.join(process.cwd(), 'results.json')
   }
 
-  error(message: string) {
+  public error(message: string): void {
     this.results.status = 'error'
     this.results.message = message
   }
 
-  finish(aggregatedResults: AggregatedResult) {
+  public finish(aggregatedResults: AggregatedResult): void {
     if (!this.results.status) {
       this.results.status =
         aggregatedResults.numRuntimeErrorTestSuites === 0 &&
@@ -56,11 +55,11 @@ export class Output {
     fs.writeFileSync(this.outputFile, artifact)
   }
 
-  testFinished(
+  public testFinished(
     specFilePath: string,
     testResult: TestResult,
     results: AggregatedResult
-  ) {
+  ): void {
     // Syntax errors etc. These are runtime errors: failures to run
     if (results.numRuntimeErrorTestSuites > 0) {
       this.error(
@@ -73,7 +72,7 @@ export class Output {
       return
     }
 
-    // Suites ran fine. Output regurarly.
+    // Suites ran fine. Output normally.
     results.testResults.forEach((testResult) => {
       return this.testInnerFinished(
         specFilePath,
@@ -83,11 +82,11 @@ export class Output {
     })
   }
 
-  testInnerFinished(
+  public testInnerFinished(
     specFilePath: string,
     testResult: TestResult,
     innerResults: AssertionResult[]
-  ) {
+  ): void {
     if (testResult.console) {
       /*
       // The code below works, but is not accepted by the current runner spec on exercism
@@ -116,10 +115,12 @@ export class Output {
     this.results.tests.push(...outputs.map((r) => ({ ...r, output: null })))
   }
 
-  testStarted(_path: string) {}
+  public testStarted(_path: string): void {
+    // noop
+  }
 }
 
-function buildOutput(buffer: ConsoleBuffer) {
+function buildOutput(buffer: ConsoleBuffer): string {
   const output = buffer
     .map((entry) => `[${entry.type}] ${entry.message}`)
     .join('\n')

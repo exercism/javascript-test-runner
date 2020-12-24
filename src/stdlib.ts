@@ -17,7 +17,7 @@ export class Stdlib {
     this.wrapStdio(process.stderr)
   }
 
-  log(message: string) {
+  public log(message: string): void {
     if (this.useStderr) {
       this.err(`${message}\n`)
     } else {
@@ -25,35 +25,35 @@ export class Stdlib {
     }
   }
 
-  error(message: string) {
+  public error(message: string): void {
     this.err(`${message}\n`)
   }
 
-  clear() {
+  public clear(): void {
     clearLine(process.stdout)
     clearLine(process.stderr)
   }
 
-  close() {
+  public close(): void {
     this.forceFlushBufferedOutput()
     process.stdout.write = this.out
     process.stderr.write = this.err
   }
 
   // Don't wait for the debounced call and flush all output immediately.
-  forceFlushBufferedOutput() {
+  public forceFlushBufferedOutput(): void {
     for (const flushBufferedOutput of this.bufferedOutput) {
       flushBufferedOutput()
     }
   }
 
-  wrapStdio(stream: NodeJS.WritableStream) {
+  public wrapStdio(stream: NodeJS.WritableStream): void {
     const originalWrite = stream.write
 
     let buffer: Parameters<NodeJS.WriteStream['write']>[0][] = []
     let timeout: NodeJS.Timeout | null = null
 
-    const flushBufferedOutput = () => {
+    const flushBufferedOutput = (): void => {
       const string = buffer.join('')
       buffer = []
 
@@ -66,7 +66,7 @@ export class Stdlib {
 
     this.bufferedOutput.add(flushBufferedOutput)
 
-    const debouncedFlush = () => {
+    const debouncedFlush = (): void => {
       // If the process blows up no errors would be printed.
       // There should be a smart way to buffer stderr, but for now
       // we just won't buffer it.
@@ -82,7 +82,9 @@ export class Stdlib {
       }
     }
 
-    stream.write = (chunk: Parameters<NodeJS.WriteStream['write']>[0]) => {
+    stream.write = (
+      chunk: Parameters<NodeJS.WriteStream['write']>[0]
+    ): boolean => {
       buffer.push(chunk)
       debouncedFlush()
 

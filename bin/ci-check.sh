@@ -10,5 +10,6 @@
 # eats 1 argument
 shift 1
 
-lint.sh "$@"
-check-formatting.sh "$@"
+DIRNAME=$(dirname "$0")
+"${DIRNAME}/lint.sh" "$@"
+"${DIRNAME}/check-formatting.sh" "$@"

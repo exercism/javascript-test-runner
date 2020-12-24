@@ -23,13 +23,13 @@ interface TestRecord {
  * shifting the whole list.
  */
 class CurrentTestList {
-  _array: Array<null | TestRecord>
+  private _array: Array<null | TestRecord>
 
   constructor() {
     this._array = []
   }
 
-  add(testPath: string, config: Config.ProjectConfig) {
+  public add(testPath: string, config: Config.ProjectConfig): void {
     const index = this._array.indexOf(null)
     const record = { config, testPath }
     if (index !== -1) {
@@ -39,14 +39,14 @@ class CurrentTestList {
     }
   }
 
-  delete(testPath: string) {
+  public delete(testPath: string): void {
     const record = this._array.find(
       (record) => record && record.testPath === testPath
     )
     this._array[this._array.indexOf(record || null)] = null
   }
 
-  get() {
+  public get(): Array<null | TestRecord> {
     return this._array
   }
 }
@@ -79,14 +79,18 @@ export class Status {
     this._showStatus = false
   }
 
-  onChange(callback = () => {}) {
+  public onChange(
+    callback = (): void => {
+      /*noop*/
+    }
+  ): void {
     this._callback = callback
   }
 
-  runStarted(
+  public runStarted(
     aggregatedResults: AggregatedResult,
     options: ReporterOnStartOptions
-  ) {
+  ): void {
     this._estimatedTime = (options && options.estimatedTime) || 0
     this._showStatus = options && options.showStatus
     this._interval = setInterval(() => this._tick(), 1000)
@@ -94,13 +98,13 @@ export class Status {
     this._debouncedEmit()
   }
 
-  runFinished() {
+  public runFinished(): void {
     this._done = true
     clearInterval(this._interval!)
     this._emit()
   }
 
-  testStarted(testPath: string, config: Config.ProjectConfig) {
+  public testStarted(testPath: string, config: Config.ProjectConfig): void {
     this._currentTests.add(testPath, config)
     if (!this._showStatus) {
       this._emit()
@@ -109,18 +113,18 @@ export class Status {
     }
   }
 
-  testFinished(
+  public testFinished(
     _config: unknown,
     testResult: TestResult,
     aggregatedResults: AggregatedResult
-  ) {
+  ): void {
     const { testFilePath } = testResult
     this._aggregatedResults = aggregatedResults
     this._currentTests.delete(testFilePath)
     this._debouncedEmit()
   }
 
-  get() {
+  public get(): { clear: string; content: string } {
     if (this._cache) {
       return this._cache
     }
@@ -162,13 +166,13 @@ export class Status {
     return (this._cache = { clear, content })
   }
 
-  _emit() {
+  private _emit(): void {
     this._cache = null
     this._lastUpdated = Date.now()
     this._callback && this._callback()
   }
 
-  _debouncedEmit() {
+  private _debouncedEmit(): void {
     if (!this._emitScheduled) {
       // Perf optimization to avoid two separate renders When
       // one test finishes and another test starts executing.
@@ -180,7 +184,7 @@ export class Status {
     }
   }
 
-  _tick() {
+  private _tick(): void {
     this._debouncedEmit()
   }
 }
