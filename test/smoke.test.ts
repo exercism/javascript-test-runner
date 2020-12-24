@@ -3,8 +3,9 @@ import { join, resolve } from 'path'
 import { lstat, mkdtempSync, readFileSync } from 'fs'
 import { tmpdir } from 'os'
 
-const bin = resolve(__dirname, '..', 'bin')
+const root = resolve(__dirname, '..')
 const fixtures = resolve(__dirname, 'fixtures')
+const bin = resolve(root, 'bin')
 const run = resolve(bin, 'run.sh')
 
 describe('javascript-test-runner', () => {
@@ -15,6 +16,7 @@ describe('javascript-test-runner', () => {
         [run, 'two-fer', join(fixtures, 'two-fer', 'pass')],
         {
           stdio: 'pipe',
+          cwd: root,
         }
       )
 
@@ -29,6 +31,7 @@ describe('javascript-test-runner', () => {
     test('generates a result.json', () => {
       spawnSync('bash', [run, 'two-fer', join(fixtures, 'two-fer', 'pass')], {
         stdio: 'pipe',
+        cwd: root,
       })
 
       return new Promise((resolve, reject) => {
@@ -56,6 +59,7 @@ describe('javascript-test-runner', () => {
         [run, 'clock', join(fixtures, 'clock', 'pass'), outputDir],
         {
           stdio: 'pipe',
+          cwd: root,
         }
       )
 
@@ -80,6 +84,7 @@ describe('javascript-test-runner', () => {
         [run, 'two-fer', join(fixtures, 'two-fer', 'fail')],
         {
           stdio: 'pipe',
+          cwd: root,
         }
       )
 
@@ -90,6 +95,7 @@ describe('javascript-test-runner', () => {
     test('generates a result.json', () => {
       spawnSync('bash', [run, 'two-fer', join(fixtures, 'two-fer', 'fail')], {
         stdio: 'pipe',
+        cwd: root,
       })
 
       return new Promise((resolve, reject) => {
