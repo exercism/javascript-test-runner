@@ -4,12 +4,12 @@ FROM node:erbium-buster-slim as runner
 
 # fetch latest security updates
 RUN set -ex; \
-    apt-get update; \
-    apt-get upgrade -y; \
-    # curl is required to fetch our webhook from github
-    # unzip is required for unzipping payloads in development
-    apt-get install curl unzip -y; \
-    rm -rf /var/lib/apt/lists/*
+  apt-get update; \
+  apt-get upgrade -y; \
+  # curl is required to fetch our webhook from github
+  # unzip is required for unzipping payloads in development
+  apt-get install curl unzip -y; \
+  rm -rf /var/lib/apt/lists/*
 
 # add a non-root user to run our code as
 RUN adduser --disabled-password --gecos "" appuser
@@ -28,11 +28,6 @@ RUN set -ex; \
   yarn install --production; \
   # clean our yarn cache
   yarn cache clean;
-
-# static binary used for webhook when running in dev mode
-RUN curl -L -o /usr/local/bin/tooling_webserver \
-  https://github.com/exercism/tooling-webserver/releases/latest/download/tooling_webserver
-RUN chmod +x /usr/local/bin/tooling_webserver
 
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
