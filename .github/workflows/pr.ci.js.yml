@@ -22,11 +22,7 @@ jobs:
         run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Run exercism/javascript ci precheck (lint code)
-        run: |
-          PULL_REQUEST_URL=$(jq -r ".pull_request.url" "$GITHUB_EVENT_PATH")
-          curl --url $"${PULL_REQUEST_URL}/files?per_page=100" --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | \
-            jq -c '.[] | select(.status == "added" or .status == "modified") | select(.filename | match("\\.(js|jsx|ts|tsx|md|json)$")) | .filename' | \
-            xargs -r bin/pr-check.sh
+        run: bin/lint.sh
 
   ci:
     runs-on: ubuntu-latest
@@ -51,8 +47,4 @@ jobs:
         run: yarn build
 
       - name: Run exercism/javascript ci (runs tests)
-        run: |
-          PULL_REQUEST_URL=$(jq -r ".pull_request.url" "$GITHUB_EVENT_PATH")
-          curl --url $"${PULL_REQUEST_URL}/files?per_page=100" --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | \
-            jq -c '.[] | select(.status == "added" or .status == "modified") | select(.filename | match("\\.(js|jsx|ts|tsx|md|json)$")) | .filename' | \
-            xargs -r bin/pr.sh
+        run: yarn test:bare
