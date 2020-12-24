@@ -3,29 +3,29 @@
 export function wrapAnsiString(string: string, terminalWidth: number): string {
   if (terminalWidth === 0) {
     // if the terminal width is zero, don't bother word-wrapping
-    return string;
+    return string
   }
 
-  const ANSI_REGEXP = /[\\u001b\\u009b]\[\d{1,2}m/g;
-  const tokens = [];
-  let lastIndex = 0;
-  let match;
+  const ANSI_REGEXP = /[\\u001b\\u009b]\[\d{1,2}m/g
+  const tokens = []
+  let lastIndex = 0
+  let match
 
   while ((match = ANSI_REGEXP.exec(string))) {
-    const ansi = match[0];
-    const index = match.index;
+    const ansi = match[0]
+    const index = match.index
     if (index != lastIndex) {
-      tokens.push(['string', string.slice(lastIndex, index)]);
+      tokens.push(['string', string.slice(lastIndex, index)])
     }
-    tokens.push(['ansi', ansi]);
-    lastIndex = index + ansi.length;
+    tokens.push(['ansi', ansi])
+    lastIndex = index + ansi.length
   }
 
   if (lastIndex != string.length - 1) {
-    tokens.push(['string', string.slice(lastIndex, string.length)]);
+    tokens.push(['string', string.slice(lastIndex, string.length)])
   }
 
-  let lastLineLength = 0;
+  let lastLineLength = 0
 
   return tokens
     .reduce(
@@ -33,30 +33,30 @@ export function wrapAnsiString(string: string, terminalWidth: number): string {
         if (kind === 'string') {
           if (lastLineLength + token.length > terminalWidth) {
             while (token.length) {
-              const chunk = token.slice(0, terminalWidth - lastLineLength);
+              const chunk = token.slice(0, terminalWidth - lastLineLength)
               const remaining = token.slice(
                 terminalWidth - lastLineLength,
                 token.length
-              );
-              lines[lines.length - 1] += chunk;
-              lastLineLength += chunk.length;
-              token = remaining;
+              )
+              lines[lines.length - 1] += chunk
+              lastLineLength += chunk.length
+              token = remaining
               if (token.length) {
-                lines.push('');
-                lastLineLength = 0;
+                lines.push('')
+                lastLineLength = 0
               }
             }
           } else {
-            lines[lines.length - 1] += token;
-            lastLineLength += token.length;
+            lines[lines.length - 1] += token
+            lastLineLength += token.length
           }
         } else {
-          lines[lines.length - 1] += token;
+          lines[lines.length - 1] += token
         }
 
-        return lines;
+        return lines
       },
       ['']
     )
-    .join('\n');
+    .join('\n')
 }

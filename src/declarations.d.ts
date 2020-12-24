@@ -1,1 +1,1 @@
-declare type Window = {}
+declare type Window = unknown
