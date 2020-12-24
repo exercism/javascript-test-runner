@@ -1,4 +1,4 @@
-name: Deploy to Amazon ECR
+name: javascript-test-runner / deploy / amazon-ecr
 
 env:
   aws_region: eu-west-2
