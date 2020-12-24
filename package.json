@@ -2,7 +2,7 @@
   "name": "@exercism/javascript-test-runner",
   "description": "Automated Test runner for exercism solutions in Javascript.",
   "author": "Derk-Jan Karrenbeld <derk-jan+github@karrenbeld.info>",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
   "license": "AGPL-3.0-or-later",
   "repository": {
