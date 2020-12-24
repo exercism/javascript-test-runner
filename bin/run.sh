@@ -76,13 +76,16 @@ OUTPUT="${OUTPUT%/}/"
 set -euo pipefail
 
 ROOT="$(realpath $(dirname "$0")/..)"
-REPORTER="./dist/reporter.js"
+REPORTER="$ROOT/dist/reporter.js"
 if test -f "$REPORTER"; then
   echo "Using reporter: $REPORTER"
   echo "Using testroot: $INPUT"
   echo "Using baseroot: $ROOT"
 else
-  >&2 echo "Expected $REPORTER to exist. Did you forget to yarn build first?"
+  >&2 echo "Expected reporter.js to exist. Did you forget to yarn build first?"
+  >&2 echo "With reporter: $REPORTER"
+  >&2 echo "With testroot: $INPUT"
+  >&2 echo "With baseroot: $ROOT"
   exit 1
 fi
 
@@ -112,12 +115,12 @@ mkdir -p "${OUTPUT}"
 set +e
 
 # Run tests
-./node_modules/.bin/jest test --no-cache "${INPUT}*" \
-                              --outputFile="${result_file}" \
-                              --reporters "${REPORTER}" \
-                              --noStackTrace \
-                              --verbose=false \
-                              --roots "${INPUT}"
+"$ROOT/node_modules/.bin/jest" test --no-cache "${INPUT}*" \
+                               --outputFile="${result_file}" \
+                               --reporters "${REPORTER}" \
+                               --noStackTrace \
+                               --verbose=false \
+                               --roots "${INPUT}"
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
