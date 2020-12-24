@@ -9,6 +9,12 @@
     "type": "git",
     "url": "https://github.com/exercism/javascript-test-runner"
   },
+  "directories": {
+    "lib": "./dist",
+    "bin": "./bin",
+    "doc": "./docs",
+    "test": "./test"
+  },
   "scripts": {
     "execute": "./bin/run.sh",
     "execute:dev": "yarn build && yarn execute",
