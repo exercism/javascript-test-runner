@@ -7,6 +7,8 @@
 # Why quoting the argument is "necessary":
 #   https://stackoverflow.com/questions/4824590/propagate-all-arguments-in-a-bash-shell-script/4824637#4824637
 
+set -euo pipefail
+
 # eats 1 argument
 shift 1
 

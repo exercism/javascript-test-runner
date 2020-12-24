@@ -23,7 +23,8 @@
     "watch": "yarn build -w",
     "prepublish": "yarn test",
     "lint": "yarn eslint . --ext ts,js,tsx,jsx,mjs -c .eslintrc",
-    "test": "yarn build && jest --roots test --testPathIgnorePatterns=\"fixtures/\""
+    "test": "yarn build && yarn test:bare",
+    "test:bare": "jest --roots test --testPathIgnorePatterns=\"fixtures/\""
   },
   "dependencies": {
     "@babel/cli": "^7.12.10",

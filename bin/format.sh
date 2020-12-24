@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+set -euo pipefail
+
 if [ -z "$EXERCISM_PRETTIER_VERSION" ]; then
 	echo "This script requires the EXERCISM_PRETTIER_VERSION variable to work."
 	echo "Please see https://github.com/exercism/v3/blob/master/docs/maintainers/style-guide.md for guidance."
