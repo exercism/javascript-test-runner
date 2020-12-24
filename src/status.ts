@@ -9,8 +9,8 @@ import { trimAndFormatPath } from './utils/trimAndFormatPath'
 import { wrapAnsiString } from './utils/wrapAnsiString'
 import { printDisplayName } from './utils/printDisplayName'
 
-const RUNNING_TEXT = ' RUNS ';
-const RUNNING = `${chalk.reset.inverse.yellow.bold(RUNNING_TEXT)} `;
+const RUNNING_TEXT = ' RUNS '
+const RUNNING = `${chalk.reset.inverse.yellow.bold(RUNNING_TEXT)} `
 
 interface TestRecord {
   testPath: string
@@ -23,31 +23,31 @@ interface TestRecord {
  * shifting the whole list.
  */
 class CurrentTestList {
-  _array: Array<null | TestRecord>;
+  _array: Array<null | TestRecord>
 
   constructor() {
-    this._array = [];
+    this._array = []
   }
 
   add(testPath: string, config: Config.ProjectConfig) {
-    const index = this._array.indexOf(null);
-    const record = { config, testPath };
+    const index = this._array.indexOf(null)
+    const record = { config, testPath }
     if (index !== -1) {
-      this._array[index] = record;
+      this._array[index] = record
     } else {
-      this._array.push(record);
+      this._array.push(record)
     }
   }
 
   delete(testPath: string) {
     const record = this._array.find(
-      record => record && record.testPath === testPath
-    );
-    this._array[this._array.indexOf(record || null)] = null;
+      (record) => record && record.testPath === testPath
+    )
+    this._array[this._array.indexOf(record || null)] = null
   }
 
   get() {
-    return this._array;
+    return this._array
   }
 }
 
@@ -57,123 +57,130 @@ class CurrentTestList {
  * from the terminal.
  */
 export class Status {
-  private readonly _currentTests: CurrentTestList;
-  private _callback?: () => void;
-  private _height: number;
-  private _done: boolean;
-  private _emitScheduled: boolean;
-  private _estimatedTime: number;
-  private _showStatus: boolean;
-  private _cache: null | { clear: string; content: string };
-  private _aggregatedResults?: AggregatedResult;
-  private _interval?: NodeJS.Timeout;
-  private _lastUpdated?: number;
+  private readonly _currentTests: CurrentTestList
+  private _callback?: () => void
+  private _height: number
+  private _done: boolean
+  private _emitScheduled: boolean
+  private _estimatedTime: number
+  private _showStatus: boolean
+  private _cache: null | { clear: string; content: string }
+  private _aggregatedResults?: AggregatedResult
+  private _interval?: NodeJS.Timeout
+  private _lastUpdated?: number
 
   constructor() {
-    this._cache = null;
-    this._currentTests = new CurrentTestList();
-    this._done = false;
-    this._emitScheduled = false;
-    this._estimatedTime = 0;
-    this._height = 0;
-    this._showStatus = false;
+    this._cache = null
+    this._currentTests = new CurrentTestList()
+    this._done = false
+    this._emitScheduled = false
+    this._estimatedTime = 0
+    this._height = 0
+    this._showStatus = false
   }
 
   onChange(callback = () => {}) {
-    this._callback = callback;
+    this._callback = callback
   }
 
-  runStarted(aggregatedResults: AggregatedResult, options: ReporterOnStartOptions) {
-    this._estimatedTime = (options && options.estimatedTime) || 0;
-    this._showStatus = options && options.showStatus;
-    this._interval = setInterval(() => this._tick(), 1000);
-    this._aggregatedResults = aggregatedResults;
-    this._debouncedEmit();
+  runStarted(
+    aggregatedResults: AggregatedResult,
+    options: ReporterOnStartOptions
+  ) {
+    this._estimatedTime = (options && options.estimatedTime) || 0
+    this._showStatus = options && options.showStatus
+    this._interval = setInterval(() => this._tick(), 1000)
+    this._aggregatedResults = aggregatedResults
+    this._debouncedEmit()
   }
 
   runFinished() {
-    this._done = true;
-    clearInterval(this._interval!);
-    this._emit();
+    this._done = true
+    clearInterval(this._interval!)
+    this._emit()
   }
 
   testStarted(testPath: string, config: Config.ProjectConfig) {
-    this._currentTests.add(testPath, config);
+    this._currentTests.add(testPath, config)
     if (!this._showStatus) {
-      this._emit();
+      this._emit()
     } else {
-      this._debouncedEmit();
+      this._debouncedEmit()
     }
   }
 
-  testFinished(_config: unknown, testResult: TestResult, aggregatedResults: AggregatedResult) {
-    const { testFilePath } = testResult;
-    this._aggregatedResults = aggregatedResults;
-    this._currentTests.delete(testFilePath);
-    this._debouncedEmit();
+  testFinished(
+    _config: unknown,
+    testResult: TestResult,
+    aggregatedResults: AggregatedResult
+  ) {
+    const { testFilePath } = testResult
+    this._aggregatedResults = aggregatedResults
+    this._currentTests.delete(testFilePath)
+    this._debouncedEmit()
   }
 
   get() {
     if (this._cache) {
-      return this._cache;
+      return this._cache
     }
 
     if (this._done) {
-      return { clear: '', content: '' };
+      return { clear: '', content: '' }
     }
 
     // $FlowFixMe
-    const width = process.stdout.columns;
-    let content = '\n';
-    this._currentTests.get().forEach(record => {
+    const width = process.stdout.columns
+    let content = '\n'
+    this._currentTests.get().forEach((record) => {
       if (record) {
-        const { config, testPath } = record;
+        const { config, testPath } = record
 
         const projectDisplayName = config.displayName
           ? `${printDisplayName(config)} `
-          : '';
-        const prefix = RUNNING + projectDisplayName;
+          : ''
+        const prefix = RUNNING + projectDisplayName
 
         content += `${wrapAnsiString(
           prefix +
             trimAndFormatPath(stringLength(prefix), config, testPath, width),
           width
-        )}\n`;
+        )}\n`
       }
-    });
+    })
 
-    let height = 0;
+    let height = 0
 
     for (let i = 0; i < content.length; i++) {
       if (content[i] === '\n') {
-        height++;
+        height++
       }
     }
 
-    const clear = '\r\x1B[K\r\x1B[1A'.repeat(height);
+    const clear = '\r\x1B[K\r\x1B[1A'.repeat(height)
 
-    return (this._cache = { clear, content });
+    return (this._cache = { clear, content })
   }
 
   _emit() {
-    this._cache = null;
-    this._lastUpdated = Date.now();
-    this._callback && this._callback();
+    this._cache = null
+    this._lastUpdated = Date.now()
+    this._callback && this._callback()
   }
 
   _debouncedEmit() {
     if (!this._emitScheduled) {
       // Perf optimization to avoid two separate renders When
       // one test finishes and another test starts executing.
-      this._emitScheduled = true;
+      this._emitScheduled = true
       setTimeout(() => {
-        this._emit();
-        this._emitScheduled = false;
-      }, 100);
+        this._emit()
+        this._emitScheduled = false
+      }, 100)
     }
   }
 
   _tick() {
-    this._debouncedEmit();
+    this._debouncedEmit()
   }
 }

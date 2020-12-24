@@ -2,8 +2,13 @@ import { Status } from './status'
 import { Output } from './output'
 import { isInteractive } from 'jest-util'
 
-import { Config } from '@jest/types';
-import { Context, Test, Reporter, ReporterOnStartOptions }  from '@jest/reporters'
+import { Config } from '@jest/types'
+import {
+  Context,
+  Test,
+  Reporter,
+  ReporterOnStartOptions,
+} from '@jest/reporters'
 import { AggregatedResult, TestResult } from '@jest/test-result'
 
 import { getResultHeader } from './getResultHeader'
@@ -68,7 +73,11 @@ class StandardReporter implements Reporter {
    * @param testResult
    * @param results
    */
-  onTestResult(test: Test, testResult: TestResult, results: AggregatedResult): void {
+  onTestResult(
+    test: Test,
+    testResult: TestResult,
+    results: AggregatedResult
+  ): void {
     this.status.testFinished(test.context.config, testResult, results)
     this.output.testFinished(test.path, testResult, results)
 
@@ -90,10 +99,7 @@ class StandardReporter implements Reporter {
       }
 
       const didUpdate = this.globalConfig.updateSnapshot === 'all'
-      const snapshotStatuses = getSnapshotStatus(
-        testResult.snapshot,
-        didUpdate
-      )
+      const snapshotStatuses = getSnapshotStatus(testResult.snapshot, didUpdate)
       snapshotStatuses.forEach(this.stdlib.log.bind(this.stdlib))
     }
     this.stdlib.forceFlushBufferedOutput()
@@ -103,7 +109,10 @@ class StandardReporter implements Reporter {
    * @param contexts
    * @param aggregatedResults
    */
-  onRunComplete(_contexts: Set<Context>, aggregatedResults: AggregatedResult): Promise<void> | void {
+  onRunComplete(
+    _contexts: Set<Context>,
+    aggregatedResults: AggregatedResult
+  ): Promise<void> | void {
     this.stdlib.log(getSummary(aggregatedResults, undefined))
     this.status.runFinished()
     this.stdlib.close()

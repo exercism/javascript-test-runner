@@ -3,7 +3,11 @@ import fs from 'fs'
 import { trimAndFormatPath } from './utils/trimAndFormatPath'
 
 import { ConsoleBuffer } from '@jest/console'
-import { AggregatedResult, AssertionResult, TestResult } from '@jest/test-result'
+import {
+  AggregatedResult,
+  AssertionResult,
+  TestResult,
+} from '@jest/test-result'
 import { Config } from '@jest/types'
 
 interface OutputInterface {
@@ -20,7 +24,6 @@ interface OutputTestInterface {
 }
 
 export class Output {
-
   private results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
@@ -28,7 +31,8 @@ export class Output {
   constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
     this.results = { tests: [] }
-    this.outputFile = this.globalConfig.outputFile || path.join(process.cwd(), 'results.json')
+    this.outputFile =
+      this.globalConfig.outputFile || path.join(process.cwd(), 'results.json')
   }
 
   error(message: string) {
@@ -38,12 +42,13 @@ export class Output {
 
   finish(aggregatedResults: AggregatedResult) {
     if (!this.results.status) {
-      this.results.status = (aggregatedResults.numRuntimeErrorTestSuites === 0)
-        && (aggregatedResults.numFailedTestSuites === 0)
-        && (aggregatedResults.numPendingTests === 0)
-        && (aggregatedResults.numFailedTests === 0)
-        ? 'pass'
-        : 'fail'
+      this.results.status =
+        aggregatedResults.numRuntimeErrorTestSuites === 0 &&
+        aggregatedResults.numFailedTestSuites === 0 &&
+        aggregatedResults.numPendingTests === 0 &&
+        aggregatedResults.numFailedTests === 0
+          ? 'pass'
+          : 'fail'
     }
 
     const artifact = JSON.stringify(this.results, undefined, 2)
@@ -51,20 +56,38 @@ export class Output {
     fs.writeFileSync(this.outputFile, artifact)
   }
 
-  testFinished(specFilePath: string, testResult: TestResult, results: AggregatedResult) {
+  testFinished(
+    specFilePath: string,
+    testResult: TestResult,
+    results: AggregatedResult
+  ) {
     // Syntax errors etc. These are runtime errors: failures to run
     if (results.numRuntimeErrorTestSuites > 0) {
-      this.error(sanitizeErrorMessage(specFilePath, testResult.failureMessage || 'Something went wrong when running the tests.'))
+      this.error(
+        sanitizeErrorMessage(
+          specFilePath,
+          testResult.failureMessage ||
+            'Something went wrong when running the tests.'
+        )
+      )
       return
     }
 
     // Suites ran fine. Output regurarly.
     results.testResults.forEach((testResult) => {
-      return this.testInnerFinished(specFilePath, testResult, testResult.testResults)
+      return this.testInnerFinished(
+        specFilePath,
+        testResult,
+        testResult.testResults
+      )
     })
   }
 
-  testInnerFinished(specFilePath: string, testResult: TestResult, innerResults: AssertionResult[]) {
+  testInnerFinished(
+    specFilePath: string,
+    testResult: TestResult,
+    innerResults: AssertionResult[]
+  ) {
     if (testResult.console) {
       /*
       // The code below works, but is not accepted by the current runner spec on exercism
@@ -83,15 +106,17 @@ export class Output {
       })
       */
 
-     this.results.message = sanitizeErrorMessage(specFilePath, buildOutput(testResult.console))
+      this.results.message = sanitizeErrorMessage(
+        specFilePath,
+        buildOutput(testResult.console)
+      )
     }
 
     const outputs = buildTestOutput(specFilePath, testResult, innerResults)
     this.results.tests.push(...outputs.map((r) => ({ ...r, output: null })))
   }
 
-  testStarted(_path: string) {
-  }
+  testStarted(_path: string) {}
 }
 
 function buildOutput(buffer: ConsoleBuffer) {
@@ -100,7 +125,9 @@ function buildOutput(buffer: ConsoleBuffer) {
     .join('\n')
 
   if (output.length > 500) {
-    return output.slice(0, 500 - '... (500 chars max)'.length).concat('... (500 chars max)')
+    return output
+      .slice(0, 500 - '... (500 chars max)'.length)
+      .concat('... (500 chars max)')
   }
 
   return output
@@ -112,16 +139,18 @@ function buildTestOutput(
   inner: AssertionResult[]
 ): Pick<OutputTestInterface, 'name' | 'status' | 'message'>[] {
   if (testResult.testExecError) {
-    return [{
-      message: sanitizeErrorMessage(
-        path,
-        testResult.failureMessage
-          ? removeStackTrace(testResult.failureMessage)
-          : testResult.testExecError.message
-      ),
-      name: testResult.testFilePath,
-      status: 'error',
-    }]
+    return [
+      {
+        message: sanitizeErrorMessage(
+          path,
+          testResult.failureMessage
+            ? removeStackTrace(testResult.failureMessage)
+            : testResult.testExecError.message
+        ),
+        name: testResult.testFilePath,
+        status: 'error',
+      },
+    ]
   }
 
   return inner.map((assert) => {
@@ -130,8 +159,8 @@ function buildTestOutput(
       status: assert.status === 'passed' ? 'pass' : 'fail',
       message: sanitizeErrorMessage(
         testResult.testFilePath,
-        assert.failureMessages.map(removeStackTrace).join("\n")
-      )
+        assert.failureMessages.map(removeStackTrace).join('\n')
+      ),
     }
   })
 }
@@ -141,7 +170,7 @@ function removeStackTrace(message: string): string {
   if (i === -1) {
     return message
   }
-  const split = message.slice(0, i).lastIndexOf("\n")
+  const split = message.slice(0, i).lastIndexOf('\n')
   return split === -1
     ? message.slice(0, i).trimEnd()
     : message.slice(0, split).trimEnd()
@@ -152,11 +181,11 @@ function sanitizeErrorMessage(specFilePath: string, message: string): string {
     path.dirname(specFilePath),
     path.dirname(path.dirname(specFilePath)),
     process.cwd(),
-    path.dirname(process.cwd())
+    path.dirname(process.cwd()),
   ]
 
   dirs.forEach((sensativePath) => {
-    while(message.indexOf(sensativePath) !== -1) {
+    while (message.indexOf(sensativePath) !== -1) {
       message = message.replace(sensativePath, '<solution>')
     }
   })
