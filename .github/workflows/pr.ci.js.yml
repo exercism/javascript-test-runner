@@ -19,7 +19,7 @@ jobs:
           node-version: 14.x
 
       - name: Install project dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Run exercism/javascript ci precheck (lint code)
         run: |
@@ -45,12 +45,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install project dependencies
-        run: yarn install --frozen-lockfile
+        run:  yarn install --frozen-lockfile --ignore-scripts
+
 
       - name: Build the test-runner (using Node ${{ matrix.node-version }})
         run: yarn build
 
-      - name: Run exercism/javascript ci (build and runs tests)
+      - name: Run exercism/javascript ci (runs tests)
         run: |
           PULL_REQUEST_URL=$(jq -r ".pull_request.url" "$GITHUB_EVENT_PATH")
           curl --url $"${PULL_REQUEST_URL}/files?per_page=100" --header 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' | \
