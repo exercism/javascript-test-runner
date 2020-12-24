@@ -9,6 +9,7 @@ jest.json
 results.json
 junit.xml
 results.xml
+tmp
 
 yarn-error.log
 
