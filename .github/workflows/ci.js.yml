@@ -42,7 +42,4 @@ jobs:
         run: yarn install --frozen-lockfile --ignore-scripts
 
       - name: Build the test-runner (using Node ${{ matrix.node-version }})
-        run: yarn build
-
-      - name: Run exercism/javascript-test-runner ci (runs tests)
-        run: yarn test:bare
+        run: bin/test.sh

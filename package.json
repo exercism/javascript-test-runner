@@ -19,7 +19,8 @@
   "scripts": {
     "execute": "./bin/run.sh",
     "execute:dev": "yarn build && yarn execute",
-    "build": "yarn tsc --project ./tsconfig.json --outDir ./dist",
+    "prebuild": "rimraf ./dist",
+    "build": "yarn tsc --project ./src/tsconfig.json --outDir ./dist",
     "watch": "yarn build -w",
     "prepublish": "yarn test",
     "lint": "yarn eslint . --ext ts,js,tsx,jsx,mjs -c .eslintrc",
@@ -51,6 +52,7 @@
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.3",
+    "rimraf": "^3.0.2",
     "typescript": "^4.1.3"
   },
   "jest": {

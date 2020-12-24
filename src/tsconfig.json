@@ -1,0 +1,9 @@
+{
+  "composite": true,
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./"
+  },
+  "include": ["./"],
+  "exclude": ["./fixtures"]
+}
