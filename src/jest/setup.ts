@@ -1,4 +1,4 @@
-import spyConsole from './console'
+// import spyConsole from './console'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const originalDescribe = (jasmine as any).getEnv().describe
@@ -10,16 +10,16 @@ const originalDescribe = (jasmine as any).getEnv().describe
   ...describeArgs: T
 ) => {
   function spiedSpecDefinition(...args: T): void {
-    const restores: Array<() => void> = []
+    // const restores: Array<() => void> = []
 
     beforeEach(() => {
-      restores.push(spyConsole().restore)
+      // restores.push(spyConsole().restore)
+      console.log(`@exercism/javascript:${expect.getState().currentTestName}`)
     })
 
     afterEach(() => {
-      const restore = restores.shift()!
-
-      restore()
+      // const restore = restores.shift()!
+      // restore()
     })
 
     return specDefinitions(...args)

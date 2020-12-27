@@ -77,18 +77,23 @@ set -euo pipefail
 
 ROOT="$(realpath $(dirname "$0")/..)"
 REPORTER="$ROOT/dist/reporter.js"
+SETUP="$ROOT/dist/jest/setup.js"
+
 if test -f "$REPORTER"; then
-  echo "Using reporter: $REPORTER"
-  echo "Using testroot: $INPUT"
-  echo "Using baseroot: $ROOT"
+  echo "Using reporter : $REPORTER"
+  echo "Using test-root: $INPUT"
+  echo "Using base-root: $ROOT"
+  echo "Using setup-env: $SETUP"
+
   echo ""
-  echo $(ls $ROOT/dist)
 else
   >&2 echo "Expected reporter.js to exist. Did you forget to yarn build first?"
-  >&2 echo "With reporter: $REPORTER"
-  >&2 echo "With testroot: $INPUT"
-  >&2 echo "With baseroot: $ROOT"
+  >&2 echo "Using reporter : $REPORTER"
+  >&2 echo "Using test-root: $INPUT"
+  >&2 echo "Using base-root: $ROOT"
+  >&2 echo "Using setup-env: $SETUP"
   >&2 echo ""
+  >&2 echo "The following files exist in the dist folder (build output):"
   >&2 echo $(ls $ROOT/dist)
   exit 1
 fi
@@ -101,16 +106,18 @@ test_file="${INPUT}${SLUG}.spec.js"
 # Put together the path to the test results file
 result_file="${OUTPUT}results.json"
 
-# Change xtest to test so all tests are run
-if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
-  # BSD sed -i takes an extra parameter to specify the backup file extension
-  sed -i 'tmp' 's/xtest(/test(/g' "${test_file}"
-  sed -i 'tmp' 's/xit(/it(/g' "${test_file}"
-  sed -i 'tmp' 's/xdescribe(/describe(/g' "${test_file}"
-else
-  sed -i 's/xtest(/test(/g' "${test_file}"
-  sed -i 's/xit(/it(/g' "${test_file}"
-  sed -i 's/xdescribe(/describe(/g' "${test_file}"
+if test -f "$test_file"; then
+  # Change xtest to test so all tests are run
+  if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
+    # BSD sed -i takes an extra parameter to specify the backup file extension
+    sed -i 'tmp' 's/xtest(/test(/g' "${test_file}"
+    sed -i 'tmp' 's/xit(/it(/g' "${test_file}"
+    sed -i 'tmp' 's/xdescribe(/describe(/g' "${test_file}"
+  else
+    sed -i 's/xtest(/test(/g' "${test_file}"
+    sed -i 's/xit(/it(/g' "${test_file}"
+    sed -i 's/xdescribe(/describe(/g' "${test_file}"
+  fi
 fi
 
 mkdir -p "${OUTPUT}"
@@ -119,12 +126,17 @@ mkdir -p "${OUTPUT}"
 set +e
 
 # Run tests
-"$ROOT/node_modules/.bin/jest" test --no-cache "${INPUT}*" \
+"$ROOT/node_modules/.bin/jest" "${INPUT}*" \
                                --outputFile="${result_file}" \
                                --reporters "${REPORTER}" \
                                --noStackTrace \
                                --verbose=false \
-                               --roots "${INPUT}"
+                               --roots "${INPUT}" \
+                               --passWithNoTests \
+                               --ci \
+                               --runInBand \
+                               --bail 1 \
+                               --setupFilesAfterEnv ${SETUP}
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
