@@ -11,6 +11,7 @@ junit.xml
 results.xml
 tmp
 
+debug.log
 yarn-error.log
 
 # Docker base files
