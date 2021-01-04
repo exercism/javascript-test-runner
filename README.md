@@ -2,6 +2,8 @@
 
 The Docker image for automatically run tests on JavaScript solutions submitted to [exercism][web-exercism].
 
+> At this moment, the input path _must_ be relative to the `package.json` of this respository. `jest` doesn't like running outside of its tree. This might change in the future.
+
 ## Installation
 
 Clone this repository and then run:
