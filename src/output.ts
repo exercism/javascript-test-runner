@@ -1,6 +1,12 @@
-import path from 'path'
-import fs from 'fs'
-
+import {
+  AstParser,
+  ParsedSource,
+} from '@exercism/static-analysis/dist/AstParser'
+import {
+  extractTests,
+  TestCase,
+} from '@exercism/static-analysis/dist/extracts/extract_tests'
+import { FileInput } from '@exercism/static-analysis/dist/input/FileInput'
 import { ConsoleBuffer } from '@jest/console'
 import {
   AggregatedResult,
@@ -8,6 +14,8 @@ import {
   TestResult,
 } from '@jest/test-result'
 import { Config } from '@jest/types'
+import fs from 'fs'
+import path from 'path'
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -20,6 +28,7 @@ interface OutputTestInterface {
   status: 'fail' | 'pass' | 'error'
   message: string
   output: string | null
+  test_code: string
 }
 
 export class Output {
@@ -64,11 +73,62 @@ export class Output {
       }
     }
 
+    const parsedSources: Record<
+      string,
+      {
+        program: ParsedSource['program']
+        source: ParsedSource['source']
+        tests: Record<string, TestCase>
+      }
+    > = {}
+
+    // Every tested test file is indexed and parsed
+    this.results.tests
+      .map((test) => test.test_code)
+      .filter((path, index, self) => self.indexOf(path) === index)
+      .forEach((file) => {
+        try {
+          const [{ program, source }] = AstParser.ANALYZER.parseSync(
+            fs.readFileSync(file).toString()
+          )
+          const tests = extractTests(program)
+
+          parsedSources[file] = {
+            program,
+            source,
+            tests: tests.reduce((results, item) => {
+              results[item.name(' > ')] = item
+              results[item.name(' ' as ' > ')] = item
+              return results
+            }, {} as Record<string, TestCase>),
+          }
+        } catch (err) {
+          console.error(
+            `When trying to parse ${file}, the following error occurred`,
+            err
+          )
+        }
+      })
+
+    // Extract the test code, if possible
+    const tests = this.results.tests.map((test) => {
+      const parsedSource = parsedSources[test.test_code]
+      if (!parsedSource) {
+        return { ...test, test_code: null }
+      }
+
+      const testCase = parsedSource.tests[test.name]
+      if (!testCase) {
+        return { ...test, test_code: null }
+      }
+
+      return { ...test, test_code: testCase.testCode(parsedSource.source) }
+    })
+
     // Re-order the output so that tests output shows below main output
-    const { status, message, tests } = this.results
+    const { status, message } = this.results
 
     const artifact = JSON.stringify({ status, message, tests }, undefined, 2)
-
     fs.writeFileSync(this.outputFile, artifact)
   }
 
@@ -143,8 +203,10 @@ export class Output {
         return {
           ...withoutOutput,
           output: isFirstFailure
-            ? [consoleOutputs[''], outputMessage].filter(Boolean).join('\n')
+            ? [consoleOutputs[''], outputMessage].filter(Boolean).join('\n') ||
+              null
             : outputMessage,
+          test_code: specFilePath,
         }
       })
     )

@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.0
+
+- Add `test_code` when available
+- Fix `output` when there is none (previously `""`, now `null`)
+
 ## 2.1.0
 
 - Add `output` per test (user `console.log`)

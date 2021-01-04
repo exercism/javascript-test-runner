@@ -68,9 +68,11 @@ else
 fi
 
 # Forces a trailing slash
+INPUT="${INPUT//\\//}"
 INPUT="${INPUT%/}/"
 
 # Forces a trailing slash
+OUTPUT="${OUTPUT//\\//}"
 OUTPUT="${OUTPUT%/}/"
 
 set -euo pipefail

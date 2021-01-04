@@ -29,7 +29,7 @@ You'll want these `:dev` variants because it will _build_ the required code (it 
 
 You can also manually build using `yarn` or `yarn build`, and then run the script directly: `./bin/run.sh arg1 arg2 arg3`.
 
-## Running the Tests
+## Running the Solution's Tests
 
 To run a solution's tests, do the following:
 
@@ -80,7 +80,7 @@ Find the output at:
 
 As you can see, it will be copied to a local directory. It's up to you to clean-up this directory.
 
-## Running the Tests in Docker container
+## Running the Solution's Tests in Docker container
 
 _This script is provided for testing purposes_
 
@@ -93,9 +93,9 @@ To run a solution's test in the Docker container, do the following:
 
 The `package.json` needs to be in-sync with the [`javascript` track `package.json`][git-javascript].
 
-### Known issues
+### Testing
 
-- The output format of the tests still does not conform to the [exercism automated tests][git-automated-tests] standard.
+Running the tests of the test-runner itself can be achieved by using the `test` script from `package.json`. The tests delegate to the _build output_, which is why `yarn test` first calls `yarn build` before running `jest`. **The tests take over a minute to run on a decent machine**.
 
 [web-exercism]: https://exercism.io
 [git-automated-tests]: https://github.com/exercism/automated-tests
