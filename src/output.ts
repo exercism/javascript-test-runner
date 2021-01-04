@@ -48,9 +48,26 @@ export class Output {
         aggregatedResults.numFailedTests === 0
           ? 'pass'
           : 'fail'
+
+      // Divert status if nothing ran
+      if (
+        this.results.status === 'pass' &&
+        aggregatedResults.numPassedTests === 0
+      ) {
+        this.results.status = 'fail'
+        this.error(
+          'Expected to run at least one test, but none were found. This can ' +
+            'happen if the test file(s) (.spec.js) are missing or empty. ' +
+            'These files are normally not empty. Revert any changes or report ' +
+            'an issue if the problem persists.'
+        )
+      }
     }
 
-    const artifact = JSON.stringify(this.results, undefined, 2)
+    // Re-order the output so that tests output shows below main output
+    const { status, message, tests } = this.results
+
+    const artifact = JSON.stringify({ status, message, tests }, undefined, 2)
 
     fs.writeFileSync(this.outputFile, artifact)
   }
@@ -104,15 +121,33 @@ export class Output {
         message: ''
       })
       */
-
-      this.results.message = sanitizeErrorMessage(
-        specFilePath,
-        buildOutput(testResult.console)
-      )
     }
 
+    const consoleOutputs = testResult.console
+      ? buildOutput(specFilePath, testResult.console)
+      : ({} as Record<string, string>)
+
     const outputs = buildTestOutput(specFilePath, testResult, innerResults)
-    this.results.tests.push(...outputs.map((r) => ({ ...r, output: null })))
+    const firstFailureIndex = outputs.findIndex(
+      (output) => output.status === 'fail'
+    )
+
+    this.results.tests.push(
+      ...outputs.map((withoutOutput, i, self) => {
+        const isFirstFailure =
+          firstFailureIndex === i ||
+          (firstFailureIndex === -1 && self.length === i + 1)
+        const outputMessage =
+          consoleOutputs[withoutOutput.name.replace(/ > /g, ' ')] || null
+
+        return {
+          ...withoutOutput,
+          output: isFirstFailure
+            ? [consoleOutputs[''], outputMessage].filter(Boolean).join('\n')
+            : outputMessage,
+        }
+      })
+    )
   }
 
   public testStarted(_path: string): void {
@@ -120,18 +155,44 @@ export class Output {
   }
 }
 
-function buildOutput(buffer: ConsoleBuffer): string {
-  const output = buffer
-    .map((entry) => `[${entry.type}] ${entry.message}`)
-    .join('\n')
+function buildOutput(
+  specFilePath: string,
+  buffer: ConsoleBuffer
+): Record<string, string> {
+  const [, outputs] = buffer.reduce(
+    ([lastTest, messages], entry) => {
+      // Change current test messages
+      if (entry.message.startsWith('@exercism/javascript:')) {
+        return [
+          entry.message.slice('@exercism/javascript:'.length).trim(),
+          messages,
+        ] as const
+      }
 
-  if (output.length > 500) {
-    return output
-      .slice(0, 500 - '... (500 chars max)'.length)
-      .concat('... (500 chars max)')
-  }
+      const sanitized = `[${entry.type}] ${sanitizeErrorMessage(
+        specFilePath,
+        entry.message
+      )}`
+      messages[lastTest] ||= []
+      messages[lastTest].push(sanitized)
 
-  return output
+      return [lastTest, messages] as const
+    },
+    ['', {}] as readonly [string, Record<string, string[]>]
+  )
+
+  return Object.keys(outputs).reduce((results, key) => {
+    const message = (outputs[key] || []).join('\n') || ''
+    if (message.length <= 500) {
+      results[key] = message
+    } else {
+      results[key] = message
+        .slice(0, 500 - '... (500 chars max)'.length)
+        .concat('... (500 chars max)')
+    }
+
+    return results
+  }, {} as Record<string, string>)
 }
 
 function buildTestOutput(
@@ -142,14 +203,14 @@ function buildTestOutput(
   if (testResult.testExecError) {
     return [
       {
+        name: testResult.testFilePath,
+        status: 'error',
         message: sanitizeErrorMessage(
           path,
           testResult.failureMessage
             ? removeStackTrace(testResult.failureMessage)
             : testResult.testExecError.message
         ),
-        name: testResult.testFilePath,
-        status: 'error',
       },
     ]
   }

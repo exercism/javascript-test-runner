@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.1.0
+
+- Add `output` per test (user `console.log`)
+- Add `message` and `status: fail` when there are 0 tests
+
 ## 2.0.0
 
 - Add deploy to dockerhub

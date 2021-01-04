@@ -54,14 +54,5 @@
     "eslint-plugin-jest": "^24.1.3",
     "rimraf": "^3.0.2",
     "typescript": "^4.1.3"
-  },
-  "jest": {
-    "modulePathIgnorePatterns": [
-      "package.json"
-    ],
-    "reporters": [
-      "<rootDir>/dist/reporter.js"
-    ],
-    "setupFilesAfterEnv": []
   }
 }
