@@ -1,4 +1,4 @@
-name: Push Docker images to DockerHub and ECR
+name: javascript-test-runner / deploy
 
 on:
   push:
