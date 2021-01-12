@@ -1,12 +1,3 @@
-import {
-  AstParser,
-  ParsedSource,
-} from '@exercism/static-analysis/dist/AstParser'
-import {
-  extractTests,
-  TestCase,
-} from '@exercism/static-analysis/dist/extracts/extract_tests'
-import { FileInput } from '@exercism/static-analysis/dist/input/FileInput'
 import { ConsoleBuffer } from '@jest/console'
 import {
   AggregatedResult,
@@ -16,6 +7,12 @@ import {
 import { Config } from '@jest/types'
 import fs from 'fs'
 import path from 'path'
+import {
+  AstParser,
+  ExtractedTestCase,
+  extractTests,
+  ParsedSource,
+} from '@exercism/static-analysis'
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -78,7 +75,7 @@ export class Output {
       {
         program: ParsedSource['program']
         source: ParsedSource['source']
-        tests: Record<string, TestCase>
+        tests: Record<string, ExtractedTestCase>
       }
     > = {}
 
@@ -100,7 +97,7 @@ export class Output {
               results[item.name(' > ')] = item
               results[item.name(' ' as ' > ')] = item
               return results
-            }, {} as Record<string, TestCase>),
+            }, {} as Record<string, ExtractedTestCase>),
           }
         } catch (err) {
           console.error(
