@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.2.1
+
+- Upgrade `@exercism/static-analysis`
+- Make sure all peer deps are listed as deps
+
 ## 2.2.0
 
 - Add `test_code` when available
