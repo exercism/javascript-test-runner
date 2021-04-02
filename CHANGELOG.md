@@ -1,5 +1,10 @@
 # Changelog
 
+## 2.3.0
+
+- Enable `.meta/config.json`
+- Add test that _requires_ `.meta/config.json` files to be set
+
 ## 2.2.1
 
 - Upgrade `@exercism/static-analysis`

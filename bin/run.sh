@@ -102,25 +102,21 @@ fi
 
 echo ""
 
-# Put together the path to the test file
-test_file="${INPUT}${SLUG}.spec.js"
+configuration_file="${INPUT}.meta/config.json"
+
+# Prepare the test file(s)
+
+if test -f $configuration_file; then
+  echo "Using ${configuration_file} as base configuration"
+  cat $configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${INPUT}
+else
+  test_file="${SLUG}.spec.js"
+  echo "No configuration give. Falling back to ${test_file}"
+  "$ROOT/bin/prepare.sh" ${INPUT} ${test_file}
+fi;
 
 # Put together the path to the test results file
 result_file="${OUTPUT}results.json"
-
-if test -f "$test_file"; then
-  # Change xtest to test so all tests are run
-  if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
-    # BSD sed -i takes an extra parameter to specify the backup file extension
-    sed -i 'tmp' 's/xtest(/test(/g' "${test_file}"
-    sed -i 'tmp' 's/xit(/it(/g' "${test_file}"
-    sed -i 'tmp' 's/xdescribe(/describe(/g' "${test_file}"
-  else
-    sed -i 's/xtest(/test(/g' "${test_file}"
-    sed -i 's/xit(/it(/g' "${test_file}"
-    sed -i 's/xdescribe(/describe(/g' "${test_file}"
-  fi
-fi
 
 mkdir -p "${OUTPUT}"
 
