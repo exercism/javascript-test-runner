@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.3.1
+
+- Install `jq` into the Docker image
+
 ## 2.3.0
 
 - Enable `.meta/config.json`
