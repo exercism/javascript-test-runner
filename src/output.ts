@@ -28,6 +28,7 @@ interface OutputTestInterface {
   test_code: string
 }
 
+const OUTPUT_VERSION = 2
 export class Output {
   private results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
@@ -125,7 +126,11 @@ export class Output {
     // Re-order the output so that tests output shows below main output
     const { status, message } = this.results
 
-    const artifact = JSON.stringify({ status, message, tests }, undefined, 2)
+    const artifact = JSON.stringify(
+      { status, message, tests, version: OUTPUT_VERSION },
+      undefined,
+      2
+    )
     fs.writeFileSync(this.outputFile, artifact)
   }
 
