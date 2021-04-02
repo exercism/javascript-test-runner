@@ -8,7 +8,7 @@ RUN set -ex; \
   apt-get upgrade -y; \
   # curl is required to fetch our webhook from github
   # unzip is required for unzipping payloads in development
-  apt-get install curl unzip -y; \
+  apt-get install curl unzip jq -y; \
   rm -rf /var/lib/apt/lists/*
 
 # add a non-root user to run our code as
