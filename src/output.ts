@@ -237,7 +237,7 @@ function buildOutput(
         specFilePath,
         entry.message
       )}`
-      messages[lastTest] ||= []
+      messages[lastTest] = messages[lastTest] || []
       messages[lastTest].push(sanitized)
 
       return [lastTest, messages] as const
