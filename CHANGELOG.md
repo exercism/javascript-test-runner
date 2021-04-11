@@ -4,6 +4,7 @@
 
 - Fix a bug with the output generation
 - Upgrade dependencies
+
 ## 2.3.2
 
 - Add `version: 2` to output
