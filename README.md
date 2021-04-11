@@ -4,7 +4,9 @@
 
 The Docker image for automatically run tests on JavaScript solutions submitted to [exercism][web-exercism].
 
-> At this moment, the input path _must_ be relative to the `package.json` of this respository. `jest` doesn't like running outside of its tree. This might change in the future.
+> At this moment, the input path _must_ be relative to the `package.json` of this respository.
+> `jest` doesn't like running outside of its tree.
+> This might change in the future.
 
 ## Installation
 
@@ -27,7 +29,10 @@ If you're developing this, you can run this via `yarn` or the provided shell scr
 - `.sh` enabled systems (UNIX, WSL): `yarn execute:dev`
 - `.bat` fallback (cmd.exe, Git Bash for Windows): _unsupported_
 
-You'll want these `:dev` variants because it will _build_ the required code (it will transpile from TypeScript to JavaScript, which is necessary to run this in Node environments, unlike Deno environments). When on Windows, if you're using Git Bash for Windows or a similar terminal, the `.sh` files will work, but will open a new window (which closes after execution). The `.bat` scripts will work in the same terminal. In this case it might be much easier to run `bin/run.sh` directly, so a new shell won't open.
+You'll want these `:dev` variants because it will _build_ the required code (it will transpile from TypeScript to JavaScript, which is necessary to run this in Node environments, unlike Deno environments).
+When on Windows, if you're using Git Bash for Windows or a similar terminal, the `.sh` files will work, but will open a new window (which closes after execution).
+The `.bat` scripts will work in the same terminal.
+In this case it might be much easier to run `bin/run.sh` directly, so a new shell won't open.
 
 You can also manually build using `yarn` or `yarn build`, and then run the script directly: `./bin/run.sh arg1 arg2 arg3`.
 
@@ -80,7 +85,8 @@ Find the output at:
 ./tmp/clock/a7d1b71693fb4298a3a99bd352dd4d74/clock/results.json
 ```
 
-As you can see, it will be copied to a local directory. It's up to you to clean-up this directory.
+As you can see, it will be copied to a local directory.
+It's up to you to clean-up this directory.
 
 ## Running the Solution's Tests in Docker container
 
@@ -97,7 +103,9 @@ The `package.json` needs to be in-sync with the [`javascript` track `package.jso
 
 ### Testing
 
-Running the tests of the test-runner itself can be achieved by using the `test` script from `package.json`. The tests delegate to the _build output_, which is why `yarn test` first calls `yarn build` before running `jest`. **The tests take over a minute to run on a decent machine**.
+Running the tests of the test-runner itself can be achieved by using the `test` script from `package.json`.
+The tests delegate to the _build output_, which is why `yarn test` first calls `yarn build` before running `jest`.
+**The tests take over a minute to run on a decent machine**.
 
 [web-exercism]: https://exercism.io
 [git-automated-tests]: https://github.com/exercism/automated-tests
