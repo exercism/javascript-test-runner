@@ -1,5 +1,7 @@
 # Exercism JavaScript Test Runner
 
+[![javascript-test-runner / deploy](https://github.com/exercism/javascript-test-runner/actions/workflows/deploys.yml/badge.svg)](https://github.com/exercism/javascript-test-runner/actions/workflows/deploys.yml) [![javascript-test-runner / main](https://github.com/exercism/javascript-test-runner/actions/workflows/ci.js.yml/badge.svg)](https://github.com/exercism/javascript-test-runner/actions/workflows/ci.js.yml)
+
 The Docker image for automatically run tests on JavaScript solutions submitted to [exercism][web-exercism].
 
 > At this moment, the input path _must_ be relative to the `package.json` of this respository. `jest` doesn't like running outside of its tree. This might change in the future.
