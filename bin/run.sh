@@ -83,17 +83,17 @@ SETUP="$ROOT/dist/jest/setup.js"
 
 if test -f "$REPORTER"; then
   echo "Using reporter : $REPORTER"
-  echo "Using test-root: $INPUT"
-  echo "Using base-root: $ROOT"
-  echo "Using setup-env: $SETUP"
+  echo "Using test root: $INPUT -> $OUTPUT"
+  echo "Using runner root: $ROOT"
+  echo "Using runner setup: $SETUP"
 
   echo ""
 else
   >&2 echo "Expected reporter.js to exist. Did you forget to yarn build first?"
   >&2 echo "Using reporter : $REPORTER"
-  >&2 echo "Using test-root: $INPUT"
-  >&2 echo "Using base-root: $ROOT"
-  >&2 echo "Using setup-env: $SETUP"
+  >&2 echo "Using test root: $INPUT -> $OUTPUT"
+  >&2 echo "Using runner root: $ROOT"
+  >&2 echo "Using runner setup: $SETUP"
   >&2 echo ""
   >&2 echo "The following files exist in the dist folder (build output):"
   >&2 echo $(ls $ROOT/dist)
@@ -105,31 +105,38 @@ echo ""
 configuration_file="${INPUT}.meta/config.json"
 
 # Prepare the test file(s)
+mkdir -p "${OUTPUT}"
+
+if [[ "${INPUT}" -ef "${OUTPUT}" ]]; then
+  echo "${INPUT} matches ${OUTPUT}. Not copying anything."
+else
+  echo "Copying ${INPUT} to ${OUTPUT}."
+  cp -r "${INPUT}" "${OUTPUT}"
+fi
 
 if test -f $configuration_file; then
   echo "Using ${configuration_file} as base configuration"
-  cat $configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${INPUT}
+  cat $configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${OUTPUT}
 else
   test_file="${SLUG}.spec.js"
-  echo "No configuration give. Falling back to ${test_file}"
-  "$ROOT/bin/prepare.sh" ${INPUT} ${test_file}
+  echo "No configuration given. Falling back to ${test_file}"
+  "$ROOT/bin/prepare.sh" ${OUTPUT} ${test_file}
 fi;
 
 # Put together the path to the test results file
 result_file="${OUTPUT}results.json"
 
-mkdir -p "${OUTPUT}"
 
 # Disable auto exit
 set +e
 
 # Run tests
-"$ROOT/node_modules/.bin/jest" "${INPUT}*" \
+"$ROOT/node_modules/.bin/jest" "${OUTPUT}*" \
                                --outputFile="${result_file}" \
                                --reporters "${REPORTER}" \
                                --noStackTrace \
                                --verbose=false \
-                               --roots "${INPUT}" \
+                               --roots "${OUTPUT}" \
                                --passWithNoTests \
                                --ci \
                                --runInBand \
