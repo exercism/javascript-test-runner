@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.4.0
+
+- Update dependencies
+
 ## 2.3.3
 
 - Fix a bug with the output generation
