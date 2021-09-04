@@ -3,6 +3,7 @@
 ## 2.4.0
 
 - Update dependencies
+- Add `prettier`
 
 ## 2.3.3
 
