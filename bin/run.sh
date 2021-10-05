@@ -83,17 +83,17 @@ SETUP="$ROOT/dist/jest/setup.js"
 
 if test -f "$REPORTER"; then
   echo "Using reporter : $REPORTER"
-  echo "Using test root: $INPUT -> $OUTPUT"
-  echo "Using runner root: $ROOT"
-  echo "Using runner setup: $SETUP"
+  echo "Using test-root: $INPUT"
+  echo "Using base-root: $ROOT"
+  echo "Using setup-env: $SETUP"
 
   echo ""
 else
   >&2 echo "Expected reporter.js to exist. Did you forget to yarn build first?"
   >&2 echo "Using reporter : $REPORTER"
-  >&2 echo "Using test root: $INPUT -> $OUTPUT"
-  >&2 echo "Using runner root: $ROOT"
-  >&2 echo "Using runner setup: $SETUP"
+  >&2 echo "Using test-root: $INPUT"
+  >&2 echo "Using base-root: $ROOT"
+  >&2 echo "Using setup-env: $SETUP"
   >&2 echo ""
   >&2 echo "The following files exist in the dist folder (build output):"
   >&2 echo $(ls $ROOT/dist)

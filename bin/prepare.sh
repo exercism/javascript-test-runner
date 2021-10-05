@@ -5,8 +5,9 @@
 test_file="$1$2"
 test_file=${test_file//$'\r'}
 
+abs_file=$(realpath $test_file)
 
-if test -f "$test_file"; then
+if test -f "$abs_file"; then
   # Change xtest to test so all tests are run
   if [[ "$OSTYPE" == "darwin"* ]]; then # Mac OS X
     # BSD sed -i takes an extra parameter to specify the backup file extension
