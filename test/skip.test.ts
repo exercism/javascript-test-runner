@@ -13,7 +13,7 @@ describe('skipping via test.skip', () => {
     const resultPath = join(
       fixtures,
       'pythagorean-triplet',
-      'chroth7',
+      'exemplar',
       'results.json'
     )
 
@@ -29,7 +29,7 @@ describe('skipping via test.skip', () => {
         [
           run,
           'pythagorean-triplet',
-          join(fixtures, 'pythagorean-triplet', 'chroth7'),
+          join(fixtures, 'pythagorean-triplet', 'exemplar'),
         ],
         {
           stdio: 'pipe',
@@ -51,7 +51,7 @@ describe('skipping via test.skip', () => {
         [
           run,
           'pythagorean-triplet',
-          join(fixtures, 'pythagorean-triplet', 'chroth7'),
+          join(fixtures, 'pythagorean-triplet', 'exemplar'),
         ],
         {
           stdio: 'pipe',
@@ -83,7 +83,7 @@ describe('skipping via test.skip', () => {
         [
           run,
           'pythagorean-triplet',
-          join(fixtures, 'pythagorean-triplet', 'chroth7'),
+          join(fixtures, 'pythagorean-triplet', 'exemplar'),
           outputDir,
         ],
         {
