@@ -283,16 +283,20 @@ function buildTestOutput(
     ]
   }
 
-  return inner.map((assert) => {
-    return {
-      name: assert.ancestorTitles.concat(assert.title).join(' > '),
-      status: assert.status === 'passed' ? 'pass' : 'fail',
-      message: sanitizeErrorMessage(
-        testResult.testFilePath,
-        assert.failureMessages.map(removeStackTrace).join('\n')
-      ),
-    }
-  })
+  return inner
+    .filter(
+      (assert) => assert.status !== 'skipped' && assert.status !== 'pending'
+    )
+    .map((assert) => {
+      return {
+        name: assert.ancestorTitles.concat(assert.title).join(' > '),
+        status: assert.status === 'passed' ? 'pass' : 'fail',
+        message: sanitizeErrorMessage(
+          testResult.testFilePath,
+          assert.failureMessages.map(removeStackTrace).join('\n')
+        ),
+      }
+    })
 }
 
 function removeStackTrace(message: string): string {

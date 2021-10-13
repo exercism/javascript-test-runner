@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.1
+
+- Fix skipped tests showing up as failed despite passed complete status.
+
 ## 2.5.0
 
 - Allow skipping/pending tests (`test.skip`)
