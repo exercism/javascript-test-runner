@@ -51,7 +51,11 @@ export class Output {
       this.results.status =
         aggregatedResults.numRuntimeErrorTestSuites === 0 &&
         aggregatedResults.numFailedTestSuites === 0 &&
-        aggregatedResults.numPendingTests === 0 &&
+        // Pending tests are skipped tests. test.skip tests are fine in our
+        // reporter and should not be forced to have ran here. So the next
+        // line is commented out.
+        //
+        // aggregatedResults.numPendingTests === 0 &&
         aggregatedResults.numFailedTests === 0
           ? 'pass'
           : 'fail'

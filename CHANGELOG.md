@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.5.0
+
+- Allow skipping/pending tests (`test.skip`)
+
 ## 2.4.0
 
 - Update dependencies

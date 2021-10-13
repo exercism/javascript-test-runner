@@ -19,3 +19,8 @@ yarn-error.log
 /out
 /production_node_modules
 /package.template.json
+
+# Fixture development files
+/test/fixtures/**/node_modules
+/test/fixtures/**/package-lock.json
+/test/fixtures/**/results.json
