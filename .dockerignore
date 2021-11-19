@@ -8,3 +8,4 @@ dev.Dockerfile
 .github
 .gitignore
 .gitattributes
+.dockerignore
