@@ -4,3 +4,8 @@ node_modules
 ./run-in-docker.sh
 Dockerfile
 dev.Dockerfile
+.appends
+.github
+.gitignore
+.gitattributes
+.dockerignore
