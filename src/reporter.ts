@@ -11,14 +11,11 @@ import { Output } from './output'
 
 // eslint-disable-next-line import/no-default-export
 export default class StandardReporter implements Reporter {
-  private readonly globalConfig: Config.GlobalConfig
   private readonly output: Output
 
   private error: null | Error
 
   constructor(globalConfig: Config.GlobalConfig) {
-    this.globalConfig = globalConfig
-
     this.error = null
     this.output = new Output(globalConfig)
   }
@@ -63,20 +60,6 @@ export default class StandardReporter implements Reporter {
     results: AggregatedResult
   ): void {
     this.output.testFinished(test.path, testResult, results)
-
-    if (!testResult.skipped) {
-      if (
-        this.globalConfig.verbose &&
-        !testResult.testExecError &&
-        !testResult.skipped
-      ) {
-        // no-op
-      }
-
-      if (testResult.failureMessage) {
-        // no-op
-      }
-    }
   }
 
   /**
