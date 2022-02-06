@@ -1,3 +1,4 @@
+import { describe, afterEach, test, expect } from '@jest/globals'
 import { spawnSync } from 'child_process'
 import { join, resolve } from 'path'
 import { lstat, mkdtempSync, readFileSync, unlink } from 'fs'
@@ -9,6 +10,8 @@ const bin = resolve(root, 'bin')
 const run = resolve(bin, 'run.sh')
 
 describe('javascript-test-runner', () => {
+  jest.setTimeout(120 * 1000)
+
   describe('passing solution', () => {
     const resultPath = join(fixtures, 'two-fer', 'pass', 'results.json')
 
@@ -46,7 +49,9 @@ describe('javascript-test-runner', () => {
         lstat(resultPath, (err, _) => {
           expect(err).toBeNull()
 
-          const result = JSON.parse(readFileSync(resultPath).toString())
+          const result = JSON.parse(readFileSync(resultPath).toString()) as {
+            status: string
+          }
           expect(result.status).toBe('pass')
 
           if (err) {
@@ -139,7 +144,9 @@ describe('javascript-test-runner', () => {
           lstat(resultPath, (err, _) => {
             expect(err).toBeNull()
 
-            const result = JSON.parse(readFileSync(resultPath).toString())
+            const result = JSON.parse(readFileSync(resultPath).toString()) as {
+              status: string
+            }
             expect(result.status).toBe('pass')
 
             if (err) {
@@ -228,7 +235,9 @@ describe('javascript-test-runner', () => {
           lstat(resultPath, (err, _) => {
             expect(err).toBeNull()
 
-            const result = JSON.parse(readFileSync(resultPath).toString())
+            const result = JSON.parse(readFileSync(resultPath).toString()) as {
+              status: string
+            }
             expect(result.status).toBe('fail')
 
             if (err) {
@@ -312,7 +321,10 @@ describe('javascript-test-runner', () => {
           lstat(resultPath, (err, _) => {
             expect(err).toBeNull()
 
-            const result = JSON.parse(readFileSync(resultPath).toString())
+            const result = JSON.parse(readFileSync(resultPath).toString()) as {
+              status: string
+              message: string | undefined
+            }
             expect(result.status).toBe('error')
             expect(result.message).not.toBeUndefined()
 

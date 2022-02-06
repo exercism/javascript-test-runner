@@ -5,4 +5,12 @@ node_modules/*
 production_node_modules/*
 test/fixtures/*
 tmp/*
-jest.config.js
+
+/babel.config.js
+/jest.config.js
+/jest.runner.config.js
+
+/.eslintrc
+/.eslintrc.*
+/test/.eslintrc
+/test/.eslintrc.*

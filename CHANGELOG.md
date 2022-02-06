@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.0.0
+
+- Rewrite for Jest 27
+- Sanitize jest reported syntax errors
+
 ## 2.5.1
 
 - Fix skipped tests showing up as failed despite passed complete status.

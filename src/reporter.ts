@@ -1,44 +1,29 @@
-import { Status } from './status'
-import { Output } from './output'
-import { isInteractive } from 'jest-util'
-
-import { Config } from '@jest/types'
-import {
+import { ParsedSource } from '@exercism/static-analysis'
+import type {
   Context,
-  Test,
   Reporter,
   ReporterOnStartOptions,
+  Test,
 } from '@jest/reporters'
-import { AggregatedResult, TestResult } from '@jest/test-result'
+import type { AggregatedResult, TestResult } from '@jest/test-result'
+import type { Config } from '@jest/types'
+import { Output } from './output'
 
-import { getResultHeader } from './getResultHeader'
-import { getSnapshotStatus } from './getSnapshotStatus'
-import { getTestResults } from './getTestResults'
-import { getSummary } from './getSummary'
-import { Stdlib } from './stdlib'
-
-class StandardReporter implements Reporter {
+// eslint-disable-next-line import/no-default-export
+export default class StandardReporter implements Reporter {
   private readonly globalConfig: Config.GlobalConfig
-  private readonly stdlib: Stdlib
-  private readonly status: Status
   private readonly output: Output
 
   private error: null | Error
 
   constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
-    this.stdlib = new Stdlib(globalConfig)
 
     this.error = null
-    this.status = new Status()
     this.output = new Output(globalConfig)
-
-    this.status.onChange(() => {
-      /*noop*/
-    })
   }
 
-  public getLastError(): Error | void {
+  public getLastError(): Error | undefined {
     if (this.error) {
       return this.error
     }
@@ -57,17 +42,13 @@ class StandardReporter implements Reporter {
     results: AggregatedResult,
     options: ReporterOnStartOptions
   ): void {
-    this.status.runStarted(results, options)
-    if (isInteractive) {
-      this.stdlib.clear()
-    }
+    // no-op
   }
 
   /**
    * @param test
    */
   public onTestStart(test: Test): void {
-    this.status.testStarted(test.path, test.context.config)
     this.output.testStarted(test.path)
   }
 
@@ -81,31 +62,21 @@ class StandardReporter implements Reporter {
     testResult: TestResult,
     results: AggregatedResult
   ): void {
-    this.status.testFinished(test.context.config, testResult, results)
     this.output.testFinished(test.path, testResult, results)
 
     if (!testResult.skipped) {
-      this.stdlib.log(
-        getResultHeader(testResult, this.globalConfig, test.context.config)
-      )
-
       if (
         this.globalConfig.verbose &&
         !testResult.testExecError &&
         !testResult.skipped
       ) {
-        this.stdlib.log(getTestResults(testResult.testResults))
+        // no-op
       }
 
       if (testResult.failureMessage) {
-        this.stdlib.error(testResult.failureMessage)
+        // no-op
       }
-
-      const didUpdate = this.globalConfig.updateSnapshot === 'all'
-      const snapshotStatuses = getSnapshotStatus(testResult.snapshot, didUpdate)
-      snapshotStatuses.forEach(this.stdlib.log.bind(this.stdlib))
     }
-    this.stdlib.forceFlushBufferedOutput()
   }
 
   /**
@@ -116,13 +87,6 @@ class StandardReporter implements Reporter {
     _contexts: Set<Context>,
     aggregatedResults: AggregatedResult
   ): Promise<void> | void {
-    this.stdlib.log(getSummary(aggregatedResults, undefined))
-    this.status.runFinished()
-    this.stdlib.close()
-    this.stdlib.clear()
-
     this.output.finish(aggregatedResults)
   }
 }
-
-export = StandardReporter

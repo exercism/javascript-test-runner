@@ -11,26 +11,26 @@ describe('Triplet', () => {
     expect(tripletsWithSum(12)).toEqual([[3, 4, 5]]);
   });
 
-  xtest('triplets whose sum is 108', () => {
+  test('triplets whose sum is 108', () => {
     expect(tripletsWithSum(108)).toEqual([[27, 36, 45]]);
   });
 
-  xtest('triplets whose sum is 1000', () => {
+  test('triplets whose sum is 1000', () => {
     expect(tripletsWithSum(1000)).toEqual([[200, 375, 425]]);
   });
 
-  xtest('no matching triplets for 1001', () => {
+  test('no matching triplets for 1001', () => {
     expect(tripletsWithSum(1001)).toEqual([]);
   });
 
-  xtest('returns all matching triplets', () => {
+  test('returns all matching triplets', () => {
     expect(tripletsWithSum(90)).toEqual([
       [9, 40, 41],
       [15, 36, 39],
     ]);
   });
 
-  xtest('several matching triplets', () => {
+  test('several matching triplets', () => {
     expect(tripletsWithSum(840)).toEqual([
       [40, 399, 401],
       [56, 390, 394],
@@ -43,15 +43,15 @@ describe('Triplet', () => {
     ]);
   });
 
-  xtest('returns triplets with no factor smaller than minimum factor', () => {
+  test('returns triplets with no factor smaller than minimum factor', () => {
     expect(tripletsWithSum(90, { minFactor: 10 })).toEqual([[15, 36, 39]]);
   });
 
-  xtest('returns triplets with no factor larger than maximum factor', () => {
+  test('returns triplets with no factor larger than maximum factor', () => {
     expect(tripletsWithSum(840, { maxFactor: 349 })).toEqual([[240, 252, 348]]);
   });
 
-  xtest('returns triplets with factors in range', () => {
+  test('returns triplets with factors in range', () => {
     expect(tripletsWithSum(840, { maxFactor: 352, minFactor: 150 })).toEqual([
       [210, 280, 350],
       [240, 252, 348],
