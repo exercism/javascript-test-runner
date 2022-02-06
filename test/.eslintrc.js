@@ -7,5 +7,5 @@ module.exports = {
     jest: true,
   },
   plugins: ['jest'],
-  extends: ['../.eslintrc', 'plugin:jest/recommended'],
+  extends: ['../.eslintrc.js', 'plugin:jest/recommended'],
 }
