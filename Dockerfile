@@ -1,6 +1,6 @@
-FROM node:lts-slim as runner
-# Node.js LTS
-# Debian
+FROM node:16-bullseye-slim as runner
+# Node.js 16 (curently LTS)
+# Debian bullseye
 
 # fetch latest security updates
 RUN set -ex; \
