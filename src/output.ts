@@ -303,8 +303,6 @@ function buildOutput(
       entry.message
     )}`
 
-    console.log(testName, sanitized)
-
     outputs[testName] = outputs[testName] || []
     outputs[testName].push(sanitized)
 
