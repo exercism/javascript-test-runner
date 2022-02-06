@@ -4,7 +4,7 @@
 
 The Docker image for automatically run tests on JavaScript solutions submitted to [exercism][web-exercism].
 
-> At this moment, the input path _must_ be relative to the `package.json` of this respository.
+> At this moment, the input path _must_ be relative to the `package.json` of this repository.
 > `jest` doesn't like running outside of its tree.
 > This might change in the future.
 
@@ -12,13 +12,13 @@ The Docker image for automatically run tests on JavaScript solutions submitted t
 
 Clone this repository and then run:
 
-```bash
+```shell
 yarn install
 ```
 
 You'll need at least Node LTS for this to work.
 
-```
+```shell
 yarn build
 ```
 
@@ -48,11 +48,15 @@ For example:
 ```shell
 $ ./bin/run.sh two-fer ./test/fixtures/two-fer/pass
 
-PASS  test/fixtures/two-fer/pass/two-fer.spec.js
-Test Suites: 1 passed, 1 total
-Tests:       3 passed, 3 total
-Snapshots:   0 total
-Time:        2.817s
+Using reporter : **/dist/reporter.js
+Using test-root: **/test/fixtures/two-fer/pass/
+Using base-root: **/
+Using setup-env: **/dist/jest/setup.js
+
+test/fixtures/two-fer/pass/ matches test/fixtures/two-fer/pass/. Not copying anything.
+Using test/fixtures/two-fer/pass/.meta/config.json as base configuration
+Enabling tests in test/fixtures/two-fer/pass/two-fer.spec.js
+Determining test suites to run...
 Find the output at:
 test/fixtures/two-fer/pass/results.json
 ```
@@ -76,11 +80,10 @@ Exercism remote UUID: a7d1b71693fb4298a3a99bd352dd4d74
 
 Downloaded to
 C:\Users\Derk-Jan\Exercism\javascript\clock
-PASS  tmp/clock/a7d1b71693fb4298a3a99bd352dd4d74/clock/clock.spec.js
-Test Suites: 1 passed, 1 total
-Tests:       52 passed, 52 total
-Snapshots:   0 total
-Time:        2.987s
+
+...
+
+Determining test suites to run...
 Find the output at:
 ./tmp/clock/a7d1b71693fb4298a3a99bd352dd4d74/clock/results.json
 ```

@@ -1,18 +1,14 @@
-import { ConsoleBuffer } from '@jest/console'
-import {
+import { AstParser, extractTests } from '@exercism/static-analysis'
+import type { ExtractedTestCase, ParsedSource } from '@exercism/static-analysis'
+import type { ConsoleBuffer } from '@jest/console'
+import type {
   AggregatedResult,
   AssertionResult,
   TestResult,
 } from '@jest/test-result'
-import { Config } from '@jest/types'
+import type { Config } from '@jest/types'
 import fs from 'fs'
 import path from 'path'
-import {
-  AstParser,
-  ExtractedTestCase,
-  extractTests,
-  ParsedSource,
-} from '@exercism/static-analysis'
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -25,6 +21,7 @@ interface OutputTestInterface {
   status: 'fail' | 'pass' | 'error'
   message: string
   output: string | null
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_code: string
 }
 
@@ -33,12 +30,17 @@ export class Output {
   private results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
+  private readonly sources: Record<string, ParsedSource>
+  private readonly tests: Record<string, ReturnType<typeof extractTests>>
 
   constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
     this.results = { tests: [] }
     this.outputFile =
-      this.globalConfig.outputFile || path.join(process.cwd(), 'results.json')
+      this.globalConfig.outputFile ?? path.join(process.cwd(), 'results.json')
+
+    this.sources = {}
+    this.tests = {}
   }
 
   public error(message: string): void {
@@ -98,13 +100,16 @@ export class Output {
           parsedSources[file] = {
             program,
             source,
-            tests: tests.reduce((results, item) => {
-              results[item.name(' > ')] = item
-              results[item.name(' ' as ' > ')] = item
-              return results
-            }, {} as Record<string, ExtractedTestCase>),
+            tests: tests.reduce<Record<string, ExtractedTestCase>>(
+              (results, item) => {
+                results[item.name(' > ')] = item
+                results[item.name(' ' as ' > ')] = item
+                return results
+              },
+              {}
+            ),
           }
-        } catch (err) {
+        } catch (err: unknown) {
           console.error(
             `When trying to parse ${file}, the following error occurred`,
             err
@@ -116,14 +121,17 @@ export class Output {
     const tests = this.results.tests.map((test) => {
       const parsedSource = parsedSources[test.test_code]
       if (!parsedSource) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         return { ...test, test_code: null }
       }
 
       const testCase = parsedSource.tests[test.name]
       if (!testCase) {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
         return { ...test, test_code: null }
       }
 
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       return { ...test, test_code: testCase.testCode(parsedSource.source) }
     })
 
@@ -148,7 +156,7 @@ export class Output {
       this.error(
         sanitizeErrorMessage(
           specFilePath,
-          testResult.failureMessage ||
+          testResult.failureMessage ??
             'Something went wrong when running the tests.'
         )
       )
@@ -157,12 +165,26 @@ export class Output {
 
     // Suites ran fine. Output normally.
     results.testResults.forEach((testResult) => {
-      return this.testInnerFinished(
-        specFilePath,
-        testResult,
-        testResult.testResults
-      )
+      this.testInnerFinished(specFilePath, testResult, testResult.testResults)
     })
+  }
+
+  private getSource(specFilePath: string): {
+    source: ParsedSource
+    tests: ExtractedTestCase[]
+  } {
+    if (!this.sources[specFilePath]) {
+      const [{ program, source }] = AstParser.ANALYZER.parseSync(
+        fs.readFileSync(specFilePath).toString()
+      )
+      this.tests[specFilePath] = extractTests(program)
+      this.sources[specFilePath] = { program, source }
+    }
+
+    return {
+      source: this.sources[specFilePath],
+      tests: this.tests[specFilePath],
+    }
   }
 
   public testInnerFinished(
@@ -170,28 +192,13 @@ export class Output {
     testResult: TestResult,
     innerResults: AssertionResult[]
   ): void {
-    if (testResult.console) {
-      /*
-      // The code below works, but is not accepted by the current runner spec on exercism
-      const name = [
-        typeof testResult.displayName === 'string' && testResult.displayName,
-        typeof testResult.displayName === 'object' && testResult.displayName && testResult.displayName.name,
-        innerResults[0] && innerResults[0].ancestorTitles.join(' > '),
-        trimAndFormatPath(0, this.globalConfig, path, 80)
-      ].filter(Boolean)[0] as string
-
-      this.results.tests.push({
-        name: name,
-        output: buildOutput(testResult.console),
-        status: testResult.numPendingTests === 0 && testResult.numFailingTests === 0 ? 'pass' : 'fail',
-        message: ''
-      })
-      */
-    }
-
-    const consoleOutputs = testResult.console
-      ? buildOutput(specFilePath, testResult.console)
-      : ({} as Record<string, string>)
+    const consoleOutputs: Record<string, string> = testResult.console
+      ? buildOutput(
+          specFilePath,
+          testResult.console,
+          this.getSource(specFilePath)
+        )
+      : {}
 
     const outputs = buildTestOutput(specFilePath, testResult, innerResults)
     const firstFailureIndex = outputs.findIndex(
@@ -203,8 +210,8 @@ export class Output {
         const isFirstFailure =
           firstFailureIndex === i ||
           (firstFailureIndex === -1 && self.length === i + 1)
-        const outputMessage =
-          consoleOutputs[withoutOutput.name.replace(/ > /g, ' ')] || null
+
+        const outputMessage = consoleOutputs[withoutOutput.name] || null
 
         return {
           ...withoutOutput,
@@ -212,6 +219,7 @@ export class Output {
             ? [consoleOutputs[''], outputMessage].filter(Boolean).join('\n') ||
               null
             : outputMessage,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           test_code: specFilePath,
         }
       })
@@ -225,31 +233,83 @@ export class Output {
 
 function buildOutput(
   specFilePath: string,
-  buffer: ConsoleBuffer
+  buffer: ConsoleBuffer,
+  { tests }: { source: ParsedSource; tests: ExtractedTestCase[] }
 ): Record<string, string> {
-  const [, outputs] = buffer.reduce(
-    ([lastTest, messages], entry) => {
-      // Change current test messages
-      if (entry.message.startsWith('@exercism/javascript:')) {
-        return [
-          entry.message.slice('@exercism/javascript:'.length).trim(),
-          messages,
-        ] as const
+  const outputs = buffer.reduce<Record<string, string[]>>((outputs, entry) => {
+    // The origin stack trace will look something like this:
+    //
+    //   at twoFer (<specFile>:4:11)
+    //   at Object.<anonymous> (<specFilePath>:5:12)
+    //
+    // We want to extract the :5:12) part, convert it to a proper line, column
+    // and then look in the test file which test is "around" it. This only
+    // works if the test file looks like this:
+    //
+    // test('my-test', () => {
+    //   ...
+    //   codeThatEventuallyResultsInLog();
+    //   ...
+    // })
+
+    let foundTest: ExtractedTestCase | undefined
+    // Using find because it will break when something is found!
+
+    entry.origin.split('\n').find((originLine) => {
+      if (!originLine.includes(specFilePath)) {
+        return undefined
       }
 
-      const sanitized = `[${entry.type}] ${sanitizeErrorMessage(
-        specFilePath,
-        entry.message
-      )}`
-      messages[lastTest] = messages[lastTest] || []
-      messages[lastTest].push(sanitized)
+      const [control, line, column] = originLine
+        .slice(originLine.indexOf(specFilePath) + specFilePath.length)
+        .split(':')
 
-      return [lastTest, messages] as const
-    },
-    ['', {}] as readonly [string, Record<string, string[]>]
-  )
+      // Stacktrace didn't look like what we expected
+      if (control !== '') {
+        return undefined
+      }
 
-  return Object.keys(outputs).reduce((results, key) => {
+      const messageLoc = {
+        line: Number(line),
+        column: Number(column.slice(0, column.length - 1)),
+      }
+      return (foundTest = tests.find(({ testNode }) => {
+        if (messageLoc.line < testNode.loc.start.line) {
+          return false
+        }
+        if (messageLoc.line > testNode.loc.end.line) {
+          return false
+        }
+        if (
+          messageLoc.line === testNode.loc.start.line &&
+          messageLoc.column < testNode.loc.start.column
+        ) {
+          return false
+        }
+        if (
+          messageLoc.line === testNode.loc.end.line &&
+          messageLoc.column > testNode.loc.end.column
+        ) {
+          return false
+        }
+
+        return true
+      }))
+    })
+
+    const testName = foundTest?.name(' > ') ?? ''
+    const sanitized = `[${entry.type}] ${sanitizeErrorMessage(
+      specFilePath,
+      entry.message
+    )}`
+
+    outputs[testName] = outputs[testName] || []
+    outputs[testName].push(sanitized)
+
+    return outputs
+  }, {})
+
+  return Object.keys(outputs).reduce<Record<string, string>>((results, key) => {
     const message = (outputs[key] || []).join('\n') || ''
     if (message.length <= 500) {
       results[key] = message
@@ -260,7 +320,7 @@ function buildOutput(
     }
 
     return results
-  }, {} as Record<string, string>)
+  }, {})
 }
 
 function buildTestOutput(
@@ -318,11 +378,15 @@ function sanitizeErrorMessage(specFilePath: string, message: string): string {
     path.dirname(process.cwd()),
   ]
 
-  dirs.forEach((sensativePath) => {
-    while (message.indexOf(sensativePath) !== -1) {
-      message = message.replace(sensativePath, '<solution>')
+  dirs.forEach((sensitivePath) => {
+    while (message.includes(sensitivePath)) {
+      message = message.replace(sensitivePath, '<solution>')
     }
   })
+
+  if (message.includes('SyntaxError: <solution>')) {
+    return message.slice(message.indexOf('SyntaxError: <solution>'))
+  }
 
   return message
 }

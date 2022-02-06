@@ -1,7 +1,7 @@
 // import spyConsole from './console'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const originalDescribe = (jasmine as any).getEnv().describe
+/*const originalDescribe = (jasmine as any).getEnv().describe
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, @typescript-eslint/no-explicit-any
 ;(jasmine as any).getEnv().describe = <T extends unknown[] = any[]>(
@@ -27,3 +27,4 @@ const originalDescribe = (jasmine as any).getEnv().describe
 
   return originalDescribe(description, spiedSpecDefinition, ...describeArgs)
 }
+*/

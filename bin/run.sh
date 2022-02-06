@@ -80,6 +80,7 @@ set -euo pipefail
 ROOT="$(realpath $(dirname "$0")/..)"
 REPORTER="$ROOT/dist/reporter.js"
 SETUP="$ROOT/dist/jest/setup.js"
+CONFIG="$ROOT/jest.runner.config.js"
 
 if test -f "$REPORTER"; then
   echo "Using reporter : $REPORTER"
@@ -132,17 +133,21 @@ set +e
 
 # Run tests
 "$ROOT/node_modules/.bin/jest" "${OUTPUT}*" \
-                               --outputFile="${result_file}" \
-                               --reporters "${REPORTER}" \
-                               --noStackTrace \
-                               --verbose=false \
-                               --roots "${OUTPUT}" \
-                               --passWithNoTests \
-                               --ci \
-                               --runInBand \
                                --bail 1 \
-                               --setupFilesAfterEnv ${SETUP}
+                               --ci \
+                               --colors \
+                               --config ${CONFIG} \
+                               --noStackTrace \
+                               --outputFile="${result_file}" \
+                               --passWithNoTests \
+                               --reporters "${REPORTER}" \
+                               --roots "${OUTPUT}" \
+                               --setupFilesAfterEnv ${SETUP} \
+                               --verbose false \
+                               --testLocationInResults
 
+
+# --runInBand \
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
 

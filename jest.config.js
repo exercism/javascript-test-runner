@@ -1,7 +1,5 @@
+/** @type {import('ts-jest/dist/types').InitialOptionsTsJest} */
 module.exports = {
-  verbose: true,
-  modulePathIgnorePatterns: ['package.json'],
-  transform: {
-    '^.+\\.[t|j]sx?$': 'babel-jest',
-  },
+  preset: 'ts-jest',
+  testEnvironment: 'node',
 }
