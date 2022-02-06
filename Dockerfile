@@ -1,6 +1,6 @@
-FROM node:erbium-buster-slim as runner
-# Node.js v12 LTS (Erbium)
-# Debian Buster (v10.4)
+FROM node:lts-slim as runner
+# Node.js LTS
+# Debian
 
 # fetch latest security updates
 RUN set -ex; \

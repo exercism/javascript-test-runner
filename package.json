@@ -24,7 +24,7 @@
     "watch": "yarn build -w",
     "prepare": "yarn build",
     "prepublishOnly": "yarn test:bare && yarn lint",
-    "lint": "yarn eslint . --ext ts,js,tsx,jsx,mjs -c .eslintrc",
+    "lint": "yarn eslint src --ext ts,js,tsx,jsx,mjs -c .eslintrc.js && yarn eslint test --ext ts,js,tsx,jsx,mjs -c test/.eslintrc.js",
     "test": "yarn build && yarn test:bare",
     "test:bare": "jest --roots test --testPathIgnorePatterns=\"fixtures/\""
   },
@@ -42,7 +42,7 @@
     "jest": "^27.5.0"
   },
   "devDependencies": {
-    "@exercism/eslint-config-tooling": "^0.3.0",
+    "@exercism/eslint-config-tooling": "^0.4.0",
     "@tsconfig/node16": "^1.0.2",
     "@types/jest": "^27.4.0",
     "@types/node": "^16.11.22",

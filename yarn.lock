@@ -988,10 +988,10 @@
     "@babel/preset-env" "^7.16.11"
     core-js "^3.21.0"
 
-"@exercism/eslint-config-tooling@^0.3.0":
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/@exercism/eslint-config-tooling/-/eslint-config-tooling-0.3.0.tgz#39af428c9abab3791f1843ddfddf82390d0522ba"
-  integrity sha512-SFDGsIptpUsDjVoQCGy7Kkz31dgRYRNQVB/IKafVpxSuG1StGVIdsgTBl9rQ3F7VqLNNkkZcEXgRaIv/nx46DA==
+"@exercism/eslint-config-tooling@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@exercism/eslint-config-tooling/-/eslint-config-tooling-0.4.0.tgz#6eb874113dc07ad2b0edbf70769adf36ac03ac15"
+  integrity sha512-roWVbxKs0/O6O/Yq5eT+GAu///3/D79NgRKR0qQG5KuuY9JxbOS+v9XMJHIG1DIxLkQs7kUYeUQstu+2Yj2p6w==
 
 "@exercism/static-analysis@^0.11.0":
   version "0.11.0"

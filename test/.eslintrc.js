@@ -6,6 +6,5 @@ module.exports = {
   env: {
     jest: true,
   },
-  plugins: ['jest'],
-  extends: ['../.eslintrc.js', 'plugin:jest/recommended'],
+  extends: ['../.eslintrc.js'],
 }
