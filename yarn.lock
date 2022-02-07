@@ -993,10 +993,10 @@
   resolved "https://registry.yarnpkg.com/@exercism/eslint-config-tooling/-/eslint-config-tooling-0.4.0.tgz#6eb874113dc07ad2b0edbf70769adf36ac03ac15"
   integrity sha512-roWVbxKs0/O6O/Yq5eT+GAu///3/D79NgRKR0qQG5KuuY9JxbOS+v9XMJHIG1DIxLkQs7kUYeUQstu+2Yj2p6w==
 
-"@exercism/static-analysis@^0.11.0":
-  version "0.11.0"
-  resolved "https://registry.yarnpkg.com/@exercism/static-analysis/-/static-analysis-0.11.0.tgz#16342bc8aafe178489f3f835587c5895b80bfff8"
-  integrity sha512-B7aGhd5WMCXHElTt1dK4Brc2//w6hqm64Q5+7zNlcd5yJSq540MXnSQ2JsICQZ/OAN04OmjSM27Oq+JYs+xJiA==
+"@exercism/static-analysis@^0.12.0":
+  version "0.12.0"
+  resolved "https://registry.yarnpkg.com/@exercism/static-analysis/-/static-analysis-0.12.0.tgz#05cac2d3379bda318d5a014ade2ce59095aeaa38"
+  integrity sha512-SMzVabTnp3YMpvZzpruZouFz5ocHSq5vHd84Gs0auYidwvHZRRen9ae7MjeYOEmUM7FCysIZtDlvSvGEsfumlA==
 
 "@humanwhocodes/config-array@^0.9.2":
   version "0.9.3"

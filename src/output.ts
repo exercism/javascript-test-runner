@@ -23,21 +23,43 @@ interface OutputTestInterface {
   output: string | null
   // eslint-disable-next-line @typescript-eslint/naming-convention
   test_code: string
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  task_id?: number
 }
 
-const OUTPUT_VERSION = 2
+type ExerciseConfig = {
+  custom?: {
+    'version.tests.compatibility'?: 'jest-27'
+    'flag.tests.task-per-describe': boolean
+    'flag.tests.may-run-long': boolean
+    'flag.tests.includes-optional': boolean
+  }
+}
+
+const OUTPUT_VERSION = 3
 export class Output {
   private results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
   private readonly sources: Record<string, ParsedSource>
   private readonly tests: Record<string, ReturnType<typeof extractTests>>
+  private readonly config: null | ExerciseConfig
 
   constructor(globalConfig: Config.GlobalConfig) {
     this.globalConfig = globalConfig
     this.results = { tests: [] }
     this.outputFile =
       this.globalConfig.outputFile ?? path.join(process.cwd(), 'results.json')
+
+    const configPath = path.join(
+      path.dirname(this.outputFile),
+      '.meta',
+      'config.json'
+    )
+
+    this.config = fs.existsSync(configPath)
+      ? (JSON.parse(fs.readFileSync(configPath).toString()) as ExerciseConfig)
+      : null
 
     this.sources = {}
     this.tests = {}
@@ -131,8 +153,22 @@ export class Output {
         return { ...test, test_code: null }
       }
 
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      return { ...test, test_code: testCase.testCode(parsedSource.source) }
+      // Version 3 optionally can output the task ID
+      if (this.configFlag('flag.tests.task-per-describe')) {
+        return {
+          ...test,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          task_id: testCase.topLevelIndex,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          test_code: testCase.testCode(parsedSource.source),
+        }
+      }
+
+      return {
+        ...test,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        test_code: testCase.testCode(parsedSource.source),
+      }
     })
 
     // Re-order the output so that tests output shows below main output
@@ -144,6 +180,16 @@ export class Output {
       2
     )
     fs.writeFileSync(this.outputFile, artifact)
+  }
+
+  private configFlag(
+    flag: keyof NonNullable<ExerciseConfig['custom']>
+  ): boolean {
+    if (!this.config || !this.config.custom) {
+      return false
+    }
+
+    return this.config.custom[flag] as boolean
   }
 
   public testFinished(

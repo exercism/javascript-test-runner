@@ -2,7 +2,7 @@
   "name": "@exercism/javascript-test-runner",
   "description": "Automated Test runner for exercism solutions in Javascript.",
   "author": "Derk-Jan Karrenbeld <derk-jan+github@karrenbeld.info>",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "license": "AGPL-3.0-or-later",
   "repository": {
     "type": "git",
@@ -34,7 +34,7 @@
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-typescript": "^7.16.7",
     "@exercism/babel-preset-javascript": "^0.1.2",
-    "@exercism/static-analysis": "^0.11.0",
+    "@exercism/static-analysis": "^0.12.0",
     "@typescript-eslint/typescript-estree": "^5.10.2",
     "@typescript-eslint/visitor-keys": "^5.10.2",
     "babel-jest": "^27.5.0",
