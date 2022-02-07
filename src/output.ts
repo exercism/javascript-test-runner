@@ -37,6 +37,7 @@ type ExerciseConfig = {
 }
 
 const OUTPUT_VERSION = 3
+
 export class Output {
   private results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
@@ -51,16 +52,7 @@ export class Output {
     this.outputFile =
       this.globalConfig.outputFile ?? path.join(process.cwd(), 'results.json')
 
-    const configPath = path.join(
-      path.dirname(this.outputFile),
-      '.meta',
-      'config.json'
-    )
-
-    this.config = fs.existsSync(configPath)
-      ? (JSON.parse(fs.readFileSync(configPath).toString()) as ExerciseConfig)
-      : null
-
+    this.config = findConfig(path.dirname(this.outputFile))
     this.sources = {}
     this.tests = {}
   }
@@ -435,4 +427,23 @@ function sanitizeErrorMessage(specFilePath: string, message: string): string {
   }
 
   return message
+}
+
+function findConfig(rootDir: string): null | ExerciseConfig {
+  const configPaths = [
+    path.join(rootDir, '.meta', 'config.json'),
+    path.join(rootDir, '.exercism', 'config.json'),
+  ]
+
+  const actualConfigPath = configPaths.find((potentialPath) =>
+    fs.existsSync(potentialPath)
+  )
+
+  if (!actualConfigPath) {
+    return null
+  }
+
+  return JSON.parse(
+    fs.readFileSync(actualConfigPath).toString()
+  ) as ExerciseConfig
 }

@@ -4,6 +4,7 @@
 
 - Upgrade to output version 3
 - Add config.json based handling of task IDs
+- Allow `.exercism` instead of `.meta` for downloaded exercises.
 
 ## 3.0.0
 
