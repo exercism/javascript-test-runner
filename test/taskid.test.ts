@@ -62,6 +62,14 @@ describe('includes task id', () => {
           expect(result.tests[0]).toBeDefined()
           expect(result.tests[0].task_id).toBe(1)
 
+          expect(result.tests[1]).toBeDefined()
+          expect(result.tests[1].task_id).toBe(2)
+          expect(result.tests[2]).toBeDefined()
+          expect(result.tests[2].task_id).toBe(2)
+
+          expect(result.tests[3]).toBeDefined()
+          expect(result.tests[3].task_id).toBe(3)
+
           if (err) {
             reject(err)
           } else {
