@@ -104,6 +104,7 @@ fi
 echo ""
 
 configuration_file="${INPUT}.meta/config.json"
+local_configuration_file="${INPUT}.exercism/config.json"
 
 # Prepare the test file(s)
 mkdir -p "${OUTPUT}"
@@ -119,9 +120,14 @@ if test -f $configuration_file; then
   echo "Using ${configuration_file} as base configuration"
   cat $configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${OUTPUT}
 else
-  test_file="${SLUG}.spec.js"
-  echo "No configuration given. Falling back to ${test_file}"
-  "$ROOT/bin/prepare.sh" ${OUTPUT} ${test_file}
+  if test -f $local_configuration_file; then
+    echo "Using ${local_configuration_file} as base configuration"
+    cat $local_configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${OUTPUT}
+  else
+    test_file="${SLUG}.spec.js"
+    echo "No configuration given. Falling back to ${test_file}"
+    "$ROOT/bin/prepare.sh" ${OUTPUT} ${test_file}
+  fi;
 fi;
 
 # Put together the path to the test results file
