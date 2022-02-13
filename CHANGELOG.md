@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.1.1
+
+- Clean `src/jest/setup.ts`
+- Bump depenencies
+
 ## 3.1.0
 
 - Upgrade to output version 3
