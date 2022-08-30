@@ -37,7 +37,7 @@
     "@exercism/static-analysis": "^0.12.0",
     "@typescript-eslint/typescript-estree": "^5.11.0",
     "@typescript-eslint/visitor-keys": "^5.11.0",
-    "babel-jest": "^28.0.3",
+    "babel-jest": "^29.0.1",
     "chalk": "^5.0.0",
     "jest": "^27.5.1"
   },
