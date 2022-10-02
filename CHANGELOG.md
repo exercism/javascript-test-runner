@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.2.0
+
+- Use jest 29
+- Use newer AST generator
+- Update core-js
+
 ## 3.1.1
 
 - Clean `src/jest/setup.ts`
