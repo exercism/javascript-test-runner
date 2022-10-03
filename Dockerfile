@@ -20,9 +20,9 @@ COPY . .
 
 # Build the test runner
 RUN set -ex; \
+  # install all the development modules (used for building)
   yarn install; \
   yarn build; \
-  # install all the development modules (used for building)
   rm -rf node_modules; \
   # install only the node_modules we need for production
   yarn install --production; \
