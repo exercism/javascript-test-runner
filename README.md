@@ -1,6 +1,6 @@
 # Exercism JavaScript Test Runner
 
-[![javascript-test-runner / deploy](https://github.com/exercism/javascript-test-runner/actions/workflows/deploys.yml/badge.svg)](https://github.com/exercism/javascript-test-runner/actions/workflows/deploys.yml) [![javascript-test-runner / main](https://github.com/exercism/javascript-test-runner/actions/workflows/ci.js.yml/badge.svg)](https://github.com/exercism/javascript-test-runner/actions/workflows/ci.js.yml)
+[![javascript-test-runner / deploy](https://github.com/exercism/javascript-test-runner/actions/workflows/deploy.yml/badge.svg)](https://github.com/exercism/javascript-test-runner/actions/workflows/deploy.yml) [![javascript-test-runner / main](https://github.com/exercism/javascript-test-runner/actions/workflows/ci.js.yml/badge.svg)](https://github.com/exercism/javascript-test-runner/actions/workflows/ci.js.yml)
 
 The Docker image for automatically run tests on JavaScript solutions submitted to [exercism][web-exercism].
 
