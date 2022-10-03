@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.2
+
+- Exact match the version of core-js for now
+
 ## 3.2.1
 
 - Add core-js to package.json of test-runner
