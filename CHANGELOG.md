@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.2.1
+
+- Add core-js to package.json of test-runner
+
 ## 3.2.0
 
 - Use jest 29
