@@ -16,6 +16,7 @@
 
 # Example:
 # ./run-in-docker.sh two-fer ./relative/path/to/two-fer/solution/folder/ ./relative/path/to/output-directory/
+# ./run-in-docker.sh two-fer ./test/fixtures/two-fer/pass ./test/fixtures/two-fer/pass
 
 # If arguments not provided, print usage and exit
 if [ -z "$1" ] || [ -z "$2" ] || [ -z "$3" ]; then
