@@ -8,7 +8,7 @@ module.exports = {
         targets: {
           node: 'current',
         },
-        useBuiltIns: false,
+        useBuiltIns: 'usage',
         corejs: '3.25',
       },
     ],

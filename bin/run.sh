@@ -130,9 +130,19 @@ else
   fi;
 fi;
 
+if test -d "${OUTPUT}node_modules"; then
+  echo "Did not expect node_modules in output directory, but here we are"
+else
+  ln -s "${ROOT}/node_modules" "${OUTPUT}node_modules"
+  echo "Symlinked ${OUTPUT}node_modules (${ROOT}/node_modules)"
+fi;
+
+# Rename babel.config.js and package.json
+mv "${OUTPUT}babel.config.js" "${OUTPUT}babel.config.js.__exercism.bak" || true
+mv "${OUTPUT}package.json" "${OUTPUT}package.json.__exercism.bak" || true
+
 # Put together the path to the test results file
 result_file="${OUTPUT}results.json"
-
 
 # Disable auto exit
 set +e
@@ -140,6 +150,7 @@ set +e
 # Run tests
 "$ROOT/node_modules/.bin/jest" "${OUTPUT}*" \
                                --bail 1 \
+                               --no-cache \
                                --ci \
                                --colors \
                                --config ${CONFIG} \
@@ -149,13 +160,17 @@ set +e
                                --reporters "${REPORTER}" \
                                --roots "${OUTPUT}" \
                                --setupFilesAfterEnv ${SETUP} \
-                               --verbose false \
+                               --verbose true \
                                --testLocationInResults
 
 
 # --runInBand \
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
+
+# Restore babel.config.js and package.json
+mv "${OUTPUT}babel.config.js.__exercism.bak" "${OUTPUT}babel.config.js" || true
+mv "${OUTPUT}package.json.__exercism.bak" "${OUTPUT}package.json" || true
 
 echo ""
 echo "Find the output at:"
