@@ -29,9 +29,13 @@ interface OutputTestInterface {
 
 type ExerciseConfig = {
   custom?: {
-    'version.tests.compatibility'?: 'jest-27'
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    'version.tests.compatibility'?: 'jest-27' | 'jest-29'
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     'flag.tests.task-per-describe': boolean
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     'flag.tests.may-run-long': boolean
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     'flag.tests.includes-optional': boolean
   }
 }
