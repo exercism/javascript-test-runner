@@ -53,11 +53,11 @@ export default class StandardReporter implements Reporter {
    * @param testResult
    * @param results
    */
-  public onTestResult(
+  public async onTestFileResult(
     test: Test,
     testResult: TestResult,
     results: AggregatedResult
-  ): void {
+  ): Promise<void> {
     this.output.testFinished(test.path, testResult, results)
   }
 

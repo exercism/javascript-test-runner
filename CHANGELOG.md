@@ -1,8 +1,17 @@
 # Changelog
 
+## 3.3.1
+
+- Fix debug logging
+- Add test for logging
+
+## 3.3.0
+
+- Change implementation to re-enable babel
+
 ## 3.2.2
 
-- Exact match the version of core-js for now
+- Change version of core-js to exact match
 
 ## 3.2.1
 
@@ -10,25 +19,25 @@
 
 ## 3.2.0
 
-- Use jest 29
-- Use newer AST generator
-- Update core-js
+- Change to jest 29
+- Change to newer AST generator
+- Change core-js to latest
 
 ## 3.1.1
 
-- Clean `src/jest/setup.ts`
-- Bump depenencies
+- Fix `src/jest/setup.ts` extraneous content
+- Change dependencies to latest version
 
 ## 3.1.0
 
-- Upgrade to output version 3
+- Add support for version 3 output
 - Add config.json based handling of task IDs
-- Allow `.exercism` instead of `.meta` for downloaded exercises.
+- Add support for `.exercism` instead of `.meta` for downloaded exercises.
 
 ## 3.0.0
 
-- Rewrite for Jest 27
-- Sanitize jest reported syntax errors
+- Change to Jest 27
+- Add sanitization of jest reported syntax errors
 
 ## 2.5.1
 
@@ -36,17 +45,17 @@
 
 ## 2.5.0
 
-- Allow skipping/pending tests (`test.skip`)
+- Add allow skipping/pending tests (`test.skip`)
 
 ## 2.4.0
 
-- Update dependencies
 - Add `prettier`
+- Change dependencies to latest versions
 
 ## 2.3.3
 
 - Fix a bug with the output generation
-- Upgrade dependencies
+- Change dependencies to latest versions
 
 ## 2.3.2
 
@@ -54,17 +63,17 @@
 
 ## 2.3.1
 
-- Install `jq` into the Docker image
+- Add `jq` installation into the Docker image
 
 ## 2.3.0
 
-- Enable `.meta/config.json`
+- Add support for `.meta/config.json`
 - Add test that _requires_ `.meta/config.json` files to be set
 
 ## 2.2.1
 
-- Upgrade `@exercism/static-analysis`
-- Make sure all peer deps are listed as deps
+- Change `@exercism/static-analysis` to latest version
+- Fix peer dependencies: make sure all peer deps are listed as deps
 
 ## 2.2.0
 

@@ -10,7 +10,7 @@ const bin = resolve(root, 'bin')
 const run = resolve(bin, 'run.sh')
 
 describe('skipping via test.skip', () => {
-  jest.setTimeout(120 * 1000)
+  jest.setTimeout(360 * 1000)
 
   describe('passing solution', () => {
     const resultPath = join(

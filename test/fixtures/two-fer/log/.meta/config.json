@@ -1,0 +1,16 @@
+{
+  "files": {
+    "solution": [
+      "two-fer.js"
+    ],
+    "test": [
+      "two-fer.spec.js"
+    ]
+  },
+  "custom": {
+    "version.tests.compatibility": "jest-27",
+    "flag.tests.task-per-describe": true,
+    "flag.tests.may-run-long": false,
+    "flag.tests.includes-optional": false
+  }
+}

@@ -133,13 +133,21 @@ fi;
 if test -d "${OUTPUT}node_modules"; then
   echo "Did not expect node_modules in output directory, but here we are"
 else
-  ln -s "${ROOT}/node_modules" "${OUTPUT}node_modules"
-  echo "Symlinked ${OUTPUT}node_modules (${ROOT}/node_modules)"
+  if test -f "${OUTPUT}node_modules"; then
+    echo "Did not expect node_modules in output directory, but here we are"
+  else
+    ln -s "${ROOT}/node_modules" "${OUTPUT}node_modules"
+    echo "Symlinked ${OUTPUT}node_modules (${ROOT}/node_modules)"
+  fi;
 fi;
 
 # Rename babel.config.js and package.json
-mv "${OUTPUT}babel.config.js" "${OUTPUT}babel.config.js.__exercism.bak" || true
-mv "${OUTPUT}package.json" "${OUTPUT}package.json.__exercism.bak" || true
+if test -f "${OUTPUT}babel.config.js"; then 
+  mv "${OUTPUT}babel.config.js" "${OUTPUT}babel.config.js.__exercism.bak" || true
+fi;
+if test -f "${OUTPUT}package.json"; then 
+  mv "${OUTPUT}package.json" "${OUTPUT}package.json.__exercism.bak" || true
+fi;
 
 # Put together the path to the test results file
 result_file="${OUTPUT}results.json"
@@ -149,7 +157,6 @@ set +e
 
 # Run tests
 "$ROOT/node_modules/.bin/jest" "${OUTPUT}*" \
-                               --bail 1 \
                                --no-cache \
                                --ci \
                                --colors \
@@ -160,8 +167,8 @@ set +e
                                --reporters "${REPORTER}" \
                                --roots "${OUTPUT}" \
                                --setupFilesAfterEnv ${SETUP} \
-                               --verbose true \
-                               --testLocationInResults
+                               --testLocationInResults \
+                               --verbose false
 
 
 # --runInBand \
@@ -169,8 +176,12 @@ set +e
 test_exit=$?
 
 # Restore babel.config.js and package.json
-mv "${OUTPUT}babel.config.js.__exercism.bak" "${OUTPUT}babel.config.js" || true
-mv "${OUTPUT}package.json.__exercism.bak" "${OUTPUT}package.json" || true
+if test -f "${OUTPUT}babel.config.js.__exercism.bak"; then 
+  mv "${OUTPUT}babel.config.js.__exercism.bak" "${OUTPUT}babel.config.js" || true
+fi;
+if test -f "${OUTPUT}package.json.__exercism.bak"; then 
+  mv "${OUTPUT}package.json.__exercism.bak" "${OUTPUT}package.json" || true
+fi;
 
 echo ""
 echo "Find the output at:"

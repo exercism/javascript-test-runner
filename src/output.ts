@@ -296,7 +296,6 @@ function buildOutput(
 
     let foundTest: ExtractedTestCase | undefined
     // Using find because it will break when something is found!
-
     entry.origin.split('\n').find((originLine) => {
       if (!originLine.includes(specFilePath)) {
         return undefined
