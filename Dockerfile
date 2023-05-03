@@ -1,5 +1,5 @@
-FROM node:16-bullseye-slim as runner
-# Node.js 16 (curently LTS)
+FROM node:18-bullseye-slim as runner
+# Node.js 18 (curently LTS)
 # Debian bullseye
 
 # fetch latest security updates
