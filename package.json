@@ -17,11 +17,11 @@
   "scripts": {
     "execute": "./bin/run.sh",
     "execute:dev": "yarn build && yarn execute",
-    "prebuild": "rimraf ./dist",
-    "build": "yarn tsc --project ./src/tsconfig.json --outDir ./dist",
+    "clean": "rimraf ./dist",
+    "build": "yarn clean && yarn tsc --project ./src/tsconfig.json --outDir ./dist",
     "watch": "yarn build -w",
-    "prepare": "yarn build",
-    "prepublishOnly": "yarn test:bare && yarn lint",
+    "prepack": "yarn build",
+    "prepublish": "yarn test:bare && yarn lint",
     "lint": "yarn eslint src --ext ts,js,tsx,jsx,mjs -c .eslintrc.js && yarn eslint test --ext ts,js,tsx,jsx,mjs -c test/.eslintrc.js",
     "test": "yarn build && yarn test:bare",
     "test:bare": "jest --roots test --testPathIgnorePatterns=\"fixtures/\""
