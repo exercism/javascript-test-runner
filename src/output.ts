@@ -43,7 +43,8 @@ type ExerciseConfig = {
 const OUTPUT_VERSION = 3
 
 export class Output {
-  private readonly results: Partial<OutputInterface> & Pick<OutputInterface, 'tests'>
+  private readonly results: Partial<OutputInterface> &
+    Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
   private readonly sources: Record<string, ParsedSource>
