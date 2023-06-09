@@ -3,6 +3,9 @@
 /dist
 /node_modules
 
+/.yarn
+/.yarnrc.yml
+
 # These are org-wide files (https://github.com/exercism/org-wide-files/)
 /.github/labels.yml
 /.github/workflows/sync-labels.yml

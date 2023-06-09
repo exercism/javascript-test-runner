@@ -10,6 +10,8 @@ tmp/*
 /jest.config.js
 /jest.runner.config.js
 
+/.yarn
+
 /.eslintrc
 /.eslintrc.*
 /test/.eslintrc
