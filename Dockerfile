@@ -21,11 +21,12 @@ COPY . .
 # Build the test runner
 RUN set -ex; \
   # install all the development modules (used for building)
+  yarn plugin import workspace-tools; \
   yarn install; \
   yarn build; \
   rm -rf node_modules; \
   # install only the node_modules we need for production
-  yarn install --production; \
+  yarn workspaces focus --production; \
   # clean our yarn cache
   yarn cache clean;
 
