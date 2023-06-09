@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.0.0
+
+- Update dependencies including core-js
+- Update Yarn to stable (3+)
+- Update bin/\* to use Yarn 3
+- Update package.json to use Yarn 3
+- Fix linting issues
+
 ## 3.3.1
 
 - Fix debug logging
