@@ -2,7 +2,7 @@
   "name": "@exercism/javascript-test-runner",
   "description": "Automated Test runner for exercism solutions in Javascript.",
   "author": "Derk-Jan Karrenbeld <derk-jan+github@karrenbeld.info>",
-  "version": "3.4.0",
+  "version": "4.0.0",
   "license": "AGPL-3.0-or-later",
   "repository": {
     "type": "git",
@@ -13,9 +13,7 @@
     "doc": "./docs",
     "test": "./test"
   },
-  "bin": {
-    "javascript-test-runner": "bin/run.sh"
-  },
+  "bin": "bin/run.sh",
   "scripts": {
     "execute": "./bin/run.sh",
     "execute:dev": "yarn build && yarn execute",
@@ -57,5 +55,6 @@
     "rimraf": "^5.0.1",
     "ts-jest": "^29.1.0",
     "typescript": "~5.0.3"
-  }
+  },
+  "packageManager": "yarn@3.6.0"
 }
