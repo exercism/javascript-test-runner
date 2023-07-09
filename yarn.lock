@@ -2349,7 +2349,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/visitor-keys@npm:5.59.9, @typescript-eslint/visitor-keys@npm:^5.59.9":
+"@typescript-eslint/visitor-keys@npm:5.59.9":
   version: 5.59.9
   resolution: "@typescript-eslint/visitor-keys@npm:5.59.9"
   dependencies:
@@ -2359,7 +2359,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/visitor-keys@npm:5.61.0":
+"@typescript-eslint/visitor-keys@npm:5.61.0, @typescript-eslint/visitor-keys@npm:^5.59.9":
   version: 5.61.0
   resolution: "@typescript-eslint/visitor-keys@npm:5.61.0"
   dependencies:
