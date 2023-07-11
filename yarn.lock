@@ -1659,7 +1659,7 @@ __metadata:
     "@typescript-eslint/eslint-plugin": ^5.59.9
     "@typescript-eslint/parser": ^5.59.9
     "@typescript-eslint/typescript-estree": ^5.59.9
-    "@typescript-eslint/visitor-keys": ^5.59.9
+    "@typescript-eslint/visitor-keys": ^6.0.0
     babel-jest: ^29.5.0
     chalk: ^4.1.2
     core-js: ~3.30.2
@@ -2428,6 +2428,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@typescript-eslint/types@npm:6.0.0":
+  version: 6.0.0
+  resolution: "@typescript-eslint/types@npm:6.0.0"
+  checksum: a2e232b66b0b057152f4a94d7e0be75f32e389c9c1ec9ed9901ed5aab6e5df08c07bde9865710e315d835e4400ec2232f9c3c525b6edf8a85675ebfbfb69d3a5
+  languageName: node
+  linkType: hard
+
 "@typescript-eslint/typescript-estree@npm:5.59.9":
   version: 5.59.9
   resolution: "@typescript-eslint/typescript-estree@npm:5.59.9"
@@ -2510,13 +2517,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/visitor-keys@npm:5.61.0, @typescript-eslint/visitor-keys@npm:^5.59.9":
+"@typescript-eslint/visitor-keys@npm:5.61.0":
   version: 5.61.0
   resolution: "@typescript-eslint/visitor-keys@npm:5.61.0"
   dependencies:
     "@typescript-eslint/types": 5.61.0
     eslint-visitor-keys: ^3.3.0
   checksum: a8d589f61ddfc380787218da4d347e8f9aef0f82f4a93f1daee46786bda889a90961c7ec1b470db5e3261438a728fdfd956f5bda6ee2de22c4be2d2152d6e270
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/visitor-keys@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "@typescript-eslint/visitor-keys@npm:6.0.0"
+  dependencies:
+    "@typescript-eslint/types": 6.0.0
+    eslint-visitor-keys: ^3.4.1
+  checksum: b0d9848a4490174db1d25b5f336548bb11dde4e0ce664c3dc341bed89fb3a3ada091aeb7f5d2d371433815332d93339c6cb77f7a24469c329c3d055b15237bfa
   languageName: node
   linkType: hard
 
