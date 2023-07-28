@@ -1714,7 +1714,7 @@ __metadata:
     "@types/node": ^18.16.16
     "@typescript-eslint/eslint-plugin": ^5.59.9
     "@typescript-eslint/parser": ^6.0.0
-    "@typescript-eslint/typescript-estree": ^5.59.9
+    "@typescript-eslint/typescript-estree": ^6.2.0
     "@typescript-eslint/visitor-keys": ^6.0.0
     babel-jest: ^29.5.0
     chalk: ^4.1.2
@@ -2527,7 +2527,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/typescript-estree@npm:5.61.0, @typescript-eslint/typescript-estree@npm:^5.59.9":
+"@typescript-eslint/typescript-estree@npm:5.61.0":
   version: 5.61.0
   resolution: "@typescript-eslint/typescript-estree@npm:5.61.0"
   dependencies:
@@ -2560,6 +2560,24 @@ __metadata:
     typescript:
       optional: true
   checksum: 6214ff9cc3c4fd7fe03f846e96a498ecf85916083bb60d419bc5a12142cff912670032b1de5ea52ab353ca7eeb4e1cc8fa475a22958b010043c88e274df49859
+  languageName: node
+  linkType: hard
+
+"@typescript-eslint/typescript-estree@npm:^6.2.0":
+  version: 6.2.0
+  resolution: "@typescript-eslint/typescript-estree@npm:6.2.0"
+  dependencies:
+    "@typescript-eslint/types": 6.2.0
+    "@typescript-eslint/visitor-keys": 6.2.0
+    debug: ^4.3.4
+    globby: ^11.1.0
+    is-glob: ^4.0.3
+    semver: ^7.5.4
+    ts-api-utils: ^1.0.1
+  peerDependenciesMeta:
+    typescript:
+      optional: true
+  checksum: 5bfd5bf09feff6c4807cfa65cf407dd0249f7d487d6820941dd05999ee35cacdabaacadf23c92b90b57920025e93088e93924bc8df41f393ac0366538eb2902f
   languageName: node
   linkType: hard
 
@@ -2629,7 +2647,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/visitor-keys@npm:^6.0.0":
+"@typescript-eslint/visitor-keys@npm:6.2.0, @typescript-eslint/visitor-keys@npm:^6.0.0":
   version: 6.2.0
   resolution: "@typescript-eslint/visitor-keys@npm:6.2.0"
   dependencies:
@@ -6507,7 +6525,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.5.0, semver@npm:^7.5.3":
+"semver@npm:^7.3.5, semver@npm:^7.3.7, semver@npm:^7.5.0, semver@npm:^7.5.3, semver@npm:^7.5.4":
   version: 7.5.4
   resolution: "semver@npm:7.5.4"
   dependencies:
