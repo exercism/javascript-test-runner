@@ -1,0 +1,46 @@
+{
+  "status": "pass",
+  "tests": [
+    {
+      "name": "EXPECTED_MINUTES_IN_OVEN > constant is defined correctly",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(EXPECTED_MINUTES_IN_OVEN).toBe(40);",
+      "task_id": 1
+    },
+    {
+      "name": "remainingMinutesInOven > calculates the remaining time",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(remainingMinutesInOven(25)).toBe(15);\nexpect(remainingMinutesInOven(5)).toBe(35);\nexpect(remainingMinutesInOven(39)).toBe(1);",
+      "task_id": 2
+    },
+    {
+      "name": "remainingMinutesInOven > works correctly for the edge cases",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(remainingMinutesInOven(40)).toBe(0);\nexpect(remainingMinutesInOven(0)).toBe(40);",
+      "task_id": 2
+    },
+    {
+      "name": "preparationTimeInMinutes > calculates the preparation time",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(preparationTimeInMinutes(1)).toBe(2);\nexpect(preparationTimeInMinutes(2)).toBe(4);\nexpect(preparationTimeInMinutes(8)).toBe(16);",
+      "task_id": 3
+    },
+    {
+      "name": "totalTimeInMinutes > calculates the total cooking time",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(totalTimeInMinutes(1, 5)).toBe(7);\nexpect(totalTimeInMinutes(4, 15)).toBe(23);\nexpect(totalTimeInMinutes(1, 35)).toBe(37);",
+      "task_id": 4
+    }
+  ],
+  "version": 3
+}

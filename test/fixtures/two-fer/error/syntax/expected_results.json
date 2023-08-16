@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "message": "SyntaxError: <solution>/two-fer.js: Unexpected keyword 'const'. (1:13)\n\n    \u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 1 |\u001b[39m \u001b[36mexport\u001b[39m \u001b[36mconst\u001b[39m \u001b[36mconst\u001b[39m () \u001b[33m=>\u001b[39m { (\u001b[0m\n    \u001b[0m \u001b[90m   |\u001b[39m              \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n    \u001b[0m \u001b[90m 2 |\u001b[39m\u001b[0m\n",
+  "tests": [],
+  "version": 3
+}

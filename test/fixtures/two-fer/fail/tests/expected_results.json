@@ -1,0 +1,27 @@
+{
+  "status": "fail",
+  "tests": [
+    {
+      "name": "twoFer() > no name given",
+      "status": "pass",
+      "message": "",
+      "output": "[log] undefined",
+      "test_code": "expect(twoFer()).toEqual('One for you, one for me.');"
+    },
+    {
+      "name": "twoFer() > a name given",
+      "status": "fail",
+      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\nExpected: \u001b[32m\"One for \u001b[7mAlice\u001b[27m, one for me.\"\u001b[39m\nReceived: \u001b[31m\"One for \u001b[7myou\u001b[27m, one for me.\"\u001b[39m",
+      "output": "[log] Some global log\n[log] Alice",
+      "test_code": "const name = 'Alice';\nexpect(twoFer(name)).toEqual('One for Alice, one for me.');"
+    },
+    {
+      "name": "twoFer() > another name given",
+      "status": "fail",
+      "message": "Error: \u001b[2mexpect(\u001b[22m\u001b[31mreceived\u001b[39m\u001b[2m).\u001b[22mtoEqual\u001b[2m(\u001b[22m\u001b[32mexpected\u001b[39m\u001b[2m) // deep equality\u001b[22m\n\nExpected: \u001b[32m\"One for \u001b[7mBob\u001b[27m, one for me.\"\u001b[39m\nReceived: \u001b[31m\"One for \u001b[7myou\u001b[27m, one for me.\"\u001b[39m",
+      "output": "[log] Bob",
+      "test_code": "const name = 'Bob';\nexpect(twoFer(name)).toEqual('One for Bob, one for me.');"
+    }
+  ],
+  "version": 3
+}

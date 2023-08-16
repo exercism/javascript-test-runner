@@ -1,0 +1,27 @@
+{
+  "status": "fail",
+  "tests": [
+    {
+      "name": "twoFer() > no name given",
+      "status": "fail",
+      "message": "TypeError: (0 , _twoFer.twoFer) is not a function",
+      "output": null,
+      "test_code": "expect(twoFer()).toEqual('One for you, one for me.');"
+    },
+    {
+      "name": "twoFer() > a name given",
+      "status": "fail",
+      "message": "TypeError: (0 , _twoFer.twoFer) is not a function",
+      "output": null,
+      "test_code": "const name = 'Alice';\nexpect(twoFer(name)).toEqual('One for Alice, one for me.');"
+    },
+    {
+      "name": "twoFer() > another name given",
+      "status": "fail",
+      "message": "TypeError: (0 , _twoFer.twoFer) is not a function",
+      "output": null,
+      "test_code": "const name = 'Bob';\nexpect(twoFer(name)).toEqual('One for Bob, one for me.');"
+    }
+  ],
+  "version": 3
+}

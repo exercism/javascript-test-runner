@@ -1,0 +1,13 @@
+{
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Clock > Creating a new clock with an initial time > on the hour",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(new Clock(8).toString()).toEqual('08:00');"
+    }
+  ],
+  "version": 3
+}
