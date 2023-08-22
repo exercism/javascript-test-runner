@@ -1,0 +1,76 @@
+{
+  "status": "pass",
+  "tests": [
+    {
+      "name": "strings > front door > it outputs a character per line",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "const key = ShireGuard.recite();\nexpect(key.length).toBe(SHIRE_HORSE.length);"
+    },
+    {
+      "name": "strings > front door > it outputs takes the first characters",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "const key = ShireGuard.recite();\nexpect(key.toUpperCase()).toBe(SHIRE_HORSE.acrostic.toUpperCase());"
+    },
+    {
+      "name": "strings > front door > it generates the correct password",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "ShireGuard.assert();"
+    },
+    {
+      "name": "strings > front door > frontDoorPassword(SUMMER)",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": null
+    },
+    {
+      "name": "strings > front door > frontDoorPassword(SOPHIA)",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": null
+    },
+    {
+      "name": "strings > front door > frontDoorPassword(CODE)",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": null
+    },
+    {
+      "name": "strings > back door > it outputs a character per line",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "const key = ShireGuard.recite();\nexpect(key.length).toBe(SHIRE_HORSE.length);"
+    },
+    {
+      "name": "strings > back door > it outputs takes the first characters",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "const key = ShireGuard.recite();\nexpect(key.toUpperCase()).toBe(SHIRE_HORSE.telestich.toUpperCase());"
+    },
+    {
+      "name": "strings > back door > it generates the correct password",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "ShireGuard.assert();"
+    },
+    {
+      "name": "strings > back door > backDoorGuard(WORK)",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": null
+    }
+  ],
+  "version": 3
+}

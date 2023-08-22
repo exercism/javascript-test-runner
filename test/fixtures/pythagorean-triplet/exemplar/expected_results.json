@@ -1,0 +1,69 @@
+{
+  "status": "pass",
+  "tests": [
+    {
+      "name": "Triplet > triplets whose sum is 12",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(12)).toEqual([[3, 4, 5]]);"
+    },
+    {
+      "name": "Triplet > triplets whose sum is 108",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(108)).toEqual([[27, 36, 45]]);"
+    },
+    {
+      "name": "Triplet > triplets whose sum is 1000",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(1000)).toEqual([[200, 375, 425]]);"
+    },
+    {
+      "name": "Triplet > no matching triplets for 1001",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(1001)).toEqual([]);"
+    },
+    {
+      "name": "Triplet > returns all matching triplets",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(90)).toEqual([\n      [9, 40, 41],\n      [15, 36, 39],\n    ]);"
+    },
+    {
+      "name": "Triplet > several matching triplets",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(840)).toEqual([\n      [40, 399, 401],\n      [56, 390, 394],\n      [105, 360, 375],\n      [120, 350, 370],\n      [140, 336, 364],\n      [168, 315, 357],\n      [210, 280, 350],\n      [240, 252, 348],\n    ]);"
+    },
+    {
+      "name": "Triplet > returns triplets with no factor smaller than minimum factor",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(90, { minFactor: 10 })).toEqual([[15, 36, 39]]);"
+    },
+    {
+      "name": "Triplet > returns triplets with no factor larger than maximum factor",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(840, { maxFactor: 349 })).toEqual([[240, 252, 348]]);"
+    },
+    {
+      "name": "Triplet > returns triplets with factors in range",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(tripletsWithSum(840, { maxFactor: 352, minFactor: 150 })).toEqual([\n      [210, 280, 350],\n      [240, 252, 348],\n    ]);"
+    }
+  ],
+  "version": 3
+}

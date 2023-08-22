@@ -9,3 +9,7 @@ dev.Dockerfile
 .gitignore
 .gitattributes
 .dockerignore
+/bin/
+!/bin/run.sh
+!/bin/prepare.sh
+test/
