@@ -19,7 +19,7 @@ jobs:
           node-version: 18.x
 
       - name: Install project dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Run exercism/javascript-test-runner ci precheck (lint code)
         run: bin/lint.sh
@@ -39,7 +39,7 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Install project dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --immutable
 
       - name: Build the test-runner (using Node ${{ matrix.node-version }})
         run: bin/test.sh
