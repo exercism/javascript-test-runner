@@ -565,10 +565,10 @@ __metadata:
   linkType: hard
 
 "@babel/node@npm:^7.22.1, @babel/node@npm:^7.22.5":
-  version: 7.22.10
-  resolution: "@babel/node@npm:7.22.10"
+  version: 7.23.9
+  resolution: "@babel/node@npm:7.23.9"
   dependencies:
-    "@babel/register": ^7.22.5
+    "@babel/register": ^7.23.7
     commander: ^4.0.1
     core-js: ^3.30.2
     node-environment-flags: ^1.0.5
@@ -578,7 +578,7 @@ __metadata:
     "@babel/core": ^7.0.0-0
   bin:
     babel-node: ./bin/babel-node.js
-  checksum: 9bebd11501e88b26f8039c2653cba6aef9a2a672b2bfec544e9e1975d76176c330129daca2946a4ca93d842475d0d214688b804b21e6e6d11b676a78566acb2d
+  checksum: 24b0fdd6594d88f7cffcd58e771cda67dc535c1e27242e66095885801716f3a4a34ea230b4b075c7f8e227ccebd24b66eb6a7622ee34984db73c16efb735efbe
   languageName: node
   linkType: hard
 
@@ -1621,18 +1621,18 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/register@npm:^7.22.5":
-  version: 7.22.5
-  resolution: "@babel/register@npm:7.22.5"
+"@babel/register@npm:^7.23.7":
+  version: 7.23.7
+  resolution: "@babel/register@npm:7.23.7"
   dependencies:
     clone-deep: ^4.0.1
     find-cache-dir: ^2.0.0
     make-dir: ^2.1.0
-    pirates: ^4.0.5
+    pirates: ^4.0.6
     source-map-support: ^0.5.16
   peerDependencies:
     "@babel/core": ^7.0.0-0
-  checksum: 723ce27fdad6faee5b3f51ef4f5154f7f285d61da665367de14de85abbe1c81ccbac11f699671cd0ed6b755dd430f28a62364fed5d49f2527625a9ea3bf40056
+  checksum: c72a6d4856ef04f13490370d805854d2d98a77786bfaec7d85e2c585e1217011c4f3df18197a890e14520906c9111bef95551ba1a9b59c88df4dfc2dfe2c8d1b
   languageName: node
   linkType: hard
 
@@ -6461,10 +6461,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pirates@npm:^4.0.4, pirates@npm:^4.0.5":
+"pirates@npm:^4.0.4":
   version: 4.0.5
   resolution: "pirates@npm:4.0.5"
   checksum: c9994e61b85260bec6c4fc0307016340d9b0c4f4b6550a957afaaff0c9b1ad58fbbea5cfcf083860a25cb27a375442e2b0edf52e2e1e40e69934e08dcc52d227
+  languageName: node
+  linkType: hard
+
+"pirates@npm:^4.0.6":
+  version: 4.0.6
+  resolution: "pirates@npm:4.0.6"
+  checksum: 46a65fefaf19c6f57460388a5af9ab81e3d7fd0e7bc44ca59d753cb5c4d0df97c6c6e583674869762101836d68675f027d60f841c105d72734df9dfca97cbcc6
   languageName: node
   linkType: hard
 
