@@ -8,7 +8,6 @@ import type { AggregatedResult, TestResult } from '@jest/test-result'
 import type { Config } from '@jest/types'
 import { Output } from './output'
 
-// eslint-disable-next-line import/no-default-export
 export default class StandardReporter implements Reporter {
   private readonly output: Output
 
@@ -35,8 +34,8 @@ export default class StandardReporter implements Reporter {
    * @param options
    */
   public onRunStart(
-    results: AggregatedResult,
-    options: ReporterOnStartOptions
+    _results: AggregatedResult,
+    _options: ReporterOnStartOptions
   ): void {
     // no-op
   }
