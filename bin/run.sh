@@ -390,7 +390,7 @@ echo ""
 echo "⚙️  corepack pnpm jest <...>"
 echo ""
 
-cd "${OUTPUT}" && YARN_ENABLE_OFFLINE_MODE=1 corepack pnpm jest "${OUTPUT}*" \
+cd "${OUTPUT}" && corepack pnpm --offline jest "${OUTPUT}*" \
                   --bail 1 \
                   --ci \
                   --colors \
