@@ -44,7 +44,7 @@ RUN set -ex; \
   # corepack pnpm store prune; \
   corepack pnpm install; \
   corepack pnpm build; \
-  corepack pnpm prune;
+  corepack pnpm prune --prod;
 
 # Disable network for corepack
 ENV COREPACK_ENABLE_NETWORK=0
