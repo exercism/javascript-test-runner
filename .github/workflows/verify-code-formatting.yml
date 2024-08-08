@@ -12,5 +12,15 @@ jobs:
       - name: 'Checkout code'
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332
 
+      - name: Use Node.js LTS (20.x)
+        uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
+        with:
+          node-version: 20.x
+
+      - name: Enable pnpm
+        run: |
+          corepack enable pnpm
+          corepack pnpm -v
+
       - name: 'Verify formatting of all files'
         run: ./bin/check-formatting.sh

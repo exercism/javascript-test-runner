@@ -64,8 +64,10 @@ jobs:
         uses: actions/setup-node@1e60f620b9541d16bece96c5465dc8ee9832be0b
         with:
           node-version: 20.x
-      - name: Install project development dependencies
-        run: npm install --no-save
+      - name: Enable pnpm
+        run: |
+          corepack enable pnpm
+          corepack pnpm -v
       - name: 'Format code'
         run: ./bin/format.sh
 
