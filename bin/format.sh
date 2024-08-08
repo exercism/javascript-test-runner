@@ -26,7 +26,7 @@ if [ -z "${EXERCISM_PRETTIER_VERSION:-}" ]; then
   echo "$(corepack pnpm info prettier)"
   echo ""
   echo "This is the version that can be extracted using sed:"
-  echo "$ corepack pnpm why prettier --parseable | sed -n -e '1,$s/^.*prettier@//' -e 's/\\node_modules\\prettier//p'"
+  echo "$ corepack pnpm why prettier --parseable | sed -n -e '1,\$s/^.*prettier@//' -e 's/\\node_modules\\prettier//p'"
   echo "└─ $(corepack pnpm why prettier --parseable | sed -n -e '1,$s/^.*prettier@//' -e 's/\\node_modules\\prettier//p')"
   echo ""
   echo "These files are found in the repo root:"
