@@ -11,8 +11,10 @@ assertPass(
   join(fixtures, 'two-fer', 'pass')
 )
 
-shelljs.echo('javascript-test-runner > failing passing > with output directory')
-assertError('two-fer', join(fixtures, 'two-fer', 'pass'))
+shelljs.echo(
+  'javascript-test-runner > passing solution > with output directory'
+)
+assertPass('two-fer', join(fixtures, 'two-fer', 'pass'))
 
 shelljs.echo(
   'javascript-test-runner > passing solution > uses .meta/config.json'
