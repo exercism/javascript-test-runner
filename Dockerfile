@@ -38,13 +38,14 @@ RUN chmod 444 /idk/corepack/lastKnownGood.json
 RUN chmod 555 /idk/corepack
 
 # Build the test runner
-# Build the test runner
 RUN set -ex; \
   # install all the development modules (used for building)
   # corepack pnpm store prune; \
   corepack pnpm install; \
   corepack pnpm build; \
   corepack pnpm prune --prod;
+
+RUN chmod -R +x node_modules/.bin
 
 # Disable network for corepack
 ENV COREPACK_ENABLE_NETWORK=0
