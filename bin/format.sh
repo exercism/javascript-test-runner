@@ -3,13 +3,19 @@
 set -uo pipefail
 
 if [ -z "${EXERCISM_PRETTIER_VERSION:-}" ]; then
-  echo "[format] pulling prettier version from package.json using sed"
+  echo "[format] pulling prettier version from pnpm list using sed"
   EXERCISM_PRETTIER_VERSION="$(corepack pnpm list prettier --parseable | sed -n -e '1,$s/^.*prettier@//' -e 's/\\node_modules\\prettier//p')"
   echo "[format] expected version is now ${EXERCISM_PRETTIER_VERSION:-}"
 fi
 
 if [ -z "${EXERCISM_PRETTIER_VERSION:-}" ]; then
-  echo "Version could not be pulled using sed" >&2
+  echo "[format] pulling prettier version via pnpm-lock.yaml using grep"
+  EXERCISM_PRETTIER_VERSION="$(cat  pnpm-lock.yaml | grep -Po '  prettier@\K[^:]+')"
+  echo "[format] expected version is now ${EXERCISM_PRETTIER_VERSION:-}"
+fi
+
+if [ -z "${EXERCISM_PRETTIER_VERSION:-}" ]; then
+  echo "Version could not be pulled using sed or grep" >&2
   echo ""
   echo "---------------------------------------------------"
   echo "This script requires the EXERCISM_PRETTIER_VERSION variable to work."
@@ -28,6 +34,10 @@ if [ -z "${EXERCISM_PRETTIER_VERSION:-}" ]; then
   echo "This is the version that can be extracted using sed:"
   echo "$ corepack pnpm list prettier --parseable | sed -n -e '1,\$s/^.*prettier@//' -e 's/\\node_modules\\prettier//p'"
   echo "└─ $(corepack pnpm list prettier --parseable | sed -n -e '1,$s/^.*prettier@//' -e 's/\\node_modules\\prettier//p')"
+  echo ""
+  echo "This is the version that can be extracted using grep:"
+  echo "$ cat  pnpm-lock.yaml | grep -Po '  prettier@\K[^:]+'"
+  echo "└─ $(cat  pnpm-lock.yaml | grep -Po '  prettier@\K[^:]+')"
   echo ""
   echo "These files are found in the repo root:"
   echo "$(ls -p | grep -v /)"
