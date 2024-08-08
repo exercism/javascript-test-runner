@@ -45,8 +45,8 @@ RUN set -ex; \
   corepack pnpm build; \
   corepack pnpm prune --prod;
 
-RUN chmod -R +x node_modules/.bin
-RUN chmod +x node_modules/jest/bin/jest.js
+RUN chown -R appuser:appuser node_modules
+
 
 # Disable network for corepack
 ENV COREPACK_ENABLE_NETWORK=0
