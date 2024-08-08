@@ -41,7 +41,7 @@ RUN chmod 555 /idk/corepack
 # Build the test runner
 RUN set -ex; \
   # install all the development modules (used for building)
-  corepack pnpm store prune; \
+  # corepack pnpm store prune; \
   corepack pnpm install; \
   corepack pnpm build; \
   corepack pnpm prune;
