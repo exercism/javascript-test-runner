@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "@exercism/babel-preset-javascript": "^0.5.0",
-    "@exercism/static-analysis": "file:../javascript-lib-static-analysis",
+    "@exercism/static-analysis": "^0.14.0",
     "@jest/console": "^29.7.0",
     "@jest/reporters": "^29.7.0",
     "@jest/test-result": "^29.7.0",
@@ -42,11 +42,11 @@
     "shelljs": "^0.8.5"
   },
   "devDependencies": {
-    "@exercism/eslint-config-tooling": "file:../eslint-config-tooling",
+    "@exercism/eslint-config-tooling": "^0.6.0",
     "@jest/globals": "^29.7.0",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.1.0",
-    "@types/shelljs": "^0",
+    "@types/shelljs": "^0.8.15",
     "eslint": "^9.8.0",
     "prettier": "^3.3.3",
     "rimraf": "^6.0.1",
