@@ -24,9 +24,6 @@ COPY --chown=appuser:appuser . .
 RUN mkdir -p /idk/corepack
 ENV COREPACK_HOME=/idk/corepack
 
-# Execute everything as the appuser
-USER appuser
-
 RUN set -ex; \
   corepack enable pnpm;
   # corepack pack -o ./corepack.tgz; \
@@ -39,6 +36,9 @@ RUN corepack pnpm --version
 # https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/sources/folderUtils.ts#L26-L31
 RUN chmod 444 /idk/corepack/lastKnownGood.json
 RUN chmod 555 /idk/corepack
+
+# Execute everything as the appuser
+USER appuser
 
 # Build the test runner
 RUN set -ex; \
