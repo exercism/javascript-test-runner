@@ -21,21 +21,15 @@ interface OutputTestInterface {
   status: 'fail' | 'pass' | 'error'
   message: string
   output: string | null
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   test_code: string
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   task_id?: number
 }
 
 type ExerciseConfig = {
   custom?: {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     'version.tests.compatibility'?: 'jest-27' | 'jest-29'
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     'flag.tests.task-per-describe': boolean
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     'flag.tests.may-run-long': boolean
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     'flag.tests.includes-optional': boolean
   }
 }
@@ -72,11 +66,9 @@ export class Output {
       this.results.status =
         aggregatedResults.numRuntimeErrorTestSuites === 0 &&
         aggregatedResults.numFailedTestSuites === 0 &&
-        // Pending tests are skipped tests. test.skip tests are fine in our
-        // reporter and should not be forced to have ran here. So the next
-        // line is commented out.
+        // Pending tests are skipped tests. test.skip tests are fine if the
+        // exercise reports that there are optional tests.
         //
-        // aggregatedResults.numPendingTests === 0 &&
         aggregatedResults.numFailedTests === 0
           ? 'pass'
           : 'fail'
@@ -93,6 +85,24 @@ export class Output {
             'These files are normally not empty. Revert any changes or report ' +
             'an issue if the problem persists.'
         )
+      }
+
+      if (
+        this.results.status === 'pass' &&
+        (aggregatedResults.numPendingTests !== 0 ||
+          aggregatedResults.numPendingTestSuites !== 0)
+      ) {
+        if (
+          !this.configFlag('flag.tests.includes-optional') &&
+          this.config?.custom
+        ) {
+          this.results.status = 'fail'
+          this.error(
+            'Expected to see 0 skipped tests and 0 skipped test suites. ' +
+              'None of the tests in this exercise are optional. The skipped ' +
+              'tests will not show up, but were found during the last run.'
+          )
+        }
       }
     }
 
@@ -140,13 +150,11 @@ export class Output {
     const tests = this.results.tests.map((test) => {
       const parsedSource = parsedSources[test.test_code]
       if (!parsedSource) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         return { ...test, test_code: null }
       }
 
       const testCase = parsedSource.tests[test.name]
       if (!testCase) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         return { ...test, test_code: null }
       }
 
@@ -154,16 +162,13 @@ export class Output {
       if (this.configFlag('flag.tests.task-per-describe')) {
         return {
           ...test,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           task_id: testCase.topLevelIndex,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           test_code: testCase.testCode(parsedSource.source),
         }
       }
 
       return {
         ...test,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         test_code: testCase.testCode(parsedSource.source),
       }
     })
@@ -262,7 +267,6 @@ export class Output {
             ? [consoleOutputs[''], outputMessage].filter(Boolean).join('\n') ||
               null
             : outputMessage,
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           test_code: specFilePath,
         }
       })
