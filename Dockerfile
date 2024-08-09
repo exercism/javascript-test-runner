@@ -16,7 +16,7 @@ RUN adduser --disabled-password --gecos "" appuser
 
 # install our test runner to /opt
 WORKDIR /opt/test-runner
-COPY --chown=appuser:appuser . .
+COPY . .
 
 # Install pnpm so it will be available read-only
 # https://github.com/nodejs/corepack/issues/183#issue-1379672431
@@ -37,9 +37,6 @@ RUN corepack pnpm --version
 RUN chmod 444 /idk/corepack/lastKnownGood.json
 RUN chmod 555 /idk/corepack
 
-# Execute everything as the appuser
-USER appuser
-
 # Build the test runner
 RUN set -ex; \
   # install all the development modules (used for building)
@@ -52,4 +49,6 @@ RUN set -ex; \
 ENV COREPACK_ENABLE_NETWORK=0
 ENV COREPACK_ENABLE_STRICT=0
 
+# Execute everything as the appuser
+USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
