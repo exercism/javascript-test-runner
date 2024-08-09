@@ -42,7 +42,7 @@
     "typescript": "~5.4.5"
   },
   "devDependencies": {
-    "@exercism/eslint-config-tooling": "^0.4.0",
+    "@exercism/eslint-config-tooling": "^0.6.0",
     "@tsconfig/node18": "^18.2.0",
     "@types/jest": "^29.5.2",
     "@types/node": "^20.2.5",
