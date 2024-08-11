@@ -308,7 +308,7 @@ echo ""
 if test -f "${OUTPUT}package.json"; then
   echo "✔️  standalone package found at ${OUTPUT}package.json"
   echo ""
-  ls -aln1 "${OUTPUT}"
+  ls -al "${OUTPUT}"
   echo ""
 
   if test -d "${OUTPUT}node_modules/.pnpm"; then
@@ -316,7 +316,7 @@ if test -f "${OUTPUT}package.json"; then
     # ls -aln1 "${OUTPUT}node_modules"
     # echo ""
     echo "Found .pnpm hoisted binaries"
-    ls -aln1 "${OUTPUT}node_modules/.bin"
+    ls -al "${OUTPUT}node_modules/.bin"
   else
     echo ".pnpm hoisted packages not found"
     cd "${COREPACK_ROOT_DIR}" && corepack pnpm install --offline --frozen-lockfile
