@@ -26,7 +26,7 @@ cp -R ${fixtures_dir}/* "${tmp_fixtures_dir}"
 for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
     echo "👁️  ${test_file}"
 
-    slug=$(echo "${test_file:${#tmp_fixtures_dir}+1}" | cut -d / -f 1)
+    slug=$(basename "${test_file}" | sed s/.spec.js$//)
     test_dir=$(dirname "${test_file}")
     test_dir_name=$(basename "${test_dir}")
     test_dir_path=$(realpath "${test_dir}")
