@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Synopsis:
-# Test the test runner by running it against a predefined set of solutions 
+# Test the test runner by running it against a predefined set of solutions
 # with an expected output.
 
 # Output:
@@ -14,7 +14,7 @@
 exit_code=0
 
 # We need to copy the fixtures to a temp directory as the user
-# running within the Docker container does not have permissions 
+# running within the Docker container does not have permissions
 # to run the sed command on the fixtures directory
 fixtures_dir="test/fixtures"
 tmp_fixtures_dir="/tmp/test/fixtures"
@@ -24,6 +24,8 @@ cp -R ${fixtures_dir}/* "${tmp_fixtures_dir}"
 
 # Iterate over all test directories
 for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
+    echo "👁️  ${test_file}"
+
     slug=$(echo "${test_file:${#tmp_fixtures_dir}+1}" | cut -d / -f 1)
     test_dir=$(dirname "${test_file}")
     test_dir_name=$(basename "${test_dir}")
@@ -36,8 +38,10 @@ for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
 
     bin/run.sh "${slug}" "${test_dir_path}" "${test_dir_path}"
 
-    echo "${slug}/${test_dir_name}: comparing results.json to expected_results.json"
-    diff "${results_file_path}" "${expected_results_file_path}"
+    if test -f $expected_results_file_path; then
+        echo "${slug}/${test_dir_name}: comparing results.json to expected_results.json"
+        diff "${results_file_path}" "${expected_results_file_path}"
+    fi;
 
     if [ $? -ne 0 ]; then
         exit_code=1

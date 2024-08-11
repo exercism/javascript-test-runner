@@ -87,18 +87,15 @@ echo "  🔧 Process input arguments for run                            "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
+echo "✔️  Using slug     : $SLUG"
+echo "✔️  Using reporter : $REPORTER"
+echo "✔️  Using test-root: $INPUT"
+echo "✔️  Using base-root: $ROOT"
+echo "✔️  Using setup-env: $SETUP"
 
 if test -f "$REPORTER"; then
-  echo "✔️  Using reporter : $REPORTER"
-  echo "✔️  Using test-root: $INPUT"
-  echo "✔️  Using base-root: $ROOT"
-  echo "✔️  Using setup-env: $SETUP"
+  echo "✔️  reporter.js found, test runner was built"
 else
-  echo "✔️  Using reporter : $REPORTER"
-  echo "✔️  Using test-root: $INPUT"
-  echo "✔️  Using base-root: $ROOT"
-  echo "✔️  Using setup-env: $SETUP"
-
   >&2 echo "❌ Expected reporter.js to exist."
   >&2 echo "❌ Did you forget to 'corepack pnpm build' first?"
   >&2 echo ""
