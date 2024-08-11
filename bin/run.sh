@@ -324,7 +324,7 @@ if test -f "${OUTPUT}package.json"; then
 fi;
 
 bin_jest="$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm bin)/jest"
-if [[ -f "${bin_jest}" && ]]; then
+if [[ -f "${bin_jest}" ]]; then
   echo "✔️  jest executable found using ${bin_jest}"
 
   if [[ -x "${bin_jest}" ]]; then
