@@ -52,7 +52,7 @@ ENV COREPACK_ENABLE_STRICT=0
 # https://github.com/pnpm/pnpm/issues/344#issuecomment-244355674
 ENV DEBUG_PROMISE=true
 
-RUN chown -R appuser /node_modules
+RUN chown -R appuser /opt/test-runner/node_modules
 
 # Execute everything as the appuser
 USER appuser
