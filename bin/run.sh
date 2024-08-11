@@ -339,8 +339,8 @@ echo ""
 
 jest_tests=$(cd "${OUTPUT}" && corepack pnpm jest --listTests --passWithNoTests) || false
 
-echo $("$(corepack pnpm bin)/jest --listTests")
-echo $("corepack pnpm node ${ROOT}node_modules/jest/bin/jest.js --listTests")
+echo $(cd "${OUTPUT}" && "$(corepack pnpm bin)/jest --listTests")
+echo $(cd "${OUTPUT}" && "corepack pnpm node ${OUTPUT}node_modules/jest/bin/jest.js --listTests")
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
