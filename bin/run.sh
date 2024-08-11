@@ -327,12 +327,11 @@ bin_jest="$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm bin)/jest"
 if [[ -f "${bin_jest}" && -x $(realpath "${bin_jest}") ]]; then
   echo "✔️  jest executable found using ${bin_jest}"
 else
-  echo "💥  jest executable missing at ${bin_jest} or not executable"
+  echo "💥  jest executable missing at ${bin_jest} or not executable for ${whoami}"
   echo "👁️  ${bin_jest} -> $(realpath "${bin_jest}")"
   echo "   ${COREPACK_ROOT_DIR} as corepack root"
 
   if test -f "${bin_jest}"; then
-    echo "It does exist"
     ls -l "${bin_jest}"
   fi
 
