@@ -330,7 +330,7 @@ else
   echo "💥  jest executable missing at ${bin_jest} or not executable"
   echo "👁️  ${bin_jest} -> $(realpath "${bin_jest}")"
   echo "   ${COREPACK_ROOT_DIR} as corepack root"
-  if [[ -f "${bin_jest}"]]; then
+  if [ -f "${bin_jest}"]; then
     echo "It does exist"
     ls -l "${bin_jest}"
   fi
