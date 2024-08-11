@@ -81,7 +81,7 @@ REPORTER="$ROOT/dist/reporter.js"
 SETUP="$ROOT/dist/jest/setup.js"
 CONFIG="$ROOT/jest.runner.config.js"
 
-echo ""
+echo " "
 echo "╔═════════════════════════════════════════════════════════════╗"
 echo "  🔧 Process input arguments for run                            "
 echo "╚═════════════════════════════════════════════════════════════╝"
@@ -306,7 +306,7 @@ echo "✔️  pnpm version now: $(corepack pnpm --version --offline)"
 echo ""
 
 if test -f "${OUTPUT}package.json"; then
-  echo "✔️  standalone package found"
+  echo "✔️  standalone package found at ${OUTPUT}package.json"
   echo ""
   ls -aln1 "${OUTPUT}"
   echo ""
@@ -329,6 +329,7 @@ if [[ -f "${bin_jest}" && -x $(realpath "${bin_jest}") ]]; then
 else
   echo "💥  jest executable missing at ${bin_jest} or not executable"
   echo "👁️  ${bin_jest} -> $(realpath "${bin_jest}")"
+  echo "   ${COREPACK_ROOT_DIR} as corepack root"
   exit -1
 fi;
 
