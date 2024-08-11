@@ -152,6 +152,8 @@ if test -f "${OUTPUT}.npmrc"; then
   mv "${OUTPUT}.npmrc" "${OUTPUT}.npmrc.💥.bak" || true
 fi;
 
+COREPACK_ROOT_DIR=$(pwd)
+
 if [[ "${OUTPUT}" =~ "$ROOT" ]]; then
   echo ""
   echo "The output directory seems to be placed inside the test      "
@@ -176,6 +178,8 @@ else
   echo "the tests. Will now turn the output directory into a         "
   echo "standalone package."
   echo ""
+
+  COREPACK_ROOT_DIR="${OUTPUT}"
 
   echo "✔️  pnpm cache from root to output"
   # cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
@@ -315,13 +319,13 @@ if test -f "${OUTPUT}package.json"; then
     ls -aln1 "${OUTPUT}node_modules/.bin"
   else
     echo ".pnpm hoisted packages not found"
-    cd "${OUTPUT}" && corepack pnpm install --offline --frozen-lockfile
+    cd "${COREPACK_ROOT_DIR}" && corepack pnpm install --offline --frozen-lockfile
   fi
 fi;
 
-bin_jest="$(corepack pnpm bin)/jest"
+bin_jest="$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm bin)/jest"
 if [[ -f "${bin_jest}" && -x $(realpath "${bin_jest}") ]]; then
-  echo "✔️  jest executable found"
+  echo "✔️  jest executable found using ${bin_jest}"
 else
   echo "💥  jest executable missing at ${bin_jest} or not executable"
   echo "👁️  ${bin_jest} -> $(realpath "${bin_jest}")"
@@ -337,7 +341,7 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-jest_tests=$(corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests) || false
+jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests) || false
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
@@ -399,7 +403,7 @@ echo ""
 echo "⚙️  corepack pnpm jest <...>"
 echo ""
 
-corepack pnpm jest "${OUTPUT}*" \
+cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" \
   --bail 1 \
   --ci \
   --colors \
