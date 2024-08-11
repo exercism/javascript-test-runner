@@ -339,6 +339,9 @@ echo ""
 
 jest_tests=$(cd "${OUTPUT}" && corepack pnpm jest --listTests --passWithNoTests) || false
 
+echo $("$(corepack pnpm bin)/jest --listTests")
+echo $("corepack pnpm node ${ROOT}node_modules/jest/bin/jest.js --listTests")
+
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
 
@@ -399,19 +402,19 @@ echo ""
 echo "⚙️  corepack pnpm jest <...>"
 echo ""
 
-cd "${OUTPUT}" && corepack pnpm --offline jest "${OUTPUT}*" \
-                  --bail 1 \
-                  --ci \
-                  --colors \
-                  --config ${CONFIG} \
-                  --noStackTrace \
-                  --outputFile="${result_file}" \
-                  --passWithNoTests \
-                  --reporters "${REPORTER}" \
-                  --roots "${OUTPUT}" \
-                  --setupFilesAfterEnv ${SETUP} \
-                  --verbose false \
-                  --testLocationInResults
+corepack pnpm jest "${OUTPUT}*" \
+  --bail 1 \
+  --ci \
+  --colors \
+  --config ${CONFIG} \
+  --noStackTrace \
+  --outputFile="${result_file}" \
+  --passWithNoTests \
+  --reporters "${REPORTER}" \
+  --roots "${OUTPUT}" \
+  --setupFilesAfterEnv ${SETUP} \
+  --verbose false \
+  --testLocationInResults
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
