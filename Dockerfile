@@ -49,6 +49,9 @@ RUN set -ex; \
 ENV COREPACK_ENABLE_NETWORK=0
 ENV COREPACK_ENABLE_STRICT=0
 
+# https://github.com/pnpm/pnpm/issues/344#issuecomment-244355674
+ENV DEBUG_PROMISE=true
+
 # Execute everything as the appuser
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
