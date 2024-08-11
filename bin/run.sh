@@ -308,9 +308,9 @@ if test -f "${OUTPUT}package.json"; then
   echo ""
 
   if test -d "${OUTPUT}node_modules/.pnpm"; then
-    echo "Found .pnpm hoisted packages"
-    ls -aln1 "${OUTPUT}node_modules"
-    echo ""
+    # echo "Found .pnpm hoisted packages"
+    # ls -aln1 "${OUTPUT}node_modules"
+    # echo ""
     echo "Found .pnpm hoisted binaries"
     ls -aln1 "${OUTPUT}node_modules/.bin"
   else
@@ -337,10 +337,7 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-jest_tests=$(cd "${OUTPUT}" && corepack pnpm jest --listTests --passWithNoTests) || false
-
-echo $(cd "${OUTPUT}" && "$(corepack pnpm bin)/jest --listTests")
-echo $(cd "${OUTPUT}" && "corepack pnpm node ${OUTPUT}node_modules/jest/bin/jest.js --listTests")
+jest_tests=$(corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests) || false
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
