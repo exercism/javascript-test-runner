@@ -322,6 +322,15 @@ if test -f "${OUTPUT}package.json"; then
   fi
 fi;
 
+bin_jest="$(corepack pnpm bin)/jest"
+if [[ -f "${bin_jest}" && -x $(realpath "${bin_jest}") ]]; then
+  echo "✔️  jest executable found"
+else
+  echo "💥  jest executable missing at ${bin_jest} or not executable"
+  echo "👁️  ${bin_jest} -> $(realpath "${bin_jest}")"
+  exit -1
+fi;
+
 # Disable auto exit
 set +e
 
