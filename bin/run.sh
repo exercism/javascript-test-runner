@@ -2,6 +2,7 @@
 
 env
 cat /etc/passwd
+mount
 
 # Synopsis:
 # Automatically tests exercism's JS track solutions against corresponding test files.
