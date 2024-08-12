@@ -1,5 +1,7 @@
 #!/bin/bash
 
+env
+
 # Synopsis:
 # Automatically tests exercism's JS track solutions against corresponding test files.
 # Takes two-three arguments and makes sure all the tests are run
