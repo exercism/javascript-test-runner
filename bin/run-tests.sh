@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/bin/bash
 
 # Synopsis:
 # Test the test runner by running it against a predefined set of solutions
@@ -11,7 +11,7 @@
 # Example:
 # ./bin/run-tests.sh
 
-set -eo pipefail
+set -uo pipefail
 
 mount
 
