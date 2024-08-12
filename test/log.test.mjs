@@ -9,7 +9,7 @@ const SILENT = process.env.SILENT !== '0' && process.env.RUNNER_DEBUG !== '1'
 export function assertLog(slug, fixture, outputDir = null) {
   outputDir =
     outputDir ||
-    (process.env.process.env.TMP_MAY_BE_NON_EXEC
+    (process.env.TMP_MAY_BE_NON_EXEC
       ? fixture
       : mkdtempSync(join(tmpdir(), 'assert-log-')))
   const resultPath = join(outputDir, 'results.json')

@@ -9,7 +9,7 @@ const SILENT = process.env.SILENT !== '0' && process.env.RUNNER_DEBUG !== '1'
 export function assertPass(slug, fixture, outputDir = null) {
   outputDir =
     outputDir ||
-    (process.env.process.env.TMP_MAY_BE_NON_EXEC
+    (process.env.TMP_MAY_BE_NON_EXEC
       ? fixture
       : mkdtempSync(join(tmpdir(), 'assert-pass-')))
   const resultPath = join(outputDir, 'results.json')
@@ -70,7 +70,7 @@ export function assertPass(slug, fixture, outputDir = null) {
 export function rejectPass(slug, fixture, outputDir = null) {
   outputDir =
     outputDir ||
-    (process.env.process.env.TMP_MAY_BE_NON_EXEC
+    (process.env.TMP_MAY_BE_NON_EXEC
       ? fixture
       : mkdtempSync(join(tmpdir(), 'reject-pass-')))
   const resultPath = join(outputDir, 'results.json')
@@ -137,7 +137,7 @@ export function rejectPass(slug, fixture, outputDir = null) {
 export function assertError(slug, fixture, outputDir = null) {
   outputDir =
     outputDir ||
-    (process.env.process.env.TMP_MAY_BE_NON_EXEC
+    (process.env.TMP_MAY_BE_NON_EXEC
       ? fixture
       : mkdtempSync(join(tmpdir(), 'assert-error-')))
   const resultPath = join(outputDir, 'results.json')

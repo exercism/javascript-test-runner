@@ -11,7 +11,7 @@ shelljs.echo(
 
 const slug = 'lasagna'
 const fixture = join(fixtures, slug, 'exemplar')
-const outputDir = process.env.process.env.TMP_MAY_BE_NON_EXEC
+const outputDir = process.env.TMP_MAY_BE_NON_EXEC
   ? fixture
   : mkdtempSync(join(tmpdir(), 'assert-pass-'))
 const resultPath = join(outputDir, 'results.json')
