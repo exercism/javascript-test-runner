@@ -55,5 +55,5 @@ ENV DEBUG_PROMISE=true
 # RUN chown -R appuser /opt/test-runner/node_modules
 
 # Execute everything as the appuser
-# USER appuser
+USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
