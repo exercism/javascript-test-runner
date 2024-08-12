@@ -1,9 +1,5 @@
 #!/bin/bash
 
-env
-cat /etc/passwd
-mount
-
 # Synopsis:
 # Automatically tests exercism's JS track solutions against corresponding test files.
 # Takes two-three arguments and makes sure all the tests are run
@@ -327,7 +323,7 @@ if test -f "${OUTPUT}package.json"; then
   fi
 fi;
 
-bin_jest="$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm bin)/jest"
+bin_jest="$(corepack pnpm bin)/jest"
 if [[ -f "${bin_jest}" ]]; then
   echo "✔️  jest executable found using ${bin_jest}"
 
@@ -356,7 +352,7 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests) || false
+jest_tests=$(corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests) || false
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
