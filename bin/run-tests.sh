@@ -11,6 +11,10 @@
 # Example:
 # ./bin/run-tests.sh
 
+set -eo pipefail
+
+mount
+
 exit_code=0
 
 # We need to copy the fixtures to a temp directory as the user
