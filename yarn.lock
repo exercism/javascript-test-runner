@@ -1829,7 +1829,7 @@ __metadata:
     "@babel/preset-typescript": ^7.22.5
     "@exercism/babel-preset-javascript": ^0.4.0
     "@exercism/eslint-config-tooling": ^0.4.0
-    "@exercism/static-analysis": ^0.12.0
+    "@exercism/static-analysis": ^0.14.0
     "@tsconfig/node18": ^18.2.0
     "@types/jest": ^29.5.2
     "@types/node": ^20.2.5
@@ -1854,13 +1854,13 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@exercism/static-analysis@npm:^0.12.0":
-  version: 0.12.0
-  resolution: "@exercism/static-analysis@npm:0.12.0"
+"@exercism/static-analysis@npm:^0.14.0":
+  version: 0.14.0
+  resolution: "@exercism/static-analysis@npm:0.14.0"
   peerDependencies:
-    "@typescript-eslint/typescript-estree": ^5.7.0
-    "@typescript-eslint/visitor-keys": ^5.7.0
-  checksum: c13525b2066388547d93ecf86936b84d4bec69ca01a69ad0e09fc681c26319d16b2724ab6c9aca0ef910feaf1cded574a69829040d72b62569a0ce4a46409ad5
+    "@typescript-eslint/typescript-estree": ^8.0.1
+    "@typescript-eslint/visitor-keys": ^8.0.1
+  checksum: 284b197e136955499b2489b428d594e8a3193b6f2c34a8ef0a46faad39237602e364de1dea0eba0ae91bfe1a68d2f3582e106284a40e162a0653f48ea6a88c63
   languageName: node
   linkType: hard
 
