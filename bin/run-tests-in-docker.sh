@@ -24,7 +24,7 @@ docker run \
     --network none \
     --read-only \
     --mount type=bind,src="${PWD}/test/fixtures",dst=/opt/test-runner/test/fixtures \
-    --mount type=tmpfs,dst=/tmp \
+    --mount type=tmpfs,dst=/tmp:exec \
     --volume "${PWD}/bin/run-tests.sh:/opt/test-runner/bin/run-tests.sh" \
     --workdir /opt/test-runner \
     --entrypoint /opt/test-runner/bin/run-tests.sh \
