@@ -9,10 +9,12 @@ shelljs.echo(
   'javascript-test-runner > passing solution with task ids > with output directory'
 )
 
-const outputDir = mkdtempSync(join(tmpdir(), 'foo-'))
-const resultPath = join(outputDir, 'results.json')
 const slug = 'lasagna'
-const fixture = join(fixtures, 'lasagna', 'exemplar')
+const fixture = join(fixtures, slug, 'exemplar')
+const outputDir = process.env.process.env.TMP_MAY_BE_NON_EXEC
+  ? fixture
+  : mkdtempSync(join(tmpdir(), 'assert-pass-'))
+const resultPath = join(outputDir, 'results.json')
 
 assertPass(slug, fixture, outputDir)
 

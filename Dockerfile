@@ -50,6 +50,9 @@ RUN set -ex; \
 ENV COREPACK_ENABLE_NETWORK=0
 ENV COREPACK_ENABLE_STRICT=0
 
+# Mark this as a docker run so we don't try to execute things in /tmp
+ENV TMP_MAY_BE_NON_EXEC=1
+
 # Execute everything as the appuser
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
