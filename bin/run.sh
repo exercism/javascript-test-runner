@@ -1,6 +1,7 @@
 #!/bin/bash
 
 env
+cat /etc/passwd
 
 # Synopsis:
 # Automatically tests exercism's JS track solutions against corresponding test files.
