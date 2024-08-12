@@ -324,6 +324,9 @@ if test -f "${OUTPUT}package.json"; then
 fi;
 
 bin_jest="$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm bin)/jest"
+
+echo "👁️  ${COREPACK_ROOT_DIR} as corepack root"
+
 if [[ -f "${bin_jest}" ]]; then
   echo "✔️  jest executable found using ${bin_jest}"
 
@@ -331,7 +334,6 @@ if [[ -f "${bin_jest}" ]]; then
     echo "✔️  jest executable is executable for $(whoami)"
   else
     echo "💥  jest executable not executable for $(whoami)"
-    echo "👁️  ${COREPACK_ROOT_DIR} as corepack root"
 
     ls -l "${bin_jest}"
 
@@ -352,7 +354,9 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests) || false
+echo "⚙️  corepack pnpm jest <...> --listTests"
+echo ""
+jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests --detectOpenHandles) || false
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
@@ -426,6 +430,7 @@ cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" \
   --roots "${OUTPUT}" \
   --setupFilesAfterEnv ${SETUP} \
   --verbose false \
+  --detectOpenHandles \
   --testLocationInResults
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
