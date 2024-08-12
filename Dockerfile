@@ -28,11 +28,11 @@ RUN set -ex; \
   corepack enable pnpm; \
   # corepack pack -o ./corepack.tgz; \
   # COREPACK_ENABLE_NETWORK=0 corepack install -g ./corepack.tgz;
-
+  #
   # https://github.com/nodejs/corepack/pull/446#issue-2218976611
   corepack install; \
   corepack pnpm --version; \
-
+  #
   # https://github.com/nodejs/corepack/issues/414#issuecomment-2096218732
   # https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/sources/folderUtils.ts#L26-L31
   chmod 444 /idk/corepack/lastKnownGood.json; \
