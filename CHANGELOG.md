@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.0.0
+
+- Update dependencies including core-js
+- Switch to pnpm
+- Rework `run.sh` for console friendly output
+- Use ESLint 9 (Flat Config)
+
 ## 4.0.0
 
 - Update dependencies including core-js
