@@ -33,7 +33,7 @@
     "@babel/preset-typescript": "^7.22.5",
     "@exercism/babel-preset-javascript": "^0.4.0",
     "@exercism/static-analysis": "^0.12.0",
-    "@typescript-eslint/typescript-estree": "^7.8.0",
+    "@typescript-eslint/typescript-estree": "^8.1.0",
     "@typescript-eslint/visitor-keys": "^7.8.0",
     "babel-jest": "^29.5.0",
     "chalk": "^4.1.2",
