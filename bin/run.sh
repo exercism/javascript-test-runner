@@ -89,7 +89,8 @@ echo ""
 
 echo "✔️  Using slug     : $SLUG"
 echo "✔️  Using reporter : $REPORTER"
-echo "✔️  Using test-root: $INPUT"
+echo "✔️  Using srce-root: $INPUT"
+echo "✔️  Using test-root: $OUTPUT"
 echo "✔️  Using base-root: $ROOT"
 echo "✔️  Using setup-env: $SETUP"
 
