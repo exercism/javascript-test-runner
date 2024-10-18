@@ -48,6 +48,7 @@ for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
     fi;
 
     if [ $? -ne 0 ]; then
+        echo "diff \"${results_file_path}\" \"${expected_results_file_path}\" reported $?"
         exit_code=1
     fi
 done
