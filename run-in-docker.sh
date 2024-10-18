@@ -27,10 +27,11 @@ fi
 docker build -t javascript-test-runner .
 
 # run image passing the arguments
+# --mount type=tmpfs,dst=/tmp \
 docker run \
     --network none \
     --read-only \
     --mount type=bind,src=$PWD/$2,dst=/solution/ \
     --mount type=bind,src=$PWD/$3,dst=/output/ \
-    --mount type=tmpfs,dst=/tmp \
+    --tmpfs /tmp:exec \
     javascript-test-runner $1 /solution/ /output/

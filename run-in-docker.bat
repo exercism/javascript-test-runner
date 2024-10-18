@@ -27,5 +27,5 @@ docker run^
  --read-only^
  --mount type=bind,src=%cd%/%2,dst=/solution/^
  --mount type=bind,src=%cd%/%3,dst=/output/^
- --mount type=tmpfs,dst=/tmp^
+ --tmpfs /tmp:exec^
  javascript-test-runner %1 /solution/ /output/

@@ -1,6 +1,6 @@
 {
   "status": "error",
-  "message": "SyntaxError: <solution>/two-fer.spec.js: Unexpected token (2:0)\n\n    \u001b[0m \u001b[90m 1 |\u001b[39m describe(\u001b[32m'twoFer()'\u001b[39m\u001b[33m,\u001b[39m t(\u001b[32m'another name given'\u001b[39m\u001b[33m,\u001b[39m () \u001b[33m=>\u001b[39m {\u001b[0m\n    \u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 2 |\u001b[39m\u001b[0m\n    \u001b[0m \u001b[90m   |\u001b[39m \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n",
+  "message": "SyntaxError: <solution>/two-fer.spec.js: Unexpected token (2:0)\n\n      1 | describe('twoFer()', t('another name given', () => {\n    > 2 |\n        | ^\n",
   "tests": [],
   "version": 3
 }

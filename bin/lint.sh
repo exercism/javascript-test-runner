@@ -1,5 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
-yarn lint
+corepack enable pnpm
+corepack pnpm lint
