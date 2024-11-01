@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Synopsis:
-# Test the test runner Docker image by running it against a predefined set of 
+# Test the test runner Docker image by running it against a predefined set of
 # solutions with an expected output.
 # The test runner Docker image is built automatically.
 
@@ -19,12 +19,13 @@ set -e
 docker build --rm -t exercism/javascript-test-runner .
 
 # Run the Docker image using the settings mimicking the production environment
+# # --mount type=tmpfs,dst=/tmp \
 docker run \
     --rm \
     --network none \
     --read-only \
     --mount type=bind,src="${PWD}/test/fixtures",dst=/opt/test-runner/test/fixtures \
-    --mount type=tmpfs,dst=/tmp \
+    --tmpfs /tmp:exec \
     --volume "${PWD}/bin/run-tests.sh:/opt/test-runner/bin/run-tests.sh" \
     --workdir /opt/test-runner \
     --entrypoint /opt/test-runner/bin/run-tests.sh \

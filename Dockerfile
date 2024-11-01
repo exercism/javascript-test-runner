@@ -1,6 +1,6 @@
-FROM node:18-bullseye-slim as runner
-# Node.js 18 (curently LTS)
-# Debian bullseye
+FROM node:20-bookworm-slim AS runner
+# Node.js 20 (curently LTS)
+# Debian bookwork
 
 # fetch latest security updates
 RUN set -ex; \
@@ -18,17 +18,41 @@ RUN adduser --disabled-password --gecos "" appuser
 WORKDIR /opt/test-runner
 COPY . .
 
+# Install pnpm so it will be available read-only
+# https://github.com/nodejs/corepack/issues/183#issue-1379672431
+# https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/tests/main.test.ts#L483
+RUN mkdir -p /idk/corepack
+ENV COREPACK_HOME=/idk/corepack
+
+RUN set -ex; \
+  corepack enable pnpm; \
+  # corepack pack -o ./corepack.tgz; \
+  # COREPACK_ENABLE_NETWORK=0 corepack install -g ./corepack.tgz;
+  #
+  # https://github.com/nodejs/corepack/pull/446#issue-2218976611
+  corepack install; \
+  corepack pnpm --version; \
+  #
+  # https://github.com/nodejs/corepack/issues/414#issuecomment-2096218732
+  # https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/sources/folderUtils.ts#L26-L31
+  chmod 444 /idk/corepack/lastKnownGood.json; \
+  chmod 555 /idk/corepack;
+
 # Build the test runner
 RUN set -ex; \
   # install all the development modules (used for building)
-  yarn plugin import workspace-tools; \
-  yarn install; \
-  yarn build; \
-  rm -rf node_modules; \
-  # install only the node_modules we need for production
-  yarn workspaces focus --production; \
-  # clean our yarn cache
-  yarn cache clean;
+  # corepack pnpm store prune; \
+  corepack pnpm install; \
+  corepack pnpm build; \
+  corepack pnpm prune --prod;
 
+# Disable network for corepack
+ENV COREPACK_ENABLE_NETWORK=0
+ENV COREPACK_ENABLE_STRICT=0
+
+# Mark this as a docker run so we don't try to execute things in /tmp
+ENV TMP_MAY_BE_NON_EXEC=1
+
+# Execute everything as the appuser
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]

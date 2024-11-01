@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -euo pipefail
 
-yarn build || exit
-yarn test:bare
-
+corepack enable pnpm
+corepack pnpm build || exit
+corepack pnpm test:bare
