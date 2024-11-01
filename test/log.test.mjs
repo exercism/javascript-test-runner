@@ -1,3 +1,7 @@
+/**
+ * $ corepack pnpm node test/log.test.mjs
+ */
+
 import shelljs from 'shelljs'
 import { existsSync, mkdtempSync } from 'node:fs'
 import { tmpdir } from 'node:os'

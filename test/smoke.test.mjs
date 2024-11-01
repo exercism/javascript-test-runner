@@ -1,3 +1,7 @@
+/**
+ * $ corepack pnpm node test/smoke.test.mjs
+ */
+
 import { join } from 'node:path'
 import shelljs from 'shelljs'
 import { assertError, assertPass, rejectPass } from './asserts.mjs'
@@ -24,6 +28,11 @@ assertPass(
   join(fixtures, 'poetry-club-door-policy', 'pass'),
   join(fixtures, 'poetry-club-door-policy', 'pass')
 )
+
+shelljs.echo(
+  'javascript-test-runner > passing solution > uses npm instead of pnpm'
+)
+assertPass('two-fer', join(fixtures, 'two-fer', 'npm'))
 
 /** Test failures */
 const failures = ['tests', 'empty']
