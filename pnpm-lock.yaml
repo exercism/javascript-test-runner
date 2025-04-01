@@ -13,7 +13,7 @@ importers:
         version: 0.5.1
       '@exercism/static-analysis':
         specifier: ^0.14.0
-        version: 0.14.0(@typescript-eslint/typescript-estree@8.29.0(typescript@5.7.2))(@typescript-eslint/visitor-keys@8.16.0)
+        version: 0.14.0(@typescript-eslint/typescript-estree@8.29.0(typescript@5.7.2))(@typescript-eslint/visitor-keys@8.29.0)
       '@jest/console':
         specifier: ^29.7.0
         version: 29.7.0
@@ -31,7 +31,7 @@ importers:
         version: 8.29.0(typescript@5.7.2)
       '@typescript-eslint/visitor-keys':
         specifier: ^8.0.1
-        version: 8.16.0
+        version: 8.29.0
       babel-jest:
         specifier: ^29.7.0
         version: 29.7.0(@babel/core@7.26.0)
@@ -982,10 +982,6 @@ packages:
     resolution: {integrity: sha512-PpqTVT3yCA/bIgJ12czBuE3iBlM3g4inRSC5J0QOdQFAn07TYrYEQBBKgXH1lQpglup+Zy6c1fxuwTk4MTNKIw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  '@typescript-eslint/types@8.16.0':
-    resolution: {integrity: sha512-NzrHj6thBAOSE4d9bsuRNMvk+BvaQvmY4dDglgkgGC0EW/tB3Kelnp3tAKH87GEwzoxgeQn9fNGRyFJM/xd+GQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@typescript-eslint/types@8.29.0':
     resolution: {integrity: sha512-wcJL/+cOXV+RE3gjCyl/V2G877+2faqvlgtso/ZRbTCnZazh0gXhe+7gbAnfubzN2bNsBtZjDvlh7ero8uIbzg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1013,10 +1009,6 @@ packages:
 
   '@typescript-eslint/visitor-keys@8.0.1':
     resolution: {integrity: sha512-W5E+o0UfUcK5EgchLZsyVWqARmsM7v54/qEq6PY3YI5arkgmCzHiuk0zKSJJbm71V0xdRna4BGomkCTXz2/LkQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
-  '@typescript-eslint/visitor-keys@8.16.0':
-    resolution: {integrity: sha512-pq19gbaMOmFE3CbL0ZB8J8BFCo2ckfHBfaIsaOZgBIF4EoISJIdLX5xRhd0FGB0LlHReNRuzoJoMGpTjq8F2CQ==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
   '@typescript-eslint/visitor-keys@8.29.0':
@@ -3507,10 +3499,10 @@ snapshots:
       - jest
       - supports-color
 
-  '@exercism/static-analysis@0.14.0(@typescript-eslint/typescript-estree@8.29.0(typescript@5.7.2))(@typescript-eslint/visitor-keys@8.16.0)':
+  '@exercism/static-analysis@0.14.0(@typescript-eslint/typescript-estree@8.29.0(typescript@5.7.2))(@typescript-eslint/visitor-keys@8.29.0)':
     dependencies:
       '@typescript-eslint/typescript-estree': 8.29.0(typescript@5.7.2)
-      '@typescript-eslint/visitor-keys': 8.16.0
+      '@typescript-eslint/visitor-keys': 8.29.0
 
   '@humanwhocodes/module-importer@1.0.1': {}
 
@@ -3877,8 +3869,6 @@ snapshots:
 
   '@typescript-eslint/types@8.0.1': {}
 
-  '@typescript-eslint/types@8.16.0': {}
-
   '@typescript-eslint/types@8.29.0': {}
 
   '@typescript-eslint/typescript-estree@8.0.1(typescript@5.7.2)':
@@ -3925,11 +3915,6 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.0.1
       eslint-visitor-keys: 3.4.3
-
-  '@typescript-eslint/visitor-keys@8.16.0':
-    dependencies:
-      '@typescript-eslint/types': 8.16.0
-      eslint-visitor-keys: 4.2.0
 
   '@typescript-eslint/visitor-keys@8.29.0':
     dependencies:
@@ -4434,7 +4419,7 @@ snapshots:
     dependencies:
       acorn: 8.12.1
       acorn-jsx: 5.3.2(acorn@8.12.1)
-      eslint-visitor-keys: 4.2.0
+      eslint-visitor-keys: 4.0.0
 
   esprima@4.0.1: {}
 
