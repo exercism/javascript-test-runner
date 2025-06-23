@@ -29,6 +29,9 @@ assertPass(
   join(fixtures, 'poetry-club-door-policy', 'pass')
 )
 
+shelljs.echo('javascript-test-runner > passing solution > math.random')
+assertPass('captains-log', join(fixtures, 'captains-log', 'exemplar'))
+
 shelljs.echo(
   'javascript-test-runner > passing solution > uses npm instead of pnpm'
 )

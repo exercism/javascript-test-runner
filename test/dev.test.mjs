@@ -10,8 +10,4 @@ import { join } from 'node:path'
 import { assertPass } from './asserts.mjs'
 import { fixtures } from './paths.mjs'
 
-assertPass(
-  'clock',
-  join(fixtures, 'clock', 'pass'),
-  join(fixtures, 'clock', 'pass')
-)
+assertPass('captains-log', join(fixtures, 'captains-log', 'exemplar'))
