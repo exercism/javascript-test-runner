@@ -1,5 +1,7 @@
 # Changelog
 
+## 5.0.1
+
 ## 5.0.0
 
 - Update dependencies including core-js

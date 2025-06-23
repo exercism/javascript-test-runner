@@ -87,9 +87,9 @@ echo "  🔧 Process input arguments for run                            "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-echo "✔️  Using slug     : $SLUG"
-echo "✔️  Using reporter : $REPORTER"
-echo "✔️  Using srce-root: $INPUT"
+echo "✔️  Using  slug    : $SLUG"
+echo "✔️  Using  reporter: $REPORTER"
+echo "✔️  Using  src-root: $INPUT"
 echo "✔️  Using test-root: $OUTPUT"
 echo "✔️  Using base-root: $ROOT"
 echo "✔️  Using setup-env: $SETUP"
@@ -176,16 +176,15 @@ else
   echo "The output directory is likely not placed inside the test    "
   echo "runner root. This means the CLI tools need configuration     "
   echo "files as given and understood by the test-runner for running "
-  echo "the tests. Will now turn the output directory into a         "
-  echo "standalone package."
+  echo "the tests."
   echo ""
 
   COREPACK_ROOT_DIR="${OUTPUT}"
 
   echo "✔️  pnpm cache from root to output"
-  # cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
-  # mv "${OUTPUT}deploy/node_modules" "${OUTPUT}"
-  # cp -as "${ROOT}/node_modules/" "${OUTPUT}"
+  cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
+  mv "${OUTPUT}deploy/node_modules" "${OUTPUT}"
+  cp -as "${ROOT}/node_modules/" "${OUTPUT}"
   cp -r "${ROOT}/node_modules" "${OUTPUT}"
 
   echo "✔️  .pnpm-lock.yaml from root to output"
@@ -312,12 +311,12 @@ if test -f "${OUTPUT}package.json"; then
   ls -al "${OUTPUT}"
   echo ""
 
-  if test -d "${OUTPUT}node_modules/.pnpm"; then
+  if test -d "${COREPACK_ROOT_DIR}node_modules/.pnpm"; then
     # echo "Found .pnpm hoisted packages"
     # ls -aln1 "${OUTPUT}node_modules"
     # echo ""
     echo "Found .pnpm hoisted binaries"
-    ls -al "${OUTPUT}node_modules/.bin"
+    ls -al "${COREPACK_ROOT_DIR}node_modules/.bin"
   else
     echo ".pnpm hoisted packages not found"
     cd "${COREPACK_ROOT_DIR}" && corepack pnpm install --offline --frozen-lockfile
@@ -355,9 +354,9 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-echo "⚙️  corepack pnpm jest <...> --listTests"
+echo "⚙️  corepack pnpm jest--listTests --passWithNoTests --detectOpenHandles --rootDir "${OUTPUT}" --config ${CONFIG}"
 echo ""
-jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests --detectOpenHandles) || false
+jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest --listTests --passWithNoTests --detectOpenHandles --rootDir "${OUTPUT}" --config ${CONFIG}) || false
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
@@ -416,23 +415,20 @@ echo $jest_tests
 
 # Run tests
 echo ""
-echo "⚙️  corepack pnpm jest <...>"
+echo "⚙️  corepack pnpm jest --passWithNoTests --detectOpenHandles --rootDir "${OUTPUT}" --testLocationInResults --setupFilesAfterEnv "${SETUP}" --reporters "${REPORTER}" --outputFile="${result_file}" --noStackTrace"
 echo ""
 
-cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" \
-  --bail 1 \
-  --ci \
-  --colors \
-  --config ${CONFIG} \
-  --noStackTrace \
-  --outputFile="${result_file}" \
+cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest \
   --passWithNoTests \
-  --reporters "${REPORTER}" \
-  --roots "${OUTPUT}" \
-  --setupFilesAfterEnv ${SETUP} \
-  --verbose false \
   --detectOpenHandles \
-  --testLocationInResults
+  --rootDir "${OUTPUT}" \
+  --testLocationInResults \
+  --setupFilesAfterEnv "${SETUP}" \
+  --reporters "${REPORTER}" \
+  --outputFile="${result_file}" \
+  --noStackTrace \
+  --config ${CONFIG} \
+  --ci
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?

@@ -20,6 +20,7 @@ jobs:
 
       - name: Install project dependencies
         run: |
+          npm install -g corepack@latest
           corepack enable pnpm
           corepack pnpm -v
           corepack pnpm install --frozen-lockfile
