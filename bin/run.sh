@@ -179,27 +179,27 @@ else
   echo "the tests."
   echo ""
 
-  # COREPACK_ROOT_DIR="${OUTPUT}"
+  COREPACK_ROOT_DIR="${OUTPUT}"
 
-  # echo "✔️  pnpm cache from root to output"
-  # cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
-  # mv "${OUTPUT}deploy/node_modules" "${OUTPUT}"
-  # cp -as "${ROOT}/node_modules/" "${OUTPUT}"
-  # cp -r "${ROOT}/node_modules" "${OUTPUT}"
+  echo "✔️  pnpm cache from root to output"
+  cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
+  mv "${OUTPUT}deploy/node_modules" "${OUTPUT}"
+  cp -as "${ROOT}/node_modules/" "${OUTPUT}"
+  cp -r "${ROOT}/node_modules" "${OUTPUT}"
 
-  # echo "✔️  .pnpm-lock.yaml from root to output"
-  # cp "${ROOT}/pnpm-lock.yaml" "${OUTPUT}pnpm-lock.yaml"
+  echo "✔️  .pnpm-lock.yaml from root to output"
+  cp "${ROOT}/pnpm-lock.yaml" "${OUTPUT}pnpm-lock.yaml"
 
-  # echo "✔️  babel.config.js from root to output"
-  # cp "${ROOT}/babel.config.js" "${OUTPUT}babel.config.js"
+  echo "✔️  babel.config.js from root to output"
+  cp "${ROOT}/babel.config.js" "${OUTPUT}babel.config.js"
 
-  # echo "✔️  package.json from root to output"
-  # cp "${ROOT}/package.json" "${OUTPUT}package.json"
+  echo "✔️  package.json from root to output"
+  cp "${ROOT}/package.json" "${OUTPUT}package.json"
 
-  # echo "✔️  .npmrc from root to output"
-  # cp "${ROOT}/.npmrc" "${OUTPUT}.npmrc"
+  echo "✔️  .npmrc from root to output"
+  cp "${ROOT}/.npmrc" "${OUTPUT}.npmrc"
 
-  # echo ""
+  echo ""
 fi
 
 # Put together the path to the test results file
@@ -418,22 +418,17 @@ echo ""
 echo "⚙️  corepack pnpm jest --passWithNoTests --detectOpenHandles --rootDir "${OUTPUT}" --testLocationInResults --setupFilesAfterEnv "${SETUP}" --reporters "${REPORTER}" --outputFile="${result_file}" --noStackTrace"
 echo ""
 
-cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest --passWithNoTests --detectOpenHandles --rootDir "${OUTPUT}" --testLocationInResults --setupFilesAfterEnv "${SETUP}" --reporters "${REPORTER}" --outputFile="${result_file}" --noStackTrace
-
 cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest \
-  --bail 1 \
-  --ci \
-  --colors \
-  --config ${CONFIG} \
-  --noStackTrace \
-  --outputFile="${result_file}" \
   --passWithNoTests \
-  --reporters "${REPORTER}" \
-  --rootDir "${OUTPUT}" \
-  --setupFilesAfterEnv ${SETUP} \
-  --verbose false \
   --detectOpenHandles \
-  --testLocationInResults
+  --rootDir "${OUTPUT}" \
+  --testLocationInResults \
+  --setupFilesAfterEnv "${SETUP}" \
+  --reporters "${REPORTER}" \
+  --outputFile="${result_file}" \
+  --noStackTrace \
+  --config ${CONFIG} \
+  --ci
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
 test_exit=$?
