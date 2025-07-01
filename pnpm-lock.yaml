@@ -62,7 +62,7 @@ importers:
         version: 22.1.0
       '@types/shelljs':
         specifier: ^0.8.15
-        version: 0.8.15
+        version: 0.8.16
       eslint:
         specifier: ^9.8.0
         version: 9.8.0
@@ -932,8 +932,8 @@ packages:
   '@types/node@22.1.0':
     resolution: {integrity: sha512-AOmuRF0R2/5j1knA3c6G3HOk523Ga+l+ZXltX8SF1+5oqcXijjfTd8fY3XRZqSihEu9XhtQnKYLmkFaoxgsJHw==}
 
-  '@types/shelljs@0.8.15':
-    resolution: {integrity: sha512-vzmnCHl6hViPu9GNLQJ+DZFd6BQI2DBTUeOvYHqkWQLMfKAAQYMb/xAmZkTogZI/vqXHCWkqDRymDI5p0QTi5Q==}
+  '@types/shelljs@0.8.16':
+    resolution: {integrity: sha512-40SUXiH0tZfAg/oKkkGF1kdHPAmE4slv2xAmbfa8VtE6ztHYwdpW2phlzHTVdJh5JOGqA3Cx1Hzp7kxFalKHYA==}
 
   '@types/stack-utils@2.0.3':
     resolution: {integrity: sha512-9aEbYZ3TbYMznPdcdr3SmIrLXwC/AKZXQeCf9Pgao5CKb8CyHuEX5jzWPTkvregvhRJHcpRO6BFoGW9ycaOkYw==}
@@ -3815,7 +3815,7 @@ snapshots:
     dependencies:
       undici-types: 6.13.0
 
-  '@types/shelljs@0.8.15':
+  '@types/shelljs@0.8.16':
     dependencies:
       '@types/glob': 7.2.0
       '@types/node': 22.1.0
