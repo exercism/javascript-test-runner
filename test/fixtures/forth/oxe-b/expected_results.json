@@ -1,0 +1,391 @@
+{
+  "status": "fail",
+  "tests": [
+    {
+      "name": "Forth > parsing and numbers > numbers just get pushed onto the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 3 4 5');\nexpect(forth.stack).toEqual([1, 2, 3, 4, 5]);"
+    },
+    {
+      "name": "Forth > parsing and numbers > pushes negative numbers onto the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('-1 -2 -3 -4 -5');\nexpect(forth.stack).toEqual([-1, -2, -3, -4, -5]);"
+    },
+    {
+      "name": "Forth > addition > can add two numbers",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 +');\nexpect(forth.stack).toEqual([3]);"
+    },
+    {
+      "name": "Forth > addition > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('+');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > addition > errors if there is only one value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('1 +');\n      }).toThrow(new Error('Only one value on the stack'));"
+    },
+    {
+      "name": "Forth > addition > more than two values on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 3 +');\nexpect(forth.stack).toEqual([1, 5]);"
+    },
+    {
+      "name": "Forth > subtraction > can subtract two numbers",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('3 4 -');\nexpect(forth.stack).toEqual([-1]);"
+    },
+    {
+      "name": "Forth > subtraction > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('-');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > subtraction > errors if there is only one value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('1 -');\n      }).toThrow(new Error('Only one value on the stack'));"
+    },
+    {
+      "name": "Forth > subtraction > more than two values on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 12 3 -');\nexpect(forth.stack).toEqual([1, 9]);"
+    },
+    {
+      "name": "Forth > multiplication > can multiply two numbers",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('2 4 *');\nexpect(forth.stack).toEqual([8]);"
+    },
+    {
+      "name": "Forth > multiplication > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('*');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > multiplication > errors if there is only one value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('1 *');\n      }).toThrow(new Error('Only one value on the stack'));"
+    },
+    {
+      "name": "Forth > multiplication > more than two values on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 3 *');\nexpect(forth.stack).toEqual([1, 6]);"
+    },
+    {
+      "name": "Forth > division > can divide two numbers",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('12 3 /');\nexpect(forth.stack).toEqual([4]);"
+    },
+    {
+      "name": "Forth > division > performs integer division",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('8 3 /');\nexpect(forth.stack).toEqual([2]);"
+    },
+    {
+      "name": "Forth > division > errors if dividing by zero",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('4 0 /');\n      }).toThrow(new Error('Division by zero'));"
+    },
+    {
+      "name": "Forth > division > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('/');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > division > errors if there is only one value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('1 /');\n      }).toThrow(new Error('Only one value on the stack'));"
+    },
+    {
+      "name": "Forth > division > more than two values on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 12 3 /');\nexpect(forth.stack).toEqual([1, 4]);"
+    },
+    {
+      "name": "Forth > combined arithmetic > addition and subtraction",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 + 4 -');\nexpect(forth.stack).toEqual([-1]);"
+    },
+    {
+      "name": "Forth > combined arithmetic > multiplication and division",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('2 4 * 3 /');\nexpect(forth.stack).toEqual([2]);"
+    },
+    {
+      "name": "Forth > combined arithmetic > multiplication and addition",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 3 4 * +');\nexpect(forth.stack).toEqual([13]);"
+    },
+    {
+      "name": "Forth > combined arithmetic > addition and multiplication",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 3 4 + *');\nexpect(forth.stack).toEqual([7]);"
+    },
+    {
+      "name": "Forth > dup > copies a value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 dup');\nexpect(forth.stack).toEqual([1, 1]);"
+    },
+    {
+      "name": "Forth > dup > copies the top value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 dup');\nexpect(forth.stack).toEqual([1, 2, 2]);"
+    },
+    {
+      "name": "Forth > dup > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('dup');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > drop > removes the top value on the stack if it is the only one",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 drop');\nexpect(forth.stack).toEqual([]);"
+    },
+    {
+      "name": "Forth > drop > removes the top value on the stack if it is not the only one",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 drop');\nexpect(forth.stack).toEqual([1]);"
+    },
+    {
+      "name": "Forth > drop > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('drop');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > swap > swaps the top two values on the stack if they are the only ones",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 swap');\nexpect(forth.stack).toEqual([2, 1]);"
+    },
+    {
+      "name": "Forth > swap > swaps the top two values on the stack if they are not the only ones",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 3 swap');\nexpect(forth.stack).toEqual([1, 3, 2]);"
+    },
+    {
+      "name": "Forth > swap > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('swap');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > swap > errors if there is only one value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('1 swap');\n      }).toThrow(new Error('Only one value on the stack'));"
+    },
+    {
+      "name": "Forth > over > copies the second element if there are only two",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 over');\nexpect(forth.stack).toEqual([1, 2, 1]);"
+    },
+    {
+      "name": "Forth > over > copies the second element if there are more than two",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 3 over');\nexpect(forth.stack).toEqual([1, 2, 3, 2]);"
+    },
+    {
+      "name": "Forth > over > errors if there is nothing on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('over');\n      }).toThrow(new Error('Stack empty'));"
+    },
+    {
+      "name": "Forth > over > errors if there is only one value on the stack",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('1 over');\n      }).toThrow(new Error('Only one value on the stack'));"
+    },
+    {
+      "name": "Forth > user-defined words > can consist of built-in words",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': dup-twice dup dup ;');\nforth.evaluate('1 dup-twice');\nexpect(forth.stack).toEqual([1, 1, 1]);"
+    },
+    {
+      "name": "Forth > user-defined words > execute in the right order",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': countup 1 2 3 ;');\nforth.evaluate('countup');\nexpect(forth.stack).toEqual([1, 2, 3]);"
+    },
+    {
+      "name": "Forth > user-defined words > can override other user-defined words",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': foo dup ;');\nforth.evaluate(': foo dup dup ;');\nforth.evaluate('1 foo');\nexpect(forth.stack).toEqual([1, 1, 1]);"
+    },
+    {
+      "name": "Forth > user-defined words > can override built-in words",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': swap dup ;');\nforth.evaluate('1 swap');\nexpect(forth.stack).toEqual([1, 1]);"
+    },
+    {
+      "name": "Forth > user-defined words > can override built-in operators",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': + * ;');\nforth.evaluate('3 4 +');\nexpect(forth.stack).toEqual([12]);"
+    },
+    {
+      "name": "Forth > user-defined words > can use different words with the same name",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': foo 5 ;');\nforth.evaluate(': bar foo ;');\nforth.evaluate(': foo 6 ;');\nforth.evaluate('bar foo');\nexpect(forth.stack).toEqual([5, 6]);"
+    },
+    {
+      "name": "Forth > user-defined words > can define word that uses word with the same name",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': foo 10 ;');\nforth.evaluate(': foo foo 1 + ;');\nforth.evaluate('foo');\nexpect(forth.stack).toEqual([11]);"
+    },
+    {
+      "name": "Forth > user-defined words > cannot redefine non-negative numbers",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate(': 1 2 ;');\n      }).toThrow(new Error('Invalid definition'));"
+    },
+    {
+      "name": "Forth > user-defined words > cannot redefine negative numbers",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate(': -1 2 ;');\n      }).toThrow(new Error('Invalid definition'));"
+    },
+    {
+      "name": "Forth > user-defined words > errors if executing a non-existent word",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "expect(() => {\n        forth.evaluate('foo');\n      }).toThrow(new Error('Unknown command'));"
+    },
+    {
+      "name": "Forth > user-defined words > only defines locally",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "const first = new Forth();\nconst second = new Forth();\nfirst.evaluate(': + - ;');\nfirst.evaluate('1 1 +');\nsecond.evaluate('1 1 +');\nexpect(first.stack).toEqual([0]);\nexpect(second.stack).toEqual([2]);"
+    },
+    {
+      "name": "Forth > case-insensitivity > DUP is case-insensitive",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 DUP Dup dup');\nexpect(forth.stack).toEqual([1, 1, 1, 1]);"
+    },
+    {
+      "name": "Forth > case-insensitivity > DROP is case-insensitive",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 3 4 DROP Drop drop');\nexpect(forth.stack).toEqual([1]);"
+    },
+    {
+      "name": "Forth > case-insensitivity > SWAP is case-insensitive",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 SWAP 3 Swap 4 swap');\nexpect(forth.stack).toEqual([2, 3, 4, 1]);"
+    },
+    {
+      "name": "Forth > case-insensitivity > OVER is case-insensitive",
+      "status": "pass",
+      "message": "",
+      "output": null,
+      "test_code": "forth.evaluate('1 2 OVER Over over');\nexpect(forth.stack).toEqual([1, 2, 1, 2, 1]);"
+    },
+    {
+      "name": "Forth > case-insensitivity > user-defined words are case-insensitive",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': foo dup ;');\nforth.evaluate('1 FOO Foo foo');\nexpect(forth.stack).toEqual([1, 1, 1, 1]);"
+    },
+    {
+      "name": "Forth > case-insensitivity > definitions are case-insensitive",
+      "status": "fail",
+      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "output": null,
+      "test_code": "forth.evaluate(': SWAP DUP Dup dup ;');\nforth.evaluate('1 swap');\nexpect(forth.stack).toEqual([1, 1, 1, 1]);"
+    }
+  ],
+  "version": 3
+}
