@@ -9,20 +9,14 @@ RUN set -ex; \
   # curl is required to fetch our webhook from github
   # unzip is required for unzipping payloads in development
   apt-get install curl unzip jq -y; \
-  rm -rf /var/lib/apt/lists/*
+  rm -rf /var/lib/apt/lists/*; \
 
-# add a non-root user to run our code as
-RUN adduser --disabled-password --gecos "" appuser
+  # add a non-root user to run our code as
+  adduser --disabled-password --gecos "" appuser;
 
 # install our test runner to /opt
 WORKDIR /opt/test-runner
 COPY . .
-
-# Install pnpm so it will be available read-only
-# https://github.com/nodejs/corepack/issues/183#issue-1379672431
-# https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/tests/main.test.ts#L483
-RUN mkdir -p /idk/corepack
-ENV COREPACK_HOME=/idk/corepack
 
 RUN set -ex; \
   corepack enable pnpm; \
@@ -35,11 +29,11 @@ RUN set -ex; \
   #
   # https://github.com/nodejs/corepack/issues/414#issuecomment-2096218732
   # https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/sources/folderUtils.ts#L26-L31
-  chmod 444 /idk/corepack/lastKnownGood.json; \
-  chmod 555 /idk/corepack;
+  chmod 444 /root/.cache/node/corepack/lastKnownGood.json; \
+  chmod 555 /root/.cache/node/corepack/corepack; \
 
-# Build the test runner
-RUN set -ex; \
+  # Build the test runner
+  # RUN set -ex; \
   # install all the development modules (used for building)
   # corepack pnpm store prune; \
   corepack pnpm install; \
@@ -47,11 +41,11 @@ RUN set -ex; \
   corepack pnpm prune --prod;
 
 # Disable network for corepack
-ENV COREPACK_ENABLE_NETWORK=0
-ENV COREPACK_ENABLE_STRICT=0
+ENV COREPACK_ENABLE_NETWORK=0 \
+    COREPACK_ENABLE_STRICT=0 \
 
-# Mark this as a docker run so we don't try to execute things in /tmp
-ENV TMP_MAY_BE_NON_EXEC=1
+    # Mark this as a docker run so we don't try to execute things in /tmp
+    TMP_MAY_BE_NON_EXEC=1;
 
 # Execute everything as the appuser
 USER appuser
