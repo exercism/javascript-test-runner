@@ -12,7 +12,10 @@ RUN set -ex; \
   rm -rf /var/lib/apt/lists/*; \
   #
   # add a non-root user to run our code as
-  adduser --disabled-password --gecos "" appuser;
+  adduser --disabled-password --gecos "" appuser; \
+  mkdir /home/appuser/.cache/node/corepack/v1 -p; \
+  chmod 555 /home/appuser/.cache/node/corepack/v1; \
+  chown appuser /home/appuser/.cache/node -r;
 
 # install our test runner to /opt
 WORKDIR /opt/test-runner
@@ -43,6 +46,7 @@ RUN set -ex; \
 # Disable network for corepack
 ENV COREPACK_ENABLE_NETWORK=0 \
     COREPACK_ENABLE_STRICT=0 \
+    COREPACK_DEFAULT_TO_LATEST=0 \
     #
     # Mark this as a docker run so we don't try to execute things in /tmp
     TMP_MAY_BE_NON_EXEC=1;
