@@ -15,7 +15,7 @@ RUN set -ex; \
   adduser --disabled-password --gecos "" appuser; \
   mkdir /home/appuser/.cache/node/corepack/v1 -p; \
   chmod 555 /home/appuser/.cache/node/corepack/v1; \
-  chown appuser /home/appuser/.cache/node -r;
+  chown -R appuser /home/appuser/.cache/node;
 
 # install our test runner to /opt
 WORKDIR /opt/test-runner
