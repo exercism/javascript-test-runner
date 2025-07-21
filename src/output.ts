@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import { AstParser, extractTests } from '@exercism/static-analysis'
 import type { ExtractedTestCase, ParsedSource } from '@exercism/static-analysis'
 import type { ConsoleBuffer } from '@jest/console'

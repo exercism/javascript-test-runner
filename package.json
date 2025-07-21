@@ -2,7 +2,7 @@
   "name": "@exercism/javascript-test-runner",
   "description": "Automated Test runner for exercism solutions in Javascript.",
   "author": "Derk-Jan Karrenbeld <derk-jan+github@karrenbeld.info>",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "license": "AGPL-3.0-or-later",
   "repository": {
     "type": "git",
@@ -27,30 +27,30 @@
     "test:bare": "corepack pnpm node test/smoke.test.mjs && corepack pnpm node test/skip.test.mjs && corepack pnpm node test/log.test.mjs && corepack pnpm node test/taskid.test.mjs"
   },
   "dependencies": {
-    "@exercism/babel-preset-javascript": "^0.5.0",
+    "@exercism/babel-preset-javascript": "^0.6.0",
     "@exercism/static-analysis": "^0.14.0",
     "@jest/console": "^29.7.0",
     "@jest/reporters": "^29.7.0",
     "@jest/test-result": "^29.7.0",
     "@jest/types": "^29.6.3",
-    "@typescript-eslint/typescript-estree": "^8.0.1",
-    "@typescript-eslint/visitor-keys": "^8.0.1",
+    "@typescript-eslint/typescript-estree": "^8.37.0",
+    "@typescript-eslint/visitor-keys": "^8.37.0",
     "babel-jest": "^29.7.0",
-    "chalk": "^5.3.0",
-    "core-js": "^3.38.0",
+    "chalk": "^5.4.1",
+    "core-js": "^3.44.0",
     "jest": "^29.7.0",
     "shelljs": "^0.10.0"
   },
   "devDependencies": {
-    "@exercism/eslint-config-tooling": "^0.6.0",
+    "@exercism/eslint-config-tooling": "^0.9.0",
     "@jest/globals": "^29.7.0",
-    "@tsconfig/node20": "^20.1.4",
-    "@types/node": "^22.1.0",
-    "@types/shelljs": "^0.8.15",
-    "eslint": "^9.8.0",
-    "prettier": "^3.3.3",
+    "@tsconfig/node22": "^22.0.2",
+    "@types/node": "^22.16.5",
+    "@types/shelljs": "^0.8.17",
+    "eslint": "^9.31.0",
+    "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
-    "typescript": "~5.8.3"
+    "typescript": "~5.7.3"
   },
-  "packageManager": "pnpm@9.7.0+sha512.dc09430156b427f5ecfc79888899e1c39d2d690f004be70e05230b72cb173d96839587545d09429b55ac3c429c801b4dc3c0e002f653830a420fa2dd4e3cf9cf"
+  "packageManager": "pnpm@10.13.1+sha512.37ebf1a5c7a30d5fabe0c5df44ee8da4c965ca0c5af3dbab28c3a1681b70a256218d05c81c9c0dcf767ef6b8551eb5b960042b9ed4300c59242336377e01cfad"
 }
