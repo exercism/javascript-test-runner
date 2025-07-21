@@ -28,7 +28,8 @@ cp -R ${fixtures_dir}/* "${tmp_fixtures_dir}"
 
 # Iterate over all test directories
 for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
-    echo "👁️  ${test_file}"
+
+    echo "::group::Testing 👁️  ${test_file}"
 
     slug=$(basename "${test_file}" | sed s/.spec.js$//)
     test_dir=$(dirname "${test_file}")
@@ -43,7 +44,8 @@ for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
     bin/run.sh "${slug}" "${test_dir_path}" "${test_dir_path}"
 
     if test -f $expected_results_file_path; then
-        echo "${slug}/${test_dir_name}: comparing results.json to expected_results.json"
+        touch "${results_file_path}" # ensure it exists
+        echo "${slug}/${test_dir_name}: 🚨 comparing results.json to expected_results.json"
         diff "${results_file_path}" "${expected_results_file_path}"
     fi;
 
@@ -51,6 +53,8 @@ for test_file in $(find "${tmp_fixtures_dir}" -name '*.spec.js'); do
         echo "diff \"${results_file_path}\" \"${expected_results_file_path}\" reported $?"
         exit_code=1
     fi
+
+     echo "::endgroup::"
 done
 
 exit ${exit_code}
