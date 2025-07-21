@@ -13,15 +13,16 @@ RUN set -ex; \
   #
   # add a non-root user to run our code as
   adduser --disabled-password --gecos "" appuser; \
-  mkdir /tmp/.cache/node/corepack/v1 -p; \
-  chmod 555 /tmp/.cache/node/corepack/v1; \
-  chown -R appuser /tmp/.cache/node;
+  mkdir /somewhere/.cache/node/corepack/v1 -p; \
+  chmod 555 /somewhere/.cache/node/corepack/v1; \
+  chown -R appuser /somewhere/.cache/node;
 
 # install our test runner to /opt
 WORKDIR /opt/test-runner
 COPY . .
 
-ENV COREPACK_HOME=/tmp/.cache/node \
+ENV COREPACK_HOME=/somewhere/.cache/node \
+    COREPACK_DEFAULT_TO_LATEST=0 \
     DEBUG=corepack;
 
 RUN set -ex; \
@@ -35,8 +36,8 @@ RUN set -ex; \
   #
   # https://github.com/nodejs/corepack/issues/414#issuecomment-2096218732
   # https://github.com/nodejs/corepack/blob/bc13d40037d0b1bfd386e260ae741f55505b5c7c/sources/folderUtils.ts#L26-L31
-  # chmod 444 /root/.cache/node/corepack/lastKnownGood.json; \
-  # chmod 555 /root/.cache/node/corepack/corepack; \
+  # chmod 444 /somewhere/.cache/node/corepack/lastKnownGood.json; \
+  # chmod 555 /somewhere/.cache/node/corepack/corepack; \
   #
   # Build the test runner
   # RUN set -ex; \
@@ -49,9 +50,6 @@ RUN set -ex; \
 # Disable network for corepack
 ENV COREPACK_ENABLE_NETWORK=0 \
     COREPACK_ENABLE_STRICT=0 \
-    #
-    # Disable lastKnownGood
-    COREPACK_DEFAULT_TO_LATEST=0 \
     #
     # Mark this as a docker run so we don't try to execute things in /tmp
     TMP_MAY_BE_NON_EXEC=1;
