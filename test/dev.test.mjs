@@ -11,7 +11,7 @@ import { assertPass } from './asserts.mjs'
 import { fixtures } from './paths.mjs'
 
 assertPass(
-  'clock',
-  join(fixtures, 'clock', 'pass'),
-  join(fixtures, 'clock', 'pass')
+  'forth',
+  join(fixtures, 'forth', 'oxe-b'),
+  join(fixtures, 'forth', 'oxe-b')
 )

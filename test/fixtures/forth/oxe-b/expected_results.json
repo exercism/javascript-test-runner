@@ -1,5 +1,5 @@
 {
-  "status": "fail",
+  "status": "pass",
   "tests": [
     {
       "name": "Forth > parsing and numbers > numbers just get pushed onto the stack",
@@ -269,50 +269,50 @@
     },
     {
       "name": "Forth > user-defined words > can consist of built-in words",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': dup-twice dup dup ;');\nforth.evaluate('1 dup-twice');\nexpect(forth.stack).toEqual([1, 1, 1]);"
     },
     {
       "name": "Forth > user-defined words > execute in the right order",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': countup 1 2 3 ;');\nforth.evaluate('countup');\nexpect(forth.stack).toEqual([1, 2, 3]);"
     },
     {
       "name": "Forth > user-defined words > can override other user-defined words",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': foo dup ;');\nforth.evaluate(': foo dup dup ;');\nforth.evaluate('1 foo');\nexpect(forth.stack).toEqual([1, 1, 1]);"
     },
     {
       "name": "Forth > user-defined words > can override built-in words",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': swap dup ;');\nforth.evaluate('1 swap');\nexpect(forth.stack).toEqual([1, 1]);"
     },
     {
       "name": "Forth > user-defined words > can override built-in operators",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': + * ;');\nforth.evaluate('3 4 +');\nexpect(forth.stack).toEqual([12]);"
     },
     {
       "name": "Forth > user-defined words > can use different words with the same name",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': foo 5 ;');\nforth.evaluate(': bar foo ;');\nforth.evaluate(': foo 6 ;');\nforth.evaluate('bar foo');\nexpect(forth.stack).toEqual([5, 6]);"
     },
     {
       "name": "Forth > user-defined words > can define word that uses word with the same name",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': foo 10 ;');\nforth.evaluate(': foo foo 1 + ;');\nforth.evaluate('foo');\nexpect(forth.stack).toEqual([11]);"
     },
@@ -339,8 +339,8 @@
     },
     {
       "name": "Forth > user-defined words > only defines locally",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "const first = new Forth();\nconst second = new Forth();\nfirst.evaluate(': + - ;');\nfirst.evaluate('1 1 +');\nsecond.evaluate('1 1 +');\nexpect(first.stack).toEqual([0]);\nexpect(second.stack).toEqual([2]);"
     },
@@ -374,15 +374,15 @@
     },
     {
       "name": "Forth > case-insensitivity > user-defined words are case-insensitive",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': foo dup ;');\nforth.evaluate('1 FOO Foo foo');\nexpect(forth.stack).toEqual([1, 1, 1, 1]);"
     },
     {
       "name": "Forth > case-insensitivity > definitions are case-insensitive",
-      "status": "fail",
-      "message": "TypeError: RegExp.escape is not a function\n    at Forth.escape (<solution>/forth.js:56:43)",
+      "status": "pass",
+      "message": "",
       "output": null,
       "test_code": "forth.evaluate(': SWAP DUP Dup dup ;');\nforth.evaluate('1 swap');\nexpect(forth.stack).toEqual([1, 1, 1, 1]);"
     }
