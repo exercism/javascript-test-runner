@@ -1,5 +1,5 @@
-FROM node:20-bookworm-slim AS runner
-# Node.js 20 (curently LTS)
+FROM node:22-bookworm-slim AS runner
+# Node.js 22 (curently LTS)
 # Debian bookwork
 
 # fetch latest security updates
@@ -13,13 +13,15 @@ RUN set -ex; \
   #
   # add a non-root user to run our code as
   adduser --disabled-password --gecos "" appuser; \
-  mkdir /home/appuser/.cache/node/corepack/v1 -p; \
-  chmod 555 /home/appuser/.cache/node/corepack/v1; \
-  chown -R appuser /home/appuser/.cache/node;
+  mkdir /tmp/.cache/node/corepack/v1 -p; \
+  chmod 555 /tmp/.cache/node/corepack/v1; \
+  chown -R appuser /tmp/.cache/node;
 
 # install our test runner to /opt
 WORKDIR /opt/test-runner
 COPY . .
+
+ENV COREPACK_HOME=/tmp/.cache/node;
 
 RUN set -ex; \
   corepack enable pnpm; \
@@ -46,6 +48,8 @@ RUN set -ex; \
 # Disable network for corepack
 ENV COREPACK_ENABLE_NETWORK=0 \
     COREPACK_ENABLE_STRICT=0 \
+    #
+    # Disable lastKnownGood
     COREPACK_DEFAULT_TO_LATEST=0 \
     #
     # Mark this as a docker run so we don't try to execute things in /tmp
