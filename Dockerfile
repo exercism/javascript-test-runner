@@ -22,8 +22,7 @@ WORKDIR /opt/test-runner
 COPY . .
 
 ENV COREPACK_HOME=/somewhere/.cache/node \
-    COREPACK_DEFAULT_TO_LATEST=0 \
-    DEBUG=corepack;
+    COREPACK_DEFAULT_TO_LATEST=0;
 
 RUN set -ex; \
   corepack enable pnpm; \
