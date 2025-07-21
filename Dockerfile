@@ -21,7 +21,8 @@ RUN set -ex; \
 WORKDIR /opt/test-runner
 COPY . .
 
-ENV COREPACK_HOME=/tmp/.cache/node;
+ENV COREPACK_HOME=/tmp/.cache/node \
+    DEBUG=corepack;
 
 RUN set -ex; \
   corepack enable pnpm; \
