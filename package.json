@@ -46,7 +46,7 @@
     "@jest/globals": "^30.4.0",
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.16.5",
-    "@types/shelljs": "^0.8.17",
+    "@types/shelljs": "^0.10.0",
     "eslint": "^9.31.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",
