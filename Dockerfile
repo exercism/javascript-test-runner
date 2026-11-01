@@ -1,4 +1,4 @@
-FROM node:lts-slim@sha256:cb4e8f7c443347358b7875e717c29e27bf9befc8f5a26cf18af3c3dec80e58c5 AS runner
+FROM node:lts-slim@sha256:e4db4c914bf8ad241bd24804fc25d272d89bad97e68cdc8a1414862790a02c39 AS runner
 # lts-slim == 24.18.0-bookworm-slim
 
 # fetch latest security updates
