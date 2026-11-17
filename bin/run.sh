@@ -185,8 +185,11 @@ else
   echo "✔️  pnpm cache from root to output"
   # cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
   # mv "${OUTPUT}deploy/node_modules" "${OUTPUT}"
-  # cp -as "${ROOT}/node_modules/" "${OUTPUT}"
-  cp -r "${ROOT}/node_modules" "${OUTPUT}"
+  # Link to the installed packages instead of copying them. The folder holds
+  # about 26,000 files, so copying it took over a second with a warm disk
+  # cache and over 15 seconds with a cold one. Node resolves the link to the
+  # real folder, so packages load from the image as before.
+  ln -s "${ROOT}/node_modules" "${OUTPUT}node_modules"
 
   echo "✔️  .pnpm-lock.yaml from root to output"
   cp "${ROOT}/pnpm-lock.yaml" "${OUTPUT}pnpm-lock.yaml"
@@ -299,17 +302,9 @@ echo "  🔧 Preparing test project                                    "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-# In case it's not yet enabled
-echo "✔️  enabling corepack"
-corepack enable pnpm;
-
-echo "✔️  pnpm version now: $(corepack pnpm --version --offline)"
-echo ""
 
 if test -f "${OUTPUT}package.json"; then
   echo "✔️  standalone package found at ${OUTPUT}package.json"
-  echo ""
-  ls -al "${OUTPUT}"
   echo ""
 
   if test -d "${OUTPUT}node_modules/.pnpm"; then
@@ -317,14 +312,15 @@ if test -f "${OUTPUT}package.json"; then
     # ls -aln1 "${OUTPUT}node_modules"
     # echo ""
     echo "Found .pnpm hoisted binaries"
-    ls -al "${OUTPUT}node_modules/.bin"
   else
     echo ".pnpm hoisted packages not found"
     cd "${COREPACK_ROOT_DIR}" && corepack pnpm install --offline --frozen-lockfile
   fi
 fi;
 
-bin_jest="$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm bin)/jest"
+# Call jest directly. Going through `corepack pnpm` started two extra
+# Node processes (corepack, then pnpm) before jest itself.
+bin_jest="${COREPACK_ROOT_DIR%/}/node_modules/.bin/jest"
 
 echo "👁️  ${COREPACK_ROOT_DIR} as corepack root"
 
@@ -357,7 +353,7 @@ echo ""
 
 echo "⚙️  corepack pnpm jest <...> --listTests"
 echo ""
-jest_tests=$(cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" --listTests --passWithNoTests --detectOpenHandles) || false
+jest_tests=$(cd "${COREPACK_ROOT_DIR}" && "${bin_jest}" "${OUTPUT}*" --listTests --passWithNoTests --detectOpenHandles) || false
 
 if [ -z "${jest_tests}" ]; then
   echo "❌  no jest tests (*.spec.js) discovered."
@@ -419,7 +415,7 @@ echo ""
 echo "⚙️  corepack pnpm jest <...>"
 echo ""
 
-cd "${COREPACK_ROOT_DIR}" && corepack pnpm jest "${OUTPUT}*" \
+cd "${COREPACK_ROOT_DIR}" && "${bin_jest}" "${OUTPUT}*" \
   --bail 1 \
   --ci \
   --colors \
