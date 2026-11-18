@@ -351,67 +351,9 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-echo "⚙️  corepack pnpm jest <...> --listTests"
-echo ""
-jest_tests=$(cd "${COREPACK_ROOT_DIR}" && "${bin_jest}" "${OUTPUT}*" --listTests --passWithNoTests --detectOpenHandles) || false
-
-if [ -z "${jest_tests}" ]; then
-  echo "❌  no jest tests (*.spec.js) discovered."
-
-  runner_result="The submitted code was not subjected to any type or execution tests. At least one test was expected."
-  echo "{ \"version\": 1, \"status\": \"error\", \"message\": \"${runner_result}\" }" > $result_file
-  sed -Ei ':a;N;$!ba;s/\r{0,1}\n/\\n/g' $result_file
-
-  echo ""
-  echo "If the solution previously contained configuration files,    "
-  echo "they were disabled and now need to be restored."
-  echo ""
-
-  # Restore configuration files
-  if test -f "${OUTPUT}babel.config.js.💥.bak"; then
-    echo "✔️  restoring babel.config.js in output"
-    unlink "${OUTPUT}babel.config.js"
-    mv "${OUTPUT}babel.config.js.💥.bak" "${OUTPUT}babel.config.js" || true
-  fi;
-
-  if test -f "${OUTPUT}package.json.💥.bak"; then
-    echo "✔️  restoring package.json in output"
-    if test -f "${OUTPUT}package.json"; then
-      unlink "${OUTPUT}package.json"
-    fi
-    mv "${OUTPUT}package.json.💥.bak" "${OUTPUT}package.json" || true
-  fi;
-
-  if test -f "${OUTPUT}pnpm-lock.yaml.💥.bak"; then
-    echo "✔️  restoring pnpm-lock.yaml in output"
-    if test -f "${OUTPUT}pnpm-lock.yaml"; then
-      unlink "${OUTPUT}pnpm-lock.yaml"
-    fi
-    mv "${OUTPUT}pnpm-lock.yaml.💥.bak" "${OUTPUT}pnpm-lock.yaml" || true
-  fi;
-
-  if test -f "${OUTPUT}.npmrc.💥.bak"; then
-    echo "✔️  restoring .npmrc in output"
-    if test -f "${OUTPUT}.npmrc"; then
-      unlink "${OUTPUT}.npmrc"
-    fi
-    mv "${OUTPUT}.npmrc.💥.bak" "${OUTPUT}.npmrc" || true
-  fi;
-
-  echo ""
-  echo "---------------------------------------------------------------"
-  echo "The results of this run have been written to 'results.json'."
-  echo "👁️  ${result_file}"
-
-  # Test runner didn't fail!
-  exit 0
-fi
-
-echo "✔️  jest tests (*.spec.js) discovered."
-echo $jest_tests
-
-# Run tests
-echo ""
+# Run tests. If Jest finds no test files, the reporter writes the "no tests"
+# error to results.json. Checking for that here would mean starting Jest a
+# second time (with --listTests) just to list the test files.
 echo "⚙️  corepack pnpm jest <...>"
 echo ""
 
@@ -435,6 +377,9 @@ test_exit=$?
 
 if [ $test_exit -eq 1 ]; then
   echo "❌ not all tests (*.spec.js) passed."
+elif grep -q "not subjected to any type or execution tests" "${result_file}"; then
+  # Jest found no test files, and the reporter wrote the "no tests" error.
+  echo "❌  no jest tests (*.spec.js) discovered."
 else
   echo "✅ all tests (*.spec.js) passed."
 fi;

@@ -63,6 +63,15 @@ export class Output {
   }
 
   public finish(aggregatedResults: AggregatedResult): void {
+    // If Jest found no test files, report that no tests ran. Checking here
+    // saves run.sh from starting Jest a second time to list the test files.
+    if (!this.results.status && aggregatedResults.numTotalTestSuites === 0) {
+      this.error(
+        'The submitted code was not subjected to any type or execution ' +
+          'tests. At least one test was expected.'
+      )
+    }
+
     if (!this.results.status) {
       this.results.status =
         aggregatedResults.numRuntimeErrorTestSuites === 0 &&
