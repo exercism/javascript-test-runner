@@ -33,6 +33,8 @@
     "@jest/reporters": "^30.4.0",
     "@jest/test-result": "^30.4.0",
     "@jest/types": "^30.4.0",
+    "@swc/core": "^1.16.22",
+    "@swc/jest": "^0.2.39",
     "@typescript-eslint/typescript-estree": "^8.37.0",
     "@typescript-eslint/visitor-keys": "^8.37.0",
     "babel-jest": "^30.4.0",
