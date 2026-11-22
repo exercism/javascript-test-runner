@@ -52,6 +52,37 @@ ENV COREPACK_ENABLE_NETWORK=0 \
     # Mark this as a docker run so we don't try to execute things in /tmp
     TMP_MAY_BE_NON_EXEC=1;
 
+# Node saves the compiled code of each module it loads in this folder, and
+# reuses it in later runs. bin/warm-up.sh runs the test runner once to fill
+# it, so each run skips compiling Jest, the transformer and the reporter.
+# Node keeps a separate cache for each user ID, so the warm-up runs as
+# appuser. Root then owns the cache, so runs only read it.
+ENV NODE_COMPILE_CACHE=/opt/test-runner/.node-compile-cache
+RUN mkdir .node-compile-cache && chown appuser .node-compile-cache
+USER appuser
+RUN set -ex; \
+  bin/warm-up.sh; \
+  # remove Jest's cache from the warm-up, so runs start with an empty one
+  rm -rf /tmp/jest_*
+USER root
+# Node writes the cache files readable by their owner only
+RUN chown -R root:root .node-compile-cache && chmod -R a+rX .node-compile-cache
+
 # Execute everything as the appuser
 USER appuser
 ENTRYPOINT [ "/opt/test-runner/bin/run.sh" ]
+
+# Record the files read by a run. A separate stage keeps strace out of the
+# final image.
+FROM runner AS prefetch-list
+USER root
+RUN set -ex; \
+  apt-get update; \
+  apt-get install strace -y
+# Record as appuser, so the list has the files a real run reads from
+# appuser's home folder.
+USER appuser
+RUN bin/record-prefetch-list.sh /tmp/prefetch-list
+
+FROM runner
+COPY --from=prefetch-list /tmp/prefetch-list /opt/test-runner/.prefetch-list

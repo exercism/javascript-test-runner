@@ -77,6 +77,14 @@ OUTPUT="${OUTPUT%/}/"
 set -euo pipefail
 
 ROOT="$(realpath $(dirname "$0")/..)"
+
+# Read the files a run needs into the page cache, 8 at a time, in the
+# background. The Docker image records the list at build time. On a machine
+# where the image's files are not in the page cache yet, Node read them one
+# at a time as it needed them, which took several seconds per run.
+if test -f "${ROOT}/.prefetch-list"; then
+  ( nice -n 19 xargs -P 8 -n 50 -a "${ROOT}/.prefetch-list" cat > /dev/null 2>&1 & )
+fi
 REPORTER="$ROOT/dist/reporter.js"
 SETUP="$ROOT/dist/jest/setup.js"
 CONFIG="$ROOT/jest.runner.config.js"

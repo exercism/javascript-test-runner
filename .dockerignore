@@ -13,3 +13,5 @@ dev.Dockerfile
 !/bin/run.sh
 !/bin/prepare.sh
 test/
+!/bin/warm-up.sh
+!/bin/record-prefetch-list.sh
