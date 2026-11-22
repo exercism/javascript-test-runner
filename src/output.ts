@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AstParser, extractTests } from '@exercism/static-analysis'
-import type { ExtractedTestCase, ParsedSource } from '@exercism/static-analysis'
 import type { ConsoleBuffer } from '@jest/console'
 import type {
   AggregatedResult,
@@ -10,6 +8,8 @@ import type {
 import type { Config } from '@jest/types'
 import fs from 'fs'
 import path from 'path'
+import { parseTests } from './tests'
+import type { ParsedTests, TestCase } from './tests'
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -42,8 +42,7 @@ export class Output {
     Pick<OutputInterface, 'tests'>
   private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
-  private readonly sources: Record<string, ParsedSource>
-  private readonly tests: Record<string, ReturnType<typeof extractTests>>
+  private readonly sources: Record<string, ParsedTests>
   private readonly config: null | ExerciseConfig
 
   constructor(globalConfig: Config.GlobalConfig) {
@@ -54,7 +53,6 @@ export class Output {
 
     this.config = findConfig(path.dirname(this.outputFile))
     this.sources = {}
-    this.tests = {}
   }
 
   public error(message: string): void {
@@ -130,9 +128,8 @@ export class Output {
     const parsedSources: Record<
       string,
       {
-        program: ParsedSource['program']
-        source: ParsedSource['source']
-        tests: Record<string, ExtractedTestCase>
+        source: string
+        tests: Record<string, TestCase>
       }
     > = {}
 
@@ -142,22 +139,15 @@ export class Output {
       .filter((path, index, self) => self.indexOf(path) === index)
       .forEach((file) => {
         try {
-          const [{ program, source }] = AstParser.ANALYZER.parseSync(
-            fs.readFileSync(file).toString()
-          )
-          const tests = extractTests(program)
+          const { source, tests } = parseTests(fs.readFileSync(file).toString())
 
           parsedSources[file] = {
-            program,
             source,
-            tests: tests.reduce<Record<string, ExtractedTestCase>>(
-              (results, item) => {
-                results[item.name(' > ')] = item
-                results[item.name(' ' as ' > ')] = item
-                return results
-              },
-              {}
-            ),
+            tests: tests.reduce<Record<string, TestCase>>((results, item) => {
+              results[item.name(' > ')] = item
+              results[item.name(' ' as ' > ')] = item
+              return results
+            }, {}),
           }
         } catch (err: unknown) {
           console.error(
@@ -238,22 +228,14 @@ export class Output {
     })
   }
 
-  private getSource(specFilePath: string): {
-    source: ParsedSource
-    tests: ExtractedTestCase[]
-  } {
+  private getSource(specFilePath: string): ParsedTests {
     if (!this.sources[specFilePath]) {
-      const [{ program, source }] = AstParser.ANALYZER.parseSync(
+      this.sources[specFilePath] = parseTests(
         fs.readFileSync(specFilePath).toString()
       )
-      this.tests[specFilePath] = extractTests(program)
-      this.sources[specFilePath] = { program, source }
     }
 
-    return {
-      source: this.sources[specFilePath],
-      tests: this.tests[specFilePath],
-    }
+    return this.sources[specFilePath]
   }
 
   public testInnerFinished(
@@ -302,7 +284,7 @@ export class Output {
 function buildOutput(
   specFilePath: string,
   buffer: ConsoleBuffer,
-  { tests }: { source: ParsedSource; tests: ExtractedTestCase[] }
+  { tests }: ParsedTests
 ): Record<string, string> {
   const outputs = buffer.reduce<Record<string, string[]>>((outputs, entry) => {
     // The origin stack trace will look something like this:
@@ -320,7 +302,7 @@ function buildOutput(
     //   ...
     // })
 
-    let foundTest: ExtractedTestCase | undefined
+    let foundTest: TestCase | undefined
     // Using find because it will break when something is found!
     entry.origin.split('\n').find((originLine) => {
       if (!originLine.includes(specFilePath)) {
