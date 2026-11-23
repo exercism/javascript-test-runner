@@ -369,6 +369,7 @@ cd "${COREPACK_ROOT_DIR}" && "${bin_jest}" "${OUTPUT}*" \
   --roots "${OUTPUT}" \
   --setupFilesAfterEnv ${SETUP} \
   --verbose false \
+  --forceExit \
   --testLocationInResults
 
 # Convert exit(1) (jest worked, but there are failing tests) to exit(0)
