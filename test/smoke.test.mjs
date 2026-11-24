@@ -35,7 +35,7 @@ shelljs.echo(
 assertPass('two-fer', join(fixtures, 'two-fer', 'npm'))
 
 /** Test failures */
-const failures = ['tests', 'empty']
+const failures = ['tests']
 
 failures.forEach((cause) => {
   const input = join(fixtures, 'two-fer', 'fail', cause)
@@ -51,7 +51,9 @@ failures.forEach((cause) => {
 })
 
 /** Test errors */
-const errors = ['missing', 'syntax', 'malformed_tests']
+// An empty solution has no twoFer export. Node checks the imports of a native
+// ES module before any test runs, so the whole test file fails to run.
+const errors = ['empty', 'missing', 'syntax', 'malformed_tests']
 
 errors.forEach((cause) => {
   const input = join(fixtures, 'two-fer', 'error', cause)

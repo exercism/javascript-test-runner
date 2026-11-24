@@ -1,15 +1,37 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import type { ConsoleBuffer } from '@jest/console'
-import type {
-  AggregatedResult,
-  AssertionResult,
-  TestResult,
-} from '@jest/test-result'
-import type { Config } from '@jest/types'
 import fs from 'fs'
 import path from 'path'
+import { locateSyntaxError } from './syntax-error'
 import { parseTests } from './tests'
 import type { ParsedTests, TestCase } from './tests'
+
+// The parts of Jest's results that this file reads. The reporter builds them
+// from the events of Node's test runner.
+export interface AssertionResult {
+  ancestorTitles: string[]
+  title: string
+  status: 'passed' | 'failed' | 'pending' | 'skipped'
+  failureMessages: string[]
+}
+
+export interface TestResult {
+  testFilePath: string
+  failureMessage?: string
+  testExecError?: { message: string }
+  console?: ConsoleBuffer
+  testResults: AssertionResult[]
+}
+
+export interface AggregatedResult {
+  numFailedTests: number
+  numFailedTestSuites: number
+  numPassedTests: number
+  numPendingTests: number
+  numPendingTestSuites: number
+  numRuntimeErrorTestSuites: number
+  testResults: TestResult[]
+}
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -40,16 +62,13 @@ const OUTPUT_VERSION = 3
 export class Output {
   private readonly results: Partial<OutputInterface> &
     Pick<OutputInterface, 'tests'>
-  private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
   private readonly sources: Record<string, ParsedTests>
   private readonly config: null | ExerciseConfig
 
-  constructor(globalConfig: Config.GlobalConfig) {
-    this.globalConfig = globalConfig
+  constructor(outputFile: string) {
     this.results = { tests: [] }
-    this.outputFile =
-      this.globalConfig.outputFile ?? path.join(process.cwd(), 'results.json')
+    this.outputFile = outputFile
 
     this.config = findConfig(path.dirname(this.outputFile))
     this.sources = {}
@@ -61,26 +80,6 @@ export class Output {
   }
 
   public finish(aggregatedResults: AggregatedResult): void {
-    // If Jest found no test files, report that no tests ran. Checking here
-    // saves run.sh from starting Jest a second time to list the test files.
-    // Version 3 output can't have an empty list of tests, so this uses the
-    // version 1 format, which has no tests key.
-    if (!this.results.status && aggregatedResults.numTotalTestSuites === 0) {
-      const artifact = JSON.stringify(
-        {
-          version: 1,
-          status: 'error',
-          message:
-            'The submitted code was not subjected to any type or execution ' +
-            'tests. At least one test was expected.',
-        },
-        undefined,
-        2
-      )
-      fs.writeFileSync(this.outputFile, artifact)
-      return
-    }
-
     if (!this.results.status) {
       this.results.status =
         aggregatedResults.numRuntimeErrorTestSuites === 0 &&
@@ -215,8 +214,11 @@ export class Output {
       this.error(
         sanitizeErrorMessage(
           specFilePath,
-          testResult.failureMessage ??
-            'Something went wrong when running the tests.'
+          locateSyntaxError(
+            specFilePath,
+            testResult.failureMessage ??
+              'Something went wrong when running the tests.'
+          )
         )
       )
       return
@@ -318,9 +320,10 @@ function buildOutput(
         return undefined
       }
 
+      // Frames end in "12)", or in "12" for a function with no name.
       const messageLoc = {
         line: Number(line),
-        column: Number(column.slice(0, column.length - 1)),
+        column: parseInt(column, 10),
       }
       return (foundTest = tests.find(({ testNode }) => {
         if (messageLoc.line < testNode.loc.start.line) {
@@ -426,6 +429,10 @@ function sanitizeErrorMessage(specFilePath: string, message: string): string {
     process.cwd(),
     path.dirname(process.cwd()),
   ]
+
+  // Stack frames in ES modules name files by URL (file:///...), and Jest's
+  // code frames shorten that to file:/...
+  dirs.unshift(...dirs.flatMap((dir) => [`file://${dir}`, `file:${dir}`]))
 
   dirs.forEach((sensitivePath) => {
     while (message.includes(sensitivePath)) {
