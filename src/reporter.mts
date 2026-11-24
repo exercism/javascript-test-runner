@@ -80,8 +80,8 @@ export default async function* reporter(
     })
   }
 
-  // Node loads this reporter before the preloaded setup.mts, so this file
-  // imports jest-globals.mjs only now, to let setup.mts load it first.
+  // Node loads this reporter before the preloaded setup.cts, so this file
+  // imports jest-globals.mjs only now, to let setup.cts load it first.
   const { loadErrors, testConsole } = await import('./jest-globals.mjs')
 
   if (loadErrors.length > 0) {

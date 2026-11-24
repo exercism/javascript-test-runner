@@ -78,7 +78,7 @@ set -euo pipefail
 
 ROOT="$(realpath $(dirname "$0")/..)"
 REPORTER="$ROOT/dist/reporter.mjs"
-SETUP="$ROOT/dist/setup.mjs"
+SETUP="$ROOT/dist/setup.cjs"
 
 echo " "
 echo "╔═════════════════════════════════════════════════════════════╗"
@@ -260,18 +260,15 @@ if test -f "${OUTPUT}${test_file}"; then
   echo "⚙️  node --test ${test_file}"
   echo ""
 
-  # Run the tests with Node's built-in test runner. setup.mjs provides the
+  # Run the tests with Node's built-in test runner. setup.cjs provides the
   # Jest API the tests use, and reporter.mjs writes results.json.
   #
   # --test-isolation=none runs the test file in this process, instead of
   # starting another one, and lets the reporter read the console messages.
   # --test-force-exit stops the process once the tests have finished, even
   # if the solution leaves a timer running.
-  # --experimental-test-module-mocks enables jest.mock (see setup.mts).
   cd "${OUTPUT}" && TEST_FILE="${OUTPUT}${test_file}" RESULTS_FILE="${result_file}" node \
-    --import "${SETUP}" \
-    --experimental-test-module-mocks \
-    --disable-warning=ExperimentalWarning \
+    --require "${SETUP}" \
     --test \
     --test-isolation=none \
     --test-force-exit \

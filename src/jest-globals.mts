@@ -1,7 +1,7 @@
 // Provides the Jest API used by the track's test files, on top of node:test,
-// Jest's own `expect` package and `jest-mock`. setup.mts makes
-// `import ... from '@jest/globals'` load this file, and loads it before the
-// test file. This file also:
+// Jest's own `expect` package and `jest-mock`. setup.cts loads it before the
+// test file, and points the test file's `import ... from '@jest/globals'` at
+// it (see imports.ts). This file also:
 //
 // 1. makes the API available as globals, as Jest did.
 // 2. replaces `console` with Jest's BufferedConsole, which records each
@@ -11,7 +11,7 @@
 //    did (see hoistMocks below).
 import { BufferedConsole } from '@jest/console'
 import { parse } from 'acorn'
-import type { Statement } from 'acorn'
+import type { CallExpression, ExpressionStatement, Statement } from 'acorn'
 import { expect } from 'expect'
 import { ModuleMocker } from 'jest-mock'
 import fs from 'node:fs'
@@ -22,11 +22,8 @@ import {
   before,
   beforeEach as nodeBeforeEach,
   describe as nodeDescribe,
-  mock,
   test as nodeTest,
 } from 'node:test'
-import { fileURLToPath, pathToFileURL } from 'node:url'
-import { getCallSites } from 'node:util'
 import { runInThisContext } from 'node:vm'
 
 /** Collects every console message, for the reporter. */
@@ -143,7 +140,6 @@ export function afterAll(fn: TestFn, timeout = TIMEOUT): void {
 }
 
 const mocker = new ModuleMocker(globalThis)
-const mockedModules = new Set<string>()
 
 export const jest = {
   fn: mocker.fn.bind(mocker),
@@ -154,26 +150,10 @@ export const jest = {
   resetAllMocks: mocker.resetAllMocks.bind(mocker),
   restoreAllMocks: mocker.restoreAllMocks.bind(mocker),
 
-  // Replaces a module with the object returned by `factory`. This uses Node's
-  // mock.module, which needs the --experimental-test-module-mocks flag.
-  mock(moduleName: string, factory: () => Record<string, unknown>): void {
-    const url = pathToFileURL(createRequire(callerFile()).resolve(moduleName))
-    if (mockedModules.has(url.href)) {
-      // hoistMocks already ran this call, before the test file loaded.
-      return
-    }
-    mockedModules.add(url.href)
-
-    const { default: defaultExport, ...namedExports } = factory()
-    mock.module(url.href, { defaultExport, namedExports })
-  },
-}
-
-/** The file of the function that called the function calling this one. */
-function callerFile(): string {
-  // [0] is this function, [1] is its caller, and [2] is the caller's caller.
-  const file = getCallSites(3)[2]?.scriptName ?? ''
-  return file.startsWith('file:') ? fileURLToPath(file) : file
+  // hoistMocks below has already run every top-level jest.mock call in the
+  // test file, before the test file loaded. So when the test file itself
+  // runs the call, there is nothing left to do.
+  mock(): void {},
 }
 
 export { expect }
@@ -196,9 +176,55 @@ Object.assign(globalThis, {
 // Jest moved each jest.mock call above the imports of the test file (with
 // babel-plugin-jest-hoist), so the mock replaced the module before anything
 // imported it. Native ES modules load all their imports before any of their
-// code runs, which would be too late for the mock. So before Node loads the
-// test file, this finds its top-level jest.mock calls with acorn and runs them
-// here. As in Jest, a mock factory may only use globals such as `jest`.
+// code runs, which would be too late for the mock. Node's own module mocks
+// (mock.module) are not yet stable, so this replaces the module's file
+// instead.
+//
+// Before Node loads the test file, this finds its top-level jest.mock calls
+// with acorn and runs each factory. It then writes a small module in place of
+// the mocked file, which exports what the factory returned. Both the test
+// file and the solution import that module. The original file is put back
+// when the process exits. As in Jest, a mock factory may only use globals
+// such as `jest`.
+const MOCKS = Symbol.for('exercism.jest.mocks')
+const mocks = new Map<string, Record<string, unknown>>()
+Object.assign(globalThis, { [MOCKS]: mocks })
+
+function mockModule(
+  testFile: string,
+  moduleName: string,
+  factory?: () => Record<string, unknown>
+): void {
+  if (typeof factory !== 'function') {
+    throw new Error(
+      `jest.mock('${moduleName}') needs a factory function in this test runner.`
+    )
+  }
+
+  const file = createRequire(testFile).resolve(moduleName)
+  const original = fs.readFileSync(file)
+  process.on('exit', () => {
+    fs.writeFileSync(file, original)
+  })
+
+  const exports = factory()
+  mocks.set(file, exports)
+
+  const names = Object.keys(exports).filter(
+    (name) => name !== 'default' && /^[A-Za-z_$][\w$]*$/.test(name)
+  )
+  fs.writeFileSync(
+    file,
+    [
+      `// The test runner wrote this file for jest.mock('${moduleName}').`,
+      `const mock = globalThis[Symbol.for('exercism.jest.mocks')].get(${JSON.stringify(file)})`,
+      `export default 'default' in mock ? mock.default : mock`,
+      ...names.map((name) => `export const ${name} = mock.${name}`),
+      '',
+    ].join('\n')
+  )
+}
+
 function hoistMocks(testFile: string): void {
   const source = fs.readFileSync(testFile, 'utf8')
 
@@ -225,11 +251,21 @@ function hoistMocks(testFile: string): void {
         statement.expression.callee.property.type === 'Identifier' &&
         statement.expression.callee.property.name === 'mock'
     )
-    .map((statement) => source.slice(statement.start, statement.end))
+    .map((statement) => {
+      const { arguments: args } = (
+        statement as ExpressionStatement & { expression: CallExpression }
+      ).expression
+      return `[${args.map((arg) => source.slice(arg.start, arg.end)).join(', ')}]`
+    })
 
   if (calls.length > 0) {
-    // Naming the test file lets jest.mock resolve paths from it.
-    runInThisContext(calls.join('\n'), { filename: testFile })
+    // Naming the test file makes any error in a factory point at it.
+    const argumentLists = runInThisContext(`[${calls.join(',\n')}]`, {
+      filename: testFile,
+    }) as [string, () => Record<string, unknown>][]
+    for (const [moduleName, factory] of argumentLists) {
+      mockModule(testFile, moduleName, factory)
+    }
   }
 }
 
