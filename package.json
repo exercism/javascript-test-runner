@@ -30,6 +30,7 @@
     "@jest/console": "^30.5.2",
     "acorn": "^8.15.0",
     "chalk": "^6.0.0",
+    "core-js": "^3.49.0",
     "expect": "^30.5.2",
     "jest-mock": "^30.5.2",
     "shelljs": "^0.10.0"
@@ -39,6 +40,7 @@
     "@tsconfig/node22": "^22.0.2",
     "@types/node": "^22.16.5",
     "@types/shelljs": "^0.10.0",
+    "core-js-compat": "^3.49.0",
     "eslint": "^9.31.0",
     "prettier": "^3.6.2",
     "rimraf": "^6.0.1",

@@ -1,7 +1,7 @@
 // Provides the Jest API used by the track's test files, on top of node:test,
 // Jest's own `expect` package and `jest-mock`. setup.cts loads it before the
 // test file, and points the test file's `import ... from '@jest/globals'` at
-// it (see imports.ts). This file also:
+// it. This file also:
 //
 // 1. makes the API available as globals, as Jest did.
 // 2. replaces `console` with Jest's BufferedConsole, which records each
@@ -15,7 +15,7 @@ import type { CallExpression, ExpressionStatement, Statement } from 'acorn'
 import { expect } from 'expect'
 import { ModuleMocker } from 'jest-mock'
 import fs from 'node:fs'
-import { createRequire } from 'node:module'
+import { createRequire, registerHooks } from 'node:module'
 import {
   after,
   afterEach as nodeAfterEach,
@@ -24,6 +24,7 @@ import {
   describe as nodeDescribe,
   test as nodeTest,
 } from 'node:test'
+import { pathToFileURL } from 'node:url'
 import { runInThisContext } from 'node:vm'
 
 /** Collects every console message, for the reporter. */
@@ -177,18 +178,29 @@ Object.assign(globalThis, {
 // babel-plugin-jest-hoist), so the mock replaced the module before anything
 // imported it. Native ES modules load all their imports before any of their
 // code runs, which would be too late for the mock. Node's own module mocks
-// (mock.module) are not yet stable, so this replaces the module's file
-// instead.
+// (mock.module) are not yet stable, so this uses a module hook instead.
 //
 // Before Node loads the test file, this finds its top-level jest.mock calls
-// with acorn and runs each factory. It then writes a small module in place of
-// the mocked file, which exports what the factory returned. Both the test
-// file and the solution import that module. The original file is put back
-// when the process exits. As in Jest, a mock factory may only use globals
-// such as `jest`.
+// with acorn and runs each factory. When the test file or the solution then
+// imports the mocked file, the hook hands Node a small module in its place,
+// which exports what the factory returned. The file itself is never changed.
+// As in Jest, a mock factory may only use globals such as `jest`.
 const MOCKS = Symbol.for('exercism.jest.mocks')
 const mocks = new Map<string, Record<string, unknown>>()
 Object.assign(globalThis, { [MOCKS]: mocks })
+
+/** The source of the module that replaces each mocked file, by URL. */
+const mockSources = new Map<string, string>()
+
+registerHooks({
+  load(url, context, nextLoad) {
+    const source = mockSources.get(url)
+    if (source === undefined) {
+      return nextLoad(url, context)
+    }
+    return { format: 'module', source, shortCircuit: true }
+  },
+})
 
 function mockModule(
   testFile: string,
@@ -201,23 +213,17 @@ function mockModule(
     )
   }
 
-  const file = createRequire(testFile).resolve(moduleName)
-  const original = fs.readFileSync(file)
-  process.on('exit', () => {
-    fs.writeFileSync(file, original)
-  })
-
+  const url = pathToFileURL(createRequire(testFile).resolve(moduleName)).href
   const exports = factory()
-  mocks.set(file, exports)
+  mocks.set(url, exports)
 
   const names = Object.keys(exports).filter(
     (name) => name !== 'default' && /^[A-Za-z_$][\w$]*$/.test(name)
   )
-  fs.writeFileSync(
-    file,
+  mockSources.set(
+    url,
     [
-      `// The test runner wrote this file for jest.mock('${moduleName}').`,
-      `const mock = globalThis[Symbol.for('exercism.jest.mocks')].get(${JSON.stringify(file)})`,
+      `const mock = globalThis[Symbol.for('exercism.jest.mocks')].get(${JSON.stringify(url)})`,
       `export default 'default' in mock ? mock.default : mock`,
       ...names.map((name) => `export const ${name} = mock.${name}`),
       '',
