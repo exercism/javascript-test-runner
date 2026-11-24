@@ -77,9 +77,8 @@ OUTPUT="${OUTPUT%/}/"
 set -euo pipefail
 
 ROOT="$(realpath $(dirname "$0")/..)"
-REPORTER="$ROOT/dist/reporter.js"
-SETUP="$ROOT/dist/jest/setup.js"
-CONFIG="$ROOT/jest.runner.config.js"
+REPORTER="$ROOT/dist/reporter.mjs"
+SETUP="$ROOT/dist/setup.cjs"
 
 echo " "
 echo "╔═════════════════════════════════════════════════════════════╗"
@@ -95,9 +94,9 @@ echo "✔️  Using base-root: $ROOT"
 echo "✔️  Using setup-env: $SETUP"
 
 if test -f "$REPORTER"; then
-  echo "✔️  reporter.js found, test runner was built"
+  echo "✔️  reporter.mjs found, test runner was built"
 else
-  >&2 echo "❌ Expected reporter.js to exist."
+  >&2 echo "❌ Expected reporter.mjs to exist."
   >&2 echo "❌ Did you forget to 'corepack pnpm build' first?"
   >&2 echo ""
   >&2 echo "👁️ The following files exist in the dist folder (build output):"
@@ -153,59 +152,6 @@ if test -f "${OUTPUT}.npmrc"; then
   mv "${OUTPUT}.npmrc" "${OUTPUT}.npmrc.💥.bak" || true
 fi;
 
-COREPACK_ROOT_DIR=$(pwd)
-
-if [[ "${OUTPUT}" =~ "$ROOT" ]]; then
-  echo ""
-  echo "The output directory seems to be placed inside the test      "
-  echo "runner root. This means the CLI tools we run will use the    "
-  echo "configuration files as given by the test-runner for running  "
-  echo "the tests, which is what we want. No need to turn the output "
-  echo "directory into a standalone package."
-  echo ""
-
-  if test -f "${OUTPUT}pnpm-lock.yaml"; then
-    echo "✔️  renaming pnpm-lock in output to prevent pnpm from     "
-    echo "   interpreting this directory as a standalone package."
-    mv "${OUTPUT}pnpm-lock.yaml" "${OUTPUT}pnpm-lock.yaml.💥.bak" || true
-  fi;
-
-  echo ""
-else
-  echo ""
-  echo "The output directory is likely not placed inside the test    "
-  echo "runner root. This means the CLI tools need configuration     "
-  echo "files as given and understood by the test-runner for running "
-  echo "the tests. Will now turn the output directory into a         "
-  echo "standalone package."
-  echo ""
-
-  COREPACK_ROOT_DIR="${OUTPUT}"
-
-  echo "✔️  pnpm cache from root to output"
-  # cd $ROOT && corepack pnpm deploy --filter @exercism/javascript-test-runner --ignore-scripts "${OUTPUT}deploy"
-  # mv "${OUTPUT}deploy/node_modules" "${OUTPUT}"
-  # Link to the installed packages instead of copying them. The folder holds
-  # about 26,000 files, so copying it took over a second with a warm disk
-  # cache and over 15 seconds with a cold one. Node resolves the link to the
-  # real folder, so packages load from the image as before.
-  ln -s "${ROOT}/node_modules" "${OUTPUT}node_modules"
-
-  echo "✔️  .pnpm-lock.yaml from root to output"
-  cp "${ROOT}/pnpm-lock.yaml" "${OUTPUT}pnpm-lock.yaml"
-
-  echo "✔️  babel.config.js from root to output"
-  cp "${ROOT}/babel.config.js" "${OUTPUT}babel.config.js"
-
-  echo "✔️  package.json from root to output"
-  cp "${ROOT}/package.json" "${OUTPUT}package.json"
-
-  echo "✔️  .npmrc from root to output"
-  cp "${ROOT}/.npmrc" "${OUTPUT}.npmrc"
-
-  echo ""
-fi
-
 # Put together the path to the test results file
 result_file="${OUTPUT}results.json"
 echo "The results of this run will be written to 'results.json'."
@@ -224,6 +170,9 @@ if test -f $configuration_file; then
   echo ""
 
   cat $configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${OUTPUT}
+
+  # Every exercise has one test file.
+  test_file=$(jq -r '.files.test[0]' "${configuration_file}")
 else
   if test -f $local_configuration_file; then
     echo "There is a configuration file in the .exercism local       "
@@ -234,6 +183,9 @@ else
     echo ""
 
     cat $local_configuration_file | jq -c '.files.test[]' | xargs -L 1 "$ROOT/bin/prepare.sh" ${OUTPUT}
+
+    # Every exercise has one test file.
+    test_file=$(jq -r '.files.test[0]' "${local_configuration_file}")
   else
     test_file="${SLUG}.spec.js"
 
@@ -254,7 +206,6 @@ else
       # Restore configuration files
       if test -f "${OUTPUT}babel.config.js.💥.bak"; then
         echo "✔️  restoring babel.config.js in output"
-        unlink "${OUTPUT}babel.config.js"
         mv "${OUTPUT}babel.config.js.💥.bak" "${OUTPUT}babel.config.js" || true
       fi;
 
@@ -296,52 +247,6 @@ else
   fi
 fi
 
-echo ""
-echo "╔═════════════════════════════════════════════════════════════╗"
-echo "  🔧 Preparing test project                                    "
-echo "╚═════════════════════════════════════════════════════════════╝"
-echo ""
-
-
-if test -f "${OUTPUT}package.json"; then
-  echo "✔️  standalone package found at ${OUTPUT}package.json"
-  echo ""
-
-  if test -d "${OUTPUT}node_modules/.pnpm"; then
-    # echo "Found .pnpm hoisted packages"
-    # ls -aln1 "${OUTPUT}node_modules"
-    # echo ""
-    echo "Found .pnpm hoisted binaries"
-  else
-    echo ".pnpm hoisted packages not found"
-    cd "${COREPACK_ROOT_DIR}" && corepack pnpm install --offline --frozen-lockfile
-  fi
-fi;
-
-# Call jest directly. Going through `corepack pnpm` started two extra
-# Node processes (corepack, then pnpm) before jest itself.
-bin_jest="${COREPACK_ROOT_DIR%/}/node_modules/.bin/jest"
-
-echo "👁️  ${COREPACK_ROOT_DIR} as corepack root"
-
-if [[ -f "${bin_jest}" ]]; then
-  echo "✔️  jest executable found using ${bin_jest}"
-
-  if [[ -x "${bin_jest}" ]]; then
-    echo "✔️  jest executable is executable for $(whoami)"
-  else
-    echo "💥  jest executable not executable for $(whoami)"
-
-    ls -l "${bin_jest}"
-
-    exit -1
-  fi
-else
-  echo "💥  jest executable missing at ${bin_jest}"
-  exit -1
-fi;
-
-
 # Disable auto exit
 set +e
 
@@ -351,36 +256,40 @@ echo "  ➤  Execution (tests: does the solution work?)               "
 echo "╚═════════════════════════════════════════════════════════════╝"
 echo ""
 
-# Run tests. If Jest finds no test files, the reporter writes the "no tests"
-# error to results.json. Checking for that here would mean starting Jest a
-# second time (with --listTests) just to list the test files.
-echo "⚙️  corepack pnpm jest <...>"
-echo ""
+if test -f "${OUTPUT}${test_file}"; then
+  echo "⚙️  node --test ${test_file}"
+  echo ""
 
-cd "${COREPACK_ROOT_DIR}" && "${bin_jest}" "${OUTPUT}*" \
-  --bail 1 \
-  --ci \
-  --colors \
-  --config ${CONFIG} \
-  --noStackTrace \
-  --outputFile="${result_file}" \
-  --passWithNoTests \
-  --reporters "${REPORTER}" \
-  --roots "${OUTPUT}" \
-  --setupFilesAfterEnv ${SETUP} \
-  --verbose false \
-  --testLocationInResults
+  # Run the tests with Node's built-in test runner. setup.cjs provides the
+  # Jest API the tests use, and reporter.mjs writes results.json.
+  #
+  # --test-isolation=none runs the test file in this process, instead of
+  # starting another one, and lets the reporter read the console messages.
+  # --test-force-exit stops the process once the tests have finished, even
+  # if the solution leaves a timer running.
+  cd "${OUTPUT}" && TEST_FILE="${OUTPUT}${test_file}" RESULTS_FILE="${result_file}" node \
+    --require "${SETUP}" \
+    --test \
+    --test-isolation=none \
+    --test-force-exit \
+    --test-reporter="${REPORTER}" \
+    "${OUTPUT}${test_file}"
 
-# Convert exit(1) (jest worked, but there are failing tests) to exit(0)
-test_exit=$?
+  # Convert exit(1) (the tests ran, but some failed) to exit(0)
+  test_exit=$?
 
-if [ $test_exit -eq 1 ]; then
-  echo "❌ not all tests (*.spec.js) passed."
-elif grep -q "not subjected to any type or execution tests" "${result_file}"; then
-  # Jest found no test files, and the reporter wrote the "no tests" error.
-  echo "❌  no jest tests (*.spec.js) discovered."
+  if [ $test_exit -eq 1 ]; then
+    echo "❌ not all tests (*.spec.js) passed."
+  else
+    echo "✅ all tests (*.spec.js) passed."
+  fi;
 else
-  echo "✅ all tests (*.spec.js) passed."
+  # The test file named in the configuration file is missing.
+  # Version 3 output can't have an empty list of tests, so this uses the
+  # version 1 format, which has no tests key.
+  test_exit=0
+  echo "{ \"version\": 1, \"status\": \"error\", \"message\": \"The submitted code was not subjected to any type or execution tests. At least one test was expected.\" }" > "${result_file}"
+  echo "❌  no tests (*.spec.js) discovered."
 fi;
 
 echo ""
@@ -391,7 +300,6 @@ echo ""
 # Restore configuration files
 if test -f "${OUTPUT}babel.config.js.💥.bak"; then
   echo "✔️  restoring babel.config.js in output"
-  unlink "${OUTPUT}babel.config.js"
   mv "${OUTPUT}babel.config.js.💥.bak" "${OUTPUT}babel.config.js" || true
 fi;
 

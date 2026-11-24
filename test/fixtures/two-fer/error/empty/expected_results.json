@@ -1,0 +1,6 @@
+{
+  "status": "error",
+  "message": "<solution>/two-fer.spec.js:1\nimport { twoFer } from './two-fer';\n         ^^^^^^\nSyntaxError: Named export 'twoFer' not found. The requested module './two-fer' is a CommonJS module, which may not support all module.exports as named exports.\nCommonJS modules can always be imported via the default export, for example using:\n\nimport pkg from './two-fer';\nconst { twoFer } = pkg;\n",
+  "tests": [],
+  "version": 3
+}

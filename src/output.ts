@@ -1,15 +1,37 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { AstParser, extractTests } from '@exercism/static-analysis'
-import type { ExtractedTestCase, ParsedSource } from '@exercism/static-analysis'
 import type { ConsoleBuffer } from '@jest/console'
-import type {
-  AggregatedResult,
-  AssertionResult,
-  TestResult,
-} from '@jest/test-result'
-import type { Config } from '@jest/types'
 import fs from 'fs'
 import path from 'path'
+import { locateSyntaxError } from './syntax-error'
+import { parseTests } from './tests'
+import type { ParsedTests, TestCase } from './tests'
+
+// The parts of Jest's results that this file reads. The reporter builds them
+// from the events of Node's test runner.
+export interface AssertionResult {
+  ancestorTitles: string[]
+  title: string
+  status: 'passed' | 'failed' | 'pending' | 'skipped'
+  failureMessages: string[]
+}
+
+export interface TestResult {
+  testFilePath: string
+  failureMessage?: string
+  testExecError?: { message: string }
+  console?: ConsoleBuffer
+  testResults: AssertionResult[]
+}
+
+export interface AggregatedResult {
+  numFailedTests: number
+  numFailedTestSuites: number
+  numPassedTests: number
+  numPendingTests: number
+  numPendingTestSuites: number
+  numRuntimeErrorTestSuites: number
+  testResults: TestResult[]
+}
 
 interface OutputInterface {
   status: 'fail' | 'pass' | 'error'
@@ -40,21 +62,16 @@ const OUTPUT_VERSION = 3
 export class Output {
   private readonly results: Partial<OutputInterface> &
     Pick<OutputInterface, 'tests'>
-  private readonly globalConfig: Config.GlobalConfig
   private readonly outputFile: string
-  private readonly sources: Record<string, ParsedSource>
-  private readonly tests: Record<string, ReturnType<typeof extractTests>>
+  private readonly sources: Record<string, ParsedTests>
   private readonly config: null | ExerciseConfig
 
-  constructor(globalConfig: Config.GlobalConfig) {
-    this.globalConfig = globalConfig
+  constructor(outputFile: string) {
     this.results = { tests: [] }
-    this.outputFile =
-      this.globalConfig.outputFile ?? path.join(process.cwd(), 'results.json')
+    this.outputFile = outputFile
 
     this.config = findConfig(path.dirname(this.outputFile))
     this.sources = {}
-    this.tests = {}
   }
 
   public error(message: string): void {
@@ -63,26 +80,6 @@ export class Output {
   }
 
   public finish(aggregatedResults: AggregatedResult): void {
-    // If Jest found no test files, report that no tests ran. Checking here
-    // saves run.sh from starting Jest a second time to list the test files.
-    // Version 3 output can't have an empty list of tests, so this uses the
-    // version 1 format, which has no tests key.
-    if (!this.results.status && aggregatedResults.numTotalTestSuites === 0) {
-      const artifact = JSON.stringify(
-        {
-          version: 1,
-          status: 'error',
-          message:
-            'The submitted code was not subjected to any type or execution ' +
-            'tests. At least one test was expected.',
-        },
-        undefined,
-        2
-      )
-      fs.writeFileSync(this.outputFile, artifact)
-      return
-    }
-
     if (!this.results.status) {
       this.results.status =
         aggregatedResults.numRuntimeErrorTestSuites === 0 &&
@@ -130,9 +127,8 @@ export class Output {
     const parsedSources: Record<
       string,
       {
-        program: ParsedSource['program']
-        source: ParsedSource['source']
-        tests: Record<string, ExtractedTestCase>
+        source: string
+        tests: Record<string, TestCase>
       }
     > = {}
 
@@ -142,22 +138,15 @@ export class Output {
       .filter((path, index, self) => self.indexOf(path) === index)
       .forEach((file) => {
         try {
-          const [{ program, source }] = AstParser.ANALYZER.parseSync(
-            fs.readFileSync(file).toString()
-          )
-          const tests = extractTests(program)
+          const { source, tests } = parseTests(fs.readFileSync(file).toString())
 
           parsedSources[file] = {
-            program,
             source,
-            tests: tests.reduce<Record<string, ExtractedTestCase>>(
-              (results, item) => {
-                results[item.name(' > ')] = item
-                results[item.name(' ' as ' > ')] = item
-                return results
-              },
-              {}
-            ),
+            tests: tests.reduce<Record<string, TestCase>>((results, item) => {
+              results[item.name(' > ')] = item
+              results[item.name(' ' as ' > ')] = item
+              return results
+            }, {}),
           }
         } catch (err: unknown) {
           console.error(
@@ -225,8 +214,11 @@ export class Output {
       this.error(
         sanitizeErrorMessage(
           specFilePath,
-          testResult.failureMessage ??
-            'Something went wrong when running the tests.'
+          locateSyntaxError(
+            specFilePath,
+            testResult.failureMessage ??
+              'Something went wrong when running the tests.'
+          )
         )
       )
       return
@@ -238,22 +230,14 @@ export class Output {
     })
   }
 
-  private getSource(specFilePath: string): {
-    source: ParsedSource
-    tests: ExtractedTestCase[]
-  } {
+  private getSource(specFilePath: string): ParsedTests {
     if (!this.sources[specFilePath]) {
-      const [{ program, source }] = AstParser.ANALYZER.parseSync(
+      this.sources[specFilePath] = parseTests(
         fs.readFileSync(specFilePath).toString()
       )
-      this.tests[specFilePath] = extractTests(program)
-      this.sources[specFilePath] = { program, source }
     }
 
-    return {
-      source: this.sources[specFilePath],
-      tests: this.tests[specFilePath],
-    }
+    return this.sources[specFilePath]
   }
 
   public testInnerFinished(
@@ -302,7 +286,7 @@ export class Output {
 function buildOutput(
   specFilePath: string,
   buffer: ConsoleBuffer,
-  { tests }: { source: ParsedSource; tests: ExtractedTestCase[] }
+  { tests }: ParsedTests
 ): Record<string, string> {
   const outputs = buffer.reduce<Record<string, string[]>>((outputs, entry) => {
     // The origin stack trace will look something like this:
@@ -320,7 +304,7 @@ function buildOutput(
     //   ...
     // })
 
-    let foundTest: ExtractedTestCase | undefined
+    let foundTest: TestCase | undefined
     // Using find because it will break when something is found!
     entry.origin.split('\n').find((originLine) => {
       if (!originLine.includes(specFilePath)) {
@@ -336,9 +320,10 @@ function buildOutput(
         return undefined
       }
 
+      // Frames end in "12)", or in "12" for a function with no name.
       const messageLoc = {
         line: Number(line),
-        column: Number(column.slice(0, column.length - 1)),
+        column: parseInt(column, 10),
       }
       return (foundTest = tests.find(({ testNode }) => {
         if (messageLoc.line < testNode.loc.start.line) {
@@ -444,6 +429,10 @@ function sanitizeErrorMessage(specFilePath: string, message: string): string {
     process.cwd(),
     path.dirname(process.cwd()),
   ]
+
+  // Stack frames in ES modules name files by URL (file:///...), and Jest's
+  // code frames shorten that to file:/...
+  dirs.unshift(...dirs.flatMap((dir) => [`file://${dir}`, `file:${dir}`]))
 
   dirs.forEach((sensitivePath) => {
     while (message.includes(sensitivePath)) {

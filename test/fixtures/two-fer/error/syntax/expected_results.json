@@ -1,6 +1,6 @@
 {
   "status": "error",
-  "message": "SyntaxError: <solution>/two-fer.js: Unexpected keyword 'const'. (1:13)\n\n    > 1 | export const const () => { (\n        |              ^\n      2 |\n",
+  "message": "SyntaxError: <solution>/two-fer.js: Unexpected keyword 'const' (1:13)\n\n    > 1 | export const const () => { (\n        |              ^\n      2 |\n",
   "tests": [],
   "version": 3
 }
